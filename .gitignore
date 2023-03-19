@@ -1,0 +1,11 @@
+__pycache__/
+
+.venv/
+.mypy_cache/
+
+# Content saved by the application
+saved/
+
+# PyInstaller
+build/
+dist/
