@@ -4,6 +4,8 @@ from sys import argv
 
 class Client:
     def __init__(self, ip, port, debug=False):
+        self.version = "v0.0.1"
+
         self.ip = ip
         self.port = port
         self.debug = debug
@@ -20,7 +22,8 @@ class Client:
             print(f"CLIENT could not connect")
 
         if self.connected:
-            self.send(input("Sending: "))
+            # Version check
+            self.send(self.version)
 
             self.data = True
             while self.data:
@@ -30,16 +33,15 @@ class Client:
 
                 self.send(input("Sending: "))
 
-            if self.debug:
-                print("CLIENT disconnected")
-
         self.socket.close()
-
         self.connected = False
+
+        if self.debug:
+            print("CLIENT disconnected")
 
     def send(self, data):
         try:
-            self.socket.send(data.encode("utf-8"))
+            self.socket.send(str(data).encode("utf-8"))
         except Exception as e:
             if self.debug:
                 print(f"CLIENT {e}")

@@ -15,6 +15,8 @@ class ClientInstance:
 
 class Server:
     def __init__(self, ip, port, debug=False):
+        self.version = "v0.0.1"
+
         self.ip = ip
         self.port = port
         self.debug = debug
@@ -77,7 +79,14 @@ class Server:
 
         client.conn.settimeout(10)
 
-        client.data = self.recv(client)
+        # Version check
+        version = self.recv(client)
+        if self.version != version:
+            if self.debug:
+                print(f"SERVER {client.info} bad version (Server: {self.version} Client: {version})")
+        else:
+            client.data = True
+
         while client.data:
             self.send(client, client.data)  # Send data back
             client.data = self.recv(client)
@@ -92,7 +101,7 @@ class Server:
 
     def send(self, client: ClientInstance, data):
         try:
-            client.conn.send(data.encode("utf-8"))
+            client.conn.send(str(data).encode("utf-8"))
         except Exception as e:
             if self.debug:
                 print(f"SERVER {client.info} {e}")
