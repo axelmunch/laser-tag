@@ -1,11 +1,11 @@
 import socket
 from sys import argv
 
+from ..configuration import VERSION
+
 
 class Client:
     def __init__(self, ip, port, debug=False):
-        self.version = "v0.0.1"
-
         self.ip = ip
         self.port = port
         self.debug = debug
@@ -24,7 +24,7 @@ class Client:
 
         if self.connected:
             # Version check
-            self.send(self.version)
+            self.send(VERSION)
 
             self.data = True
             while self.data:
@@ -61,7 +61,7 @@ if __name__ == "__main__":
         ip = argv[1]
         port = int(argv[2])
     except:
-        print("Usage: python -m network.Client <ip> <port> [debug]")
+        print("Usage: python -m laser-tag.network.Client <ip> <port> [debug]")
         exit(1)
     debug = len(argv) > 2
 

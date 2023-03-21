@@ -2,6 +2,8 @@ import socket
 from sys import argv
 from threading import Thread
 
+from ..configuration import VERSION
+
 
 class ClientInstance:
     def __init__(self, info, conn):
@@ -15,8 +17,6 @@ class ClientInstance:
 
 class Server:
     def __init__(self, ip, port, debug=False):
-        self.version = "v0.0.1"
-
         self.ip = ip
         self.port = port
         self.debug = debug
@@ -81,10 +81,10 @@ class Server:
 
         # Version check
         version = self.recv(client)
-        if self.version != version:
+        if VERSION != version:
             if self.debug:
                 print(
-                    f"SERVER {client.info} bad version (Server: {self.version} Client: {version})"
+                    f"SERVER {client.info} bad version (Server: {VERSION} Client: {version})"
                 )
         else:
             client.data = True
@@ -121,7 +121,7 @@ if __name__ == "__main__":
     try:
         port = int(argv[1])
     except:
-        print("Usage: python -m network.Server <port> [debug]")
+        print("Usage: python -m laser-tag.network.Server <port> [debug]")
         exit(1)
     debug = len(argv) > 2
 
