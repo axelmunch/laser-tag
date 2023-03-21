@@ -9,6 +9,7 @@ class Client:
         self.ip = ip
         self.port = port
         self.debug = debug
+
         self.connected = None
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

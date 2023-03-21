@@ -1,6 +1,6 @@
 import socket
-from threading import Thread
 from sys import argv
+from threading import Thread
 
 
 class ClientInstance:
@@ -83,7 +83,9 @@ class Server:
         version = self.recv(client)
         if self.version != version:
             if self.debug:
-                print(f"SERVER {client.info} bad version (Server: {self.version} Client: {version})")
+                print(
+                    f"SERVER {client.info} bad version (Server: {self.version} Client: {version})"
+                )
         else:
             client.data = True
 
