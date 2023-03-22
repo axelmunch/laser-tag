@@ -1,14 +1,19 @@
 import pygame
 from pygame.locals import *
 
+pygame.init()
+
 from .configuration import VARIABLES, WINDOW_WINDOWED_SIZE_RATIO
 from .graphics import display
+
+clock = pygame.time.Clock()
 
 running = True
 
 while running:
-    display.clock.tick(VARIABLES.fps)
+    clock.tick(VARIABLES.fps)
 
+    # Events
     for event in pygame.event.get():
         if event.type == QUIT:
             running = False
@@ -26,12 +31,13 @@ while running:
                         int(VARIABLES.screen_width * WINDOW_WINDOWED_SIZE_RATIO),
                         int(VARIABLES.screen_height * WINDOW_WINDOWED_SIZE_RATIO),
                     )
-                display.refresh_screen()
+                display.refresh_display()
         elif event.type == pygame.VIDEORESIZE:
             if not VARIABLES.fullscreen:
                 VARIABLES.set_screen_size(event.w, event.h)
-                display.refresh_screen()
+                display.refresh_display()
 
+    # Display
     display.screen.fill((42, 42, 42))
 
     pygame.draw.rect(
