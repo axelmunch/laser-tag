@@ -32,9 +32,9 @@ class Server:
         self.max_clients = None
         self.clients = {}
 
-        running = True
+        self.running = True
 
-        while running:
+        while self.running:
             try:
                 conn, info = self.socket.accept()
 
@@ -61,7 +61,7 @@ class Server:
             except Exception as e:
                 if self.debug:
                     print(f"SERVER {e}")
-                running = False
+                self.running = False
 
         self.socket.close()
 
