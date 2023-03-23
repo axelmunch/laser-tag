@@ -5,6 +5,7 @@ pygame.init()
 
 from .configuration import VARIABLES, WINDOW_WINDOWED_SIZE_RATIO
 from .graphics import display
+from .graphics.resize import resize
 
 clock = pygame.time.Clock()
 
@@ -43,7 +44,7 @@ while running:
     pygame.draw.rect(
         display.screen,
         (0, 128, 0),
-        (15, 15, 125, 125),
+        (resize(15, "x"), resize(15, "y"), resize(125, "x"), resize(125, "y")),
     )
 
     pygame.display.flip()
