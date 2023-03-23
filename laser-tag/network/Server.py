@@ -16,18 +16,18 @@ class ClientInstance:
 
 
 class Server:
-    def __init__(self, ip, port, debug=False):
-        self.ip = ip
+    def __init__(self, port, debug=False):
         self.port = port
         self.debug = debug
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.settimeout(5)
-        self.socket.bind((self.ip, self.port))
+        self.socket.bind(("", self.port))
         self.socket.listen()
 
         if self.debug:
             print(f"SERVER started on {self.socket.getsockname()}")
+            print(f"SERVER IP: {socket.gethostbyname(socket.gethostname())}")
 
         self.max_clients = None
         self.clients = {}
@@ -125,4 +125,4 @@ if __name__ == "__main__":
         exit(1)
     debug = len(argv) > 2
 
-    server = Server("", port, debug)
+    server = Server(port, debug)
