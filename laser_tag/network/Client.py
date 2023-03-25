@@ -25,14 +25,20 @@ class Client:
         if self.connected:
             # Version check
             self.send(VERSION)
+            server_version = self.recv()
+            if VERSION != server_version:
+                if self.debug:
+                    print(
+                        f"CLIENT bad version (Client: {VERSION} Server: {server_version})"
+                    )
+            else:
+                self.data = True
+                while self.data:
 
-            self.data = True
-            while self.data:
+                    self.data = self.recv()
+                    print(f"Received: {self.data}")
 
-                self.data = self.recv()
-                print(f"Received: {self.data}")
-
-                self.send(input("Sending: "))
+                    self.send(input("Sending: "))
 
         self.socket.close()
         self.connected = False

@@ -80,11 +80,12 @@ class Server:
         client.conn.settimeout(10)
 
         # Version check
-        version = self.recv(client)
-        if VERSION != version:
+        client_version = self.recv(client)
+        self.send(client, VERSION)
+        if VERSION != client_version:
             if self.debug:
                 print(
-                    f"SERVER {client.info} bad version (Server: {VERSION} Client: {version})"
+                    f"SERVER {client.info} bad version (Server: {VERSION} Client: {client_version})"
                 )
         else:
             client.data = True
