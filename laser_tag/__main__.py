@@ -3,9 +3,9 @@ from pygame.locals import *
 
 pygame.init()
 
-from .configuration import VARIABLES, WINDOW_WINDOWED_SIZE_RATIO
-from .graphics import display
-from .graphics.resize import resize
+from laser_tag.configuration import VARIABLES, WINDOW_WINDOWED_SIZE_RATIO
+from laser_tag.graphics import display
+from laser_tag.graphics.resize import resize
 
 clock = pygame.time.Clock()
 

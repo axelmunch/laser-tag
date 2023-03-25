@@ -5,7 +5,7 @@
             "name": "Python: Module",
             "type": "python",
             "request": "launch",
-            "module": "laser-tag",
+            "module": "laser_tag",
             "justMyCode": true
         }
     ]
