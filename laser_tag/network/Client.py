@@ -1,6 +1,7 @@
 import socket
 from sys import argv
 from sys import exit as sys_exit
+from threading import Thread
 
 from ..configuration import VERSION
 
@@ -12,6 +13,7 @@ class Client:
         self.debug = debug
 
         self.connected = None
+        self.thread = None
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.settimeout(5)
@@ -31,28 +33,31 @@ class Client:
                 print(f"CLIENT connection timed out")
 
         if self.connected:
-            # Version check
-            self.send(VERSION)
-            server_version = str(self.recv())
-            if VERSION != server_version:
-                if self.debug:
-                    print(
-                        f"CLIENT bad version (Client: {VERSION} Server: {server_version})"
-                    )
-            else:
-                self.data = True
-                while self.data:
+            self.thread = Thread(target=self.client)
+            self.thread.start()
+        else:
+            self.disconnect()
 
-                    self.data = self.recv()
-                    print(f"Received: {self.data}")
+    def client(self):
+        # Version check
+        self.send(VERSION)
+        server_version = str(self.recv())
+        if VERSION != server_version:
+            if self.debug:
+                print(
+                    f"CLIENT bad version (Client: {VERSION} Server: {server_version})"
+                )
+            self.disconnect()
 
-                    self.send(input("Sending: "))
+        self.data = True
+        while self.data and self.connected:
 
-        self.socket.close()
-        self.connected = False
+            self.data = self.recv()
+            print(f"Received: {self.data}")
 
-        if self.debug:
-            print("CLIENT disconnected")
+            self.send(input("Sending: "))
+
+        self.disconnect()
 
     def send(self, data):
         try:
@@ -68,6 +73,13 @@ class Client:
             if self.debug:
                 print(f"CLIENT recv {e}")
         return None
+
+    def disconnect(self):
+        if self.connected or self.connected is None:
+            self.socket.close()
+            self.connected = False
+            if self.debug:
+                print("CLIENT disconnected")
 
 
 if __name__ == "__main__":
