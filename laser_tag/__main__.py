@@ -1,7 +1,9 @@
+from time import time
+
 import pygame
 from pygame.locals import *
 
-from laser_tag.configuration import VARIABLES, WINDOW_WINDOWED_SIZE_RATIO
+from laser_tag.configuration import TARGET_FPS, VARIABLES, WINDOW_WINDOWED_SIZE_RATIO
 from laser_tag.graphics import display
 from laser_tag.graphics.resize import resize
 
@@ -10,10 +12,23 @@ if __name__ == "__main__":
 
     clock = pygame.time.Clock()
 
+    font = pygame.font.SysFont("Calibri", 20)
+
+    previous_time = time()
+    x_val = 0
+
     running = True
 
     while running:
         clock.tick(VARIABLES.fps)
+
+        current_time = time()
+        dt = current_time - previous_time
+        dt_target = dt * TARGET_FPS
+        previous_time = current_time
+
+        x_val += 10 * dt_target
+        x_val %= 1920
 
         # Events
         for event in pygame.event.get():
@@ -45,8 +60,18 @@ if __name__ == "__main__":
         pygame.draw.rect(
             display.screen,
             (0, 128, 0),
-            (resize(15, "x"), resize(15, "y"), resize(125, "x"), resize(125, "y")),
+            (
+                resize(15 + x_val, "x"),
+                resize(15, "y"),
+                resize(125, "x"),
+                resize(125, "y"),
+            ),
         )
+
+        fps_text = font.render(
+            "FPS: " + str(round(clock.get_fps(), 2)), True, (255, 255, 255)
+        )
+        display.screen.blit(fps_text, (resize(15, "x"), resize(15, "y")))
 
         pygame.display.flip()
 
