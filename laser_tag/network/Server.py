@@ -68,15 +68,9 @@ class Server:
             except Exception as e:
                 if self.debug:
                     print(f"SERVER {e}")
-                self.running = False
+                self.stop()
 
-        self.socket.close()
-
-        for client in self.clients.values():
-            client.conn.close()
-
-        if self.debug:
-            print("SERVER stopped")
+        self.stop()
 
     def client(self, client: ClientInstance):
         if self.debug:
@@ -123,6 +117,18 @@ class Server:
             if self.debug:
                 print(f"SERVER recv {client.info} {e}")
         return None
+
+    def stop(self):
+        if self.running:
+            self.running = False
+
+            self.socket.close()
+
+            for client in self.clients.values():
+                client.conn.close()
+
+            if self.debug:
+                print("SERVER stopped")
 
 
 if __name__ == "__main__":
