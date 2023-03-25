@@ -3,7 +3,12 @@ from sys import argv
 from sys import exit as sys_exit
 from threading import Thread
 
-from ..configuration import VERSION
+from ..configuration import (
+    NETWORK_BUFFER_SIZE,
+    SERVER_SOCKET_TIMEOUT,
+    SERVER_TIMEOUT,
+    VERSION,
+)
 
 
 class ClientInstance:
@@ -22,7 +27,7 @@ class Server:
         self.debug = debug
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.settimeout(5)
+        self.socket.settimeout(SERVER_SOCKET_TIMEOUT)
         try:
             self.socket.bind(("", self.port))
         except OSError:
@@ -78,7 +83,7 @@ class Server:
                 f"SERVER {client.info} connected ({len(self.clients)} client{'s' * (len(self.clients) > 1)})"
             )
 
-        client.conn.settimeout(10)
+        client.conn.settimeout(SERVER_TIMEOUT)
 
         # Version check
         client_version = str(self.recv(client))
@@ -113,7 +118,7 @@ class Server:
 
     def recv(self, client: ClientInstance):
         try:
-            return client.conn.recv(1024).decode("utf-8")
+            return client.conn.recv(NETWORK_BUFFER_SIZE).decode("utf-8")
         except Exception as e:
             if self.debug:
                 print(f"SERVER recv {client.info} {e}")

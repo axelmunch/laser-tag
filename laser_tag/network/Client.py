@@ -3,7 +3,7 @@ from sys import argv
 from sys import exit as sys_exit
 from threading import Thread
 
-from ..configuration import VERSION
+from ..configuration import CLIENT_TIMEOUT, NETWORK_BUFFER_SIZE, VERSION
 
 
 class Client:
@@ -16,7 +16,7 @@ class Client:
         self.thread = None
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.settimeout(5)
+        self.socket.settimeout(CLIENT_TIMEOUT)
         try:
             self.socket.connect((self.ip, self.port))
             self.connected = True
@@ -67,7 +67,7 @@ class Client:
 
     def recv(self):
         try:
-            return self.socket.recv(1024).decode("utf-8")
+            return self.socket.recv(NETWORK_BUFFER_SIZE).decode("utf-8")
         except Exception as e:
             if self.debug:
                 print(f"CLIENT recv {e}")
