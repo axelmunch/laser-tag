@@ -1,5 +1,6 @@
 import socket
 from sys import argv
+from sys import exit as sys_exit
 from threading import Thread
 
 from ..configuration import VERSION
@@ -16,13 +17,19 @@ class ClientInstance:
 
 
 class Server:
-    def __init__(self, port, debug=False):
+    def __init__(self, port: str, debug=False):
         self.port = port
         self.debug = debug
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.settimeout(5)
-        self.socket.bind(("", self.port))
+        try:
+            self.socket.bind(("", self.port))
+        except OSError:
+            if self.debug:
+                print(f"SERVER port {self.port} is already in use")
+            self.socket.close()
+            sys_exit(1)
         self.socket.listen()
 
         if self.debug:
@@ -80,7 +87,7 @@ class Server:
         client.conn.settimeout(10)
 
         # Version check
-        client_version = self.recv(client)
+        client_version = str(self.recv(client))
         self.send(client, VERSION)
         if VERSION != client_version:
             if self.debug:
@@ -107,23 +114,23 @@ class Server:
             client.conn.send(str(data).encode("utf-8"))
         except Exception as e:
             if self.debug:
-                print(f"SERVER {client.info} {e}")
+                print(f"SERVER send {client.info} {e}")
 
     def recv(self, client: ClientInstance):
         try:
             return client.conn.recv(1024).decode("utf-8")
         except Exception as e:
             if self.debug:
-                print(f"SERVER {client.info} {e}")
+                print(f"SERVER recv {client.info} {e}")
         return None
 
 
 if __name__ == "__main__":
     try:
         port = int(argv[1])
+        debug = len(argv) > 2
     except:
-        print("Usage: python -m laser-tag.network.Server <port> [debug]")
-        exit(1)
-    debug = len(argv) > 2
+        print("Usage: python -m laser_tag.network.Server <port> [debug]")
+        sys_exit(1)
 
     server = Server(port, debug)

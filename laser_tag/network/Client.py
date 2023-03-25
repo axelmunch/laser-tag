@@ -1,11 +1,12 @@
 import socket
 from sys import argv
+from sys import exit as sys_exit
 
 from ..configuration import VERSION
 
 
 class Client:
-    def __init__(self, ip, port, debug=False):
+    def __init__(self, ip: str, port: int, debug=False):
         self.ip = ip
         self.port = port
         self.debug = debug
@@ -20,12 +21,19 @@ class Client:
             if self.debug:
                 print(f"CLIENT connected to {(ip, port)}")
         except ConnectionRefusedError:
-            print(f"CLIENT could not connect")
+            if self.debug:
+                print(f"CLIENT connection refused by {ip}")
+        except socket.gaierror:
+            if self.debug:
+                print(f"CLIENT cannot resolve host {ip}")
+        except TimeoutError:
+            if self.debug:
+                print(f"CLIENT connection timed out")
 
         if self.connected:
             # Version check
             self.send(VERSION)
-            server_version = self.recv()
+            server_version = str(self.recv())
             if VERSION != server_version:
                 if self.debug:
                     print(
@@ -51,14 +59,14 @@ class Client:
             self.socket.send(str(data).encode("utf-8"))
         except Exception as e:
             if self.debug:
-                print(f"CLIENT {e}")
+                print(f"CLIENT send {e}")
 
     def recv(self):
         try:
             return self.socket.recv(1024).decode("utf-8")
         except Exception as e:
             if self.debug:
-                print(f"CLIENT {e}")
+                print(f"CLIENT recv {e}")
         return None
 
 
@@ -66,9 +74,9 @@ if __name__ == "__main__":
     try:
         ip = argv[1]
         port = int(argv[2])
+        debug = len(argv) > 3
     except:
-        print("Usage: python -m laser-tag.network.Client <ip> <port> [debug]")
-        exit(1)
-    debug = len(argv) > 2
+        print("Usage: python -m laser_tag.network.Client <ip> <port> [debug]")
+        sys_exit(1)
 
     client = Client(ip, port, debug)
