@@ -91,9 +91,10 @@ class Server:
         else:
             client.data = True
 
-        while client.data:
-            self.send(client, client.data)  # Send data back
+        while client.data and self.running:
             client.data = self.recv(client)
+            # Process data
+            self.send(client, client.data)  # Send data back
 
         client.conn.close()
         del self.clients[client.info]

@@ -51,11 +51,10 @@ class Client:
 
         self.data = True
         while self.data and self.connected:
+            self.send(input("Sending: "))
 
             self.data = self.recv()
             print(f"Received: {self.data}")
-
-            self.send(input("Sending: "))
 
         self.disconnect()
 
