@@ -3,7 +3,7 @@ from sys import argv
 from sys import exit as sys_exit
 from threading import Thread
 
-from ..configuration import (
+from laser_tag.configuration import (
     NETWORK_BUFFER_SIZE,
     SERVER_SOCKET_TIMEOUT,
     SERVER_TIMEOUT,
@@ -138,11 +138,27 @@ class Server:
 
 
 if __name__ == "__main__":
-    try:
-        port = int(argv[1])
-        debug = len(argv) > 2
-    except:
-        print("Usage: python -m laser_tag.network.Server <port> [debug]")
-        sys_exit(1)
+    port = None
+    debug = None
+    if len(argv) < 2:
+        # Manual input of port
+        while port is None:
+            try:
+                port = int(input("Port: "))
+                if port < 0 or port > 65535:
+                    port = None
+                    raise ValueError
+            except ValueError:
+                print("Invalid port")
+        debug = "n" not in input("Debug (Y/n): ").lower()
+    else:
+        try:
+            port = int(argv[1])
+            if port < 0 or port > 65535:
+                raise ValueError
+            debug = len(argv) > 2
+        except:
+            print("Usage: python -m laser_tag.network.Server <port> [debug]")
+            sys_exit(1)
 
     server = Server(port, debug)
