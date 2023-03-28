@@ -9,6 +9,7 @@ from laser_tag.configuration import (
     SERVER_TIMEOUT,
     VERSION,
 )
+from laser_tag.network.safe_eval import safe_eval
 
 
 class ClientInstance:
@@ -87,7 +88,7 @@ class Server:
 
         # Version check
         client_version = str(self.recv(client))
-        self.send(client, VERSION)
+        self.send(client, f'"{VERSION}"')
         if VERSION != client_version:
             if self.debug:
                 print(
@@ -99,7 +100,7 @@ class Server:
         while client.data and self.running:
             client.data = self.recv(client)
             # Process data
-            self.send(client, client.data)  # Send data back
+            self.send(client, f'"{client.data}"')  # Send data back
 
         client.conn.close()
         del self.clients[client.info]
@@ -118,7 +119,9 @@ class Server:
 
     def recv(self, client: ClientInstance):
         try:
-            return client.conn.recv(NETWORK_BUFFER_SIZE).decode("utf-8")
+            data = client.conn.recv(NETWORK_BUFFER_SIZE).decode("utf-8")
+            data = safe_eval(data, self.debug)
+            return data
         except Exception as e:
             if self.debug:
                 print(f"SERVER recv {client.info} {e}")

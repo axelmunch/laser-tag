@@ -4,6 +4,7 @@ from sys import exit as sys_exit
 from threading import Thread
 
 from ..configuration import CLIENT_TIMEOUT, NETWORK_BUFFER_SIZE, VERSION
+from .safe_eval import safe_eval
 
 
 class Client:
@@ -40,7 +41,7 @@ class Client:
 
     def client(self):
         # Version check
-        self.send(VERSION)
+        self.send(f'"{VERSION}"')
         server_version = str(self.recv())
         if VERSION != server_version:
             if self.debug:
@@ -51,7 +52,7 @@ class Client:
 
         self.data = True
         while self.data and self.connected:
-            self.send(input("Sending: "))
+            self.send(f'"{input("Sending: ")}"')
 
             self.data = self.recv()
             print(f"Received: {self.data}")
@@ -67,7 +68,9 @@ class Client:
 
     def recv(self):
         try:
-            return self.socket.recv(NETWORK_BUFFER_SIZE).decode("utf-8")
+            data = self.socket.recv(NETWORK_BUFFER_SIZE).decode("utf-8")
+            data = safe_eval(data, self.debug)
+            return data
         except Exception as e:
             if self.debug:
                 print(f"CLIENT recv {e}")
