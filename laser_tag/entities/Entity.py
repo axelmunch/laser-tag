@@ -1,11 +1,13 @@
+from ..math.Box import Box
+from ..math.Point import Point
+
+
 class Entity:
     def __init__(self, x, y, z, length, width, height):
-        self.x = x
-        self.y = y
-        self.z = z
+        self.position = Point(x, y, z)
 
-        self.length = length
-        self.width = width
-        self.height = height
+        self.collider = Box(
+            Point(x - length / 2, y - width / 2, z), length, width, height
+        )
 
         self.rotation = 0
