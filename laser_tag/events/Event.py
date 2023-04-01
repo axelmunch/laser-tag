@@ -14,6 +14,7 @@ class Event(Enum):
     GAME_CROUCH = auto()
     GAME_RELOAD = auto()
     GAME_SHOOT = auto()
+    GAME_ROTATE = auto()
     KEY_ESCAPE = auto()
     KEY_ESCAPE_PRESS = auto()
     KEY_RETURN = auto()
