@@ -31,6 +31,7 @@ class Server:
         self.socket.settimeout(SERVER_SOCKET_TIMEOUT)
         try:
             self.socket.bind(("", self.port))
+            self.port = self.socket.getsockname()[1]
         except OSError:
             if self.debug:
                 print(f"SERVER port {self.port} is already in use")
@@ -47,6 +48,10 @@ class Server:
 
         self.running = True
 
+        self.running_thread = Thread(target=self.run)
+        self.running_thread.start()
+
+    def run(self):
         while self.running:
             try:
                 conn, info = self.socket.accept()
@@ -129,6 +134,9 @@ class Server:
 
     def stop(self):
         if self.running:
+            if self.debug:
+                print("SERVER stopping...")
+
             self.running = False
 
             self.socket.close()
@@ -136,8 +144,8 @@ class Server:
             for client in self.clients.values():
                 client.conn.close()
 
-            if self.debug:
-                print("SERVER stopped")
+    def get_port(self):
+        return self.port
 
 
 if __name__ == "__main__":
@@ -165,3 +173,14 @@ if __name__ == "__main__":
             sys_exit(1)
 
     server = Server(port, debug)
+    try:
+        while (
+            "exit"
+            not in input('Enter "exit" or press Ctrl+C to stop the server\n').lower()
+        ):
+            continue
+
+    except KeyboardInterrupt:
+        if debug:
+            print()
+    server.stop()
