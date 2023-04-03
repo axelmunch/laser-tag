@@ -11,3 +11,12 @@ class Entity:
         )
 
         self.rotation = 0
+
+    def move(self, x, y, z):
+        self.position.x = x
+        self.position.y = y
+        self.position.z = z
+
+        self.collider.origin.x = x - self.collider.length / 2
+        self.collider.origin.y = y - self.collider.width / 2
+        self.collider.origin.z = z
