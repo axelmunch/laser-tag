@@ -6,7 +6,7 @@ from ..configuration import VARIABLES
 
 class Display:
     def __init__(self):
-        self.screen = None
+        self.screen: pygame.Surface = None
 
         self.refresh_display()
 
