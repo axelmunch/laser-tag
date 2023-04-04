@@ -23,7 +23,7 @@ class ClientInstance:
 
 
 class Server:
-    def __init__(self, port: str, debug=False):
+    def __init__(self, port: int, debug=False):
         self.port = port
         self.debug = debug
 
@@ -40,18 +40,27 @@ class Server:
         self.socket.listen()
 
         if self.debug:
-            print(f"SERVER started on {self.socket.getsockname()}")
+            print(f"SERVER bound to {self.socket.getsockname()}")
             print(f"SERVER IP: {socket.gethostbyname(socket.gethostname())}")
 
         self.max_clients = None
         self.clients = {}
 
-        self.running = True
+        self.running = None
 
         self.running_thread = Thread(target=self.run)
-        self.running_thread.start()
+
+    def start(self):
+        if self.running is None:
+            self.running = True
+            self.running_thread.start()
+        else:
+            if self.debug:
+                print("SERVER has already been started")
 
     def run(self):
+        if self.debug and self.running:
+            print("SERVER started")
         while self.running:
             try:
                 conn, info = self.socket.accept()
@@ -102,10 +111,10 @@ class Server:
         else:
             client.data = True
 
-        while client.data and self.running:
+        while client.data is not None and self.running:
             client.data = self.recv(client)
             # Process data
-            self.send(client, f'"{client.data}"')  # Send data back
+            self.send(client, client.data)  # Send data back
 
         client.conn.close()
         del self.clients[client.info]
@@ -141,7 +150,7 @@ class Server:
 
             self.socket.close()
 
-            for client in self.clients.values():
+            for client in self.clients.copy().values():
                 client.conn.close()
 
     def get_port(self):
@@ -173,6 +182,7 @@ if __name__ == "__main__":
             sys_exit(1)
 
     server = Server(port, debug)
+    server.start()
     try:
         while (
             "exit"

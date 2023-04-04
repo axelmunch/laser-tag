@@ -1,7 +1,5 @@
 import socket
-from sys import argv
-from sys import exit as sys_exit
-from threading import Thread
+from threading import Lock, Thread
 
 from ..configuration import CLIENT_TIMEOUT, NETWORK_BUFFER_SIZE, VERSION
 from .safe_eval import safe_eval
@@ -15,6 +13,10 @@ class Client:
 
         self.connected = None
         self.thread = None
+
+        self.data_to_send = []
+        self.data_received = []
+        self.mutex = Lock()
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.settimeout(CLIENT_TIMEOUT)
@@ -50,12 +52,13 @@ class Client:
                 )
             self.disconnect()
 
-        self.data = True
-        while self.data and self.connected:
-            self.send(f'"{input("Sending: ")}"')
+        while self.connected:
+            self.send(self.get_data_to_send())
 
-            self.data = self.recv()
-            print(f"Received: {self.data}")
+            data = self.recv()
+            if data is None:
+                self.disconnect()
+                continue
 
         self.disconnect()
 
@@ -70,11 +73,36 @@ class Client:
         try:
             data = self.socket.recv(NETWORK_BUFFER_SIZE).decode("utf-8")
             data = safe_eval(data, self.debug)
+            self.add_received_data(data)
             return data
         except Exception as e:
             if self.debug:
                 print(f"CLIENT recv {e}")
         return None
+
+    def add_data_to_send(self, data):
+        self.mutex.acquire()
+        self.data_to_send.append(data)
+        self.mutex.release()
+
+    def get_data_to_send(self):
+        self.mutex.acquire()
+        data = self.data_to_send.copy()
+        self.data_to_send.clear()
+        self.mutex.release()
+        return data
+
+    def add_received_data(self, data):
+        self.mutex.acquire()
+        self.data_received.append(data)
+        self.mutex.release()
+
+    def get_received_data(self):
+        self.mutex.acquire()
+        data = self.data_received.copy()
+        self.data_received.clear()
+        self.mutex.release()
+        return data
 
     def disconnect(self):
         if self.connected or self.connected is None:
@@ -82,15 +110,3 @@ class Client:
             self.connected = False
             if self.debug:
                 print("CLIENT disconnected")
-
-
-if __name__ == "__main__":
-    try:
-        ip = argv[1]
-        port = int(argv[2])
-        debug = len(argv) > 3
-    except:
-        print("Usage: python -m laser_tag.network.Client <ip> <port> [debug]")
-        sys_exit(1)
-
-    client = Client(ip, port, debug)
