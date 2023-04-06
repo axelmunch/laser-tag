@@ -1,4 +1,4 @@
-from math import atan2, cos, pi, sin, sqrt
+from math import atan2, cos, sin
 
 from .degrees_radians import *
 from .Point import Point
