@@ -8,13 +8,14 @@ from laser_tag.events.Event import *
 from laser_tag.events.get_events import *
 from laser_tag.graphics import display
 from laser_tag.graphics.resize import resize
+from laser_tag.graphics.Text import Text
 
 if __name__ == "__main__":
     pygame.init()
 
     clock = pygame.time.Clock()
 
-    font = pygame.font.SysFont("Calibri", 20)
+    text = Text("calibri")
 
     previous_time = time()
     x_val = 0
@@ -79,10 +80,7 @@ if __name__ == "__main__":
             ),
         )
 
-        fps_text = font.render(
-            "FPS: " + str(round(clock.get_fps(), 2)), True, (255, 255, 255)
-        )
-        display.screen.blit(fps_text, (resize(15, "x"), resize(15, "y")))
+        text.text("FPS: " + str(round(clock.get_fps(), 2)), 10, 10, 40, (255, 255, 255))
 
         pygame.display.flip()
 
