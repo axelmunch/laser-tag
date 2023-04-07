@@ -1,7 +1,7 @@
 import socket
 from threading import Lock, Thread
 
-from ..configuration import CLIENT_TIMEOUT, NETWORK_BUFFER_SIZE, VERSION
+from ..configuration import CLIENT_TIMEOUT, NETWORK_BUFFER_SIZE, VARIABLES, VERSION
 from .safe_eval import safe_eval
 
 
@@ -9,7 +9,7 @@ class Client:
     def __init__(self, ip: str, port: int, debug=False):
         self.ip = ip
         self.port = port
-        self.debug = debug
+        self.debug = VARIABLES.debug or debug
 
         self.connected = None
         self.thread = None

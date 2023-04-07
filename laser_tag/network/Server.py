@@ -7,6 +7,7 @@ from laser_tag.configuration import (
     NETWORK_BUFFER_SIZE,
     SERVER_SOCKET_TIMEOUT,
     SERVER_TIMEOUT,
+    VARIABLES,
     VERSION,
 )
 from laser_tag.network.safe_eval import safe_eval
@@ -25,7 +26,7 @@ class ClientInstance:
 class Server:
     def __init__(self, port: int, debug=False):
         self.port = port
-        self.debug = debug
+        self.debug = VARIABLES.debug or debug
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.settimeout(SERVER_SOCKET_TIMEOUT)

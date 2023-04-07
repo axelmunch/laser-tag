@@ -11,6 +11,8 @@ class Variables:
 
         self.fps = 60
 
+        self.debug = True
+
         self.pseudo = "Player"
 
         # Load from file
