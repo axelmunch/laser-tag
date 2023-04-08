@@ -5,13 +5,14 @@ from .resize import resize
 
 
 class Text:
-    def __init__(self, font, font_is_file=False):
+    def __init__(self, font, font_is_file=False, size_multiplier=1):
         self.font = font
         self.font_is_file = font_is_file
+        self.size_multiplier = size_multiplier
         self.cache = {}
 
     def create_cache(self, size):
-        resized_size = int(resize(size))
+        resized_size = int(resize(size * self.size_multiplier))
         if resized_size not in self.cache:
             if self.font_is_file:
                 self.cache[resized_size] = pygame.font.Font(self.font, resized_size)
