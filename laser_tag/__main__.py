@@ -5,8 +5,7 @@ from laser_tag.configuration import VARIABLES, WINDOW_WINDOWED_SIZE_RATIO
 from laser_tag.events.Event import *
 from laser_tag.events.get_events import *
 from laser_tag.graphics import display
-from laser_tag.graphics.resize import resize
-from laser_tag.graphics.Text import Text
+from laser_tag.graphics.Renderer import Renderer
 from laser_tag.utils.DeltaTime import DeltaTime
 
 if __name__ == "__main__":
@@ -14,11 +13,9 @@ if __name__ == "__main__":
 
     clock = pygame.time.Clock()
 
-    text = Text("calibri")
+    renderer = Renderer(clock)
 
     delta_time = DeltaTime()
-
-    x_val = 0
 
     running = True
 
@@ -27,11 +24,11 @@ if __name__ == "__main__":
 
         delta_time.update()
 
-        x_val += 10 * delta_time.get_dt_target()
-        x_val %= 1920
-
         # Events
-        for event in get_events():
+        events = get_events()
+
+        # Process events
+        for event in events:
             match event.id:
                 case Event.WINDOW_QUIT:
                     running = False
@@ -64,20 +61,7 @@ if __name__ == "__main__":
                     print("CLICK")
 
         # Display
-        display.screen.fill((42, 42, 42))
-
-        pygame.draw.rect(
-            display.screen,
-            (0, 128, 0),
-            (
-                resize(15 + x_val, "x"),
-                resize(15, "y"),
-                resize(125, "x"),
-                resize(125, "y"),
-            ),
-        )
-
-        text.text("FPS: " + str(round(clock.get_fps(), 2)), 10, 10, 40, (255, 255, 255))
+        renderer.render()
 
         pygame.display.flip()
 
