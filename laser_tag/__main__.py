@@ -1,14 +1,13 @@
-from time import time
-
 import pygame
 from pygame.locals import *
 
-from laser_tag.configuration import TARGET_FPS, VARIABLES, WINDOW_WINDOWED_SIZE_RATIO
+from laser_tag.configuration import VARIABLES, WINDOW_WINDOWED_SIZE_RATIO
 from laser_tag.events.Event import *
 from laser_tag.events.get_events import *
 from laser_tag.graphics import display
 from laser_tag.graphics.resize import resize
 from laser_tag.graphics.Text import Text
+from laser_tag.utils.DeltaTime import DeltaTime
 
 if __name__ == "__main__":
     pygame.init()
@@ -17,7 +16,8 @@ if __name__ == "__main__":
 
     text = Text("calibri")
 
-    previous_time = time()
+    delta_time = DeltaTime()
+
     x_val = 0
 
     running = True
@@ -25,12 +25,9 @@ if __name__ == "__main__":
     while running:
         clock.tick(VARIABLES.fps)
 
-        current_time = time()
-        dt = current_time - previous_time
-        dt_target = dt * TARGET_FPS
-        previous_time = current_time
+        delta_time.update()
 
-        x_val += 10 * dt_target
+        x_val += 10 * delta_time.get_dt_target()
         x_val %= 1920
 
         # Events
