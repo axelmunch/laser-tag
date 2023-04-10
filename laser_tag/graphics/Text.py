@@ -23,7 +23,7 @@ class Text:
     def clear_cache(self):
         self.cache.clear()
 
-    def generate_text(self, text, size, color=(255, 255, 255)):
+    def generate_text(self, text, size, color=(255, 255, 255)) -> pygame.Surface:
         return self.cache[size].render(str(text), True, color)
 
     def get_size(self, generated_text):
@@ -56,3 +56,8 @@ class Text:
         generated_text = self.generate_text(text, resized_size, color)
 
         return self.blit(generated_text, x, y, align_x, align_y)
+
+    def get_surface(self, text, size, color=(255, 255, 255)) -> pygame.Surface:
+        resized_size = self.create_cache(size)
+
+        return self.generate_text(text, resized_size, color)
