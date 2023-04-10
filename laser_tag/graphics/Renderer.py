@@ -2,18 +2,25 @@ import pygame
 
 from ..utils.DeltaTime import DeltaTime
 from . import display
+from .components.Fps import Fps
 from .resize import resize
-from .Text import Text
 
 
 class Renderer:
     def __init__(self, clock: pygame.time.Clock):
         self.clock = clock
         # Load resources
-        self.text = Text("calibri")
 
         self.delta_time = DeltaTime()
+
+        self.fps = Fps()
+        self.components = [self.fps]
+
         self.x_val = 0
+
+    def resize(self):
+        for component in self.components:
+            component.resize()
 
     def render(self):
         # Moving object test
@@ -34,6 +41,5 @@ class Renderer:
             ),
         )
 
-        self.text.text(
-            "FPS: " + str(round(self.clock.get_fps(), 2)), 10, 10, 40, (255, 255, 255)
-        )
+        self.fps.update(self.clock.get_fps())
+        display.screen.blit(self.fps.get(), (resize(10, "x"), resize(10, "y")))

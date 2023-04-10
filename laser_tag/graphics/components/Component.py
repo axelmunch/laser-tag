@@ -23,7 +23,8 @@ class Component:
         return self.surface
 
     def update(self, data=None):
-        self.data = data
+        if data is not None:
+            self.data = data
         self.render()
 
     def render(self):

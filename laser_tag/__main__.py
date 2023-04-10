@@ -47,10 +47,12 @@ if __name__ == "__main__":
                             int(VARIABLES.screen_height * WINDOW_WINDOWED_SIZE_RATIO),
                         )
                     display.refresh_display()
+                    renderer.resize()
                 case Event.WINDOW_RESIZE:
                     if not VARIABLES.fullscreen:
                         VARIABLES.set_screen_size(event.data[0], event.data[1])
                         display.refresh_display()
+                        renderer.resize()
 
                 case Event.MOUSE_MOVE:
                     mouse_x = event.data[0] / VARIABLES.screen_width * 1920
