@@ -11,6 +11,8 @@ class Variables:
 
         self.fps = 60
 
+        self.show_fps = True
+
         self.debug = True
 
         self.pseudo = "Player"
