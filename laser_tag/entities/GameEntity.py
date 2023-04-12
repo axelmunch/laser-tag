@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from time import time
 
-from Entity import Entity
+from .Entity import Entity
 
 
 class GameEntity(Entity):
     def __init__(self, x, y, z, length, width, height):
-        super().__init__(self, x, y, z, length, width, height)
+        super().__init__(x, y, z, length, width, height)
 
         self.move_speed_multiplier = 1
 
