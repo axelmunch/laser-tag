@@ -1,6 +1,7 @@
 import pygame
 
 from ..configuration import VARIABLES
+from ..game.Game import Game
 from ..utils.DeltaTime import DeltaTime
 from . import display
 from .components.Fps import Fps
@@ -23,7 +24,7 @@ class Renderer:
         for component in self.components:
             component.resize()
 
-    def render(self):
+    def render(self, game: Game):
         # Moving object test
         self.x_val += 10 * self.delta_time.get_dt_target()
         self.x_val %= 1920

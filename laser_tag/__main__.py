@@ -3,13 +3,17 @@ from pygame.locals import *
 
 from laser_tag.configuration import VARIABLES, WINDOW_WINDOWED_SIZE_RATIO
 from laser_tag.events.Event import *
+from laser_tag.events.EventInstance import EventInstance
 from laser_tag.events.get_events import *
+from laser_tag.game.Game import Game
 from laser_tag.graphics import display
 from laser_tag.graphics.Renderer import Renderer
 from laser_tag.utils.DeltaTime import DeltaTime
 
 if __name__ == "__main__":
     pygame.init()
+
+    game = Game()
 
     clock = pygame.time.Clock()
 
@@ -26,6 +30,9 @@ if __name__ == "__main__":
 
         # Events
         events = get_events()
+
+        # Enhance events
+        game.enhance_events(events)
 
         # Process events
         for event in events:
@@ -62,8 +69,14 @@ if __name__ == "__main__":
                 case Event.MOUSE_LEFT_CLICK_PRESS:
                     print("CLICK")
 
+        # Predict
+        game.update(events)
+
+        # Send
+        pass
+
         # Display
-        renderer.render()
+        renderer.render(game)
 
         pygame.display.flip()
 
