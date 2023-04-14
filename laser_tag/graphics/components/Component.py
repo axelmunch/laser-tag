@@ -16,7 +16,7 @@ class Component:
 
     def resize(self):
         self.surface = pygame.Surface(
-            (resize(self.width, "x"), resize(self.height, "y"))
+            (resize(self.width, "x"), resize(self.height, "y")), pygame.SRCALPHA
         )
 
     def get(self) -> pygame.Surface:
