@@ -5,6 +5,7 @@ from ..game.Game import Game
 from ..utils.DeltaTime import DeltaTime
 from . import display
 from .components.Fps import Fps
+from .components.Minimap import Minimap
 from .resize import resize
 
 
@@ -16,7 +17,8 @@ class Renderer:
         self.delta_time = DeltaTime()
 
         self.fps = Fps()
-        self.components = [self.fps]
+        self.minimap = Minimap()
+        self.components = [self.fps, self.minimap]
 
         self.x_val = 0
 
@@ -42,6 +44,9 @@ class Renderer:
                 resize(125, "y"),
             ),
         )
+
+        self.minimap.update(game.world.map.map)
+        display.screen.blit(self.minimap.get(), (resize(10, "x"), resize(10, "y")))
 
         if VARIABLES.show_fps:
             self.fps.update(self.clock.get_fps())
