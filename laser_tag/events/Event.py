@@ -39,6 +39,7 @@ class Event(Enum):
     WINDOW_RESIZE = auto()
     WINDOW_FULLSCREEN = auto()
     WINDOW_QUIT = auto()
+    SCREENSHOT = auto()
 
 
 local_events = [
@@ -66,4 +67,5 @@ local_events = [
     Event.WINDOW_RESIZE,
     Event.WINDOW_FULLSCREEN,
     Event.WINDOW_QUIT,
+    Event.SCREENSHOT,
 ]

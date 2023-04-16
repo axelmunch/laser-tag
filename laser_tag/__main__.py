@@ -61,6 +61,9 @@ if __name__ == "__main__":
                         display.refresh_display()
                         renderer.resize()
 
+                case Event.SCREENSHOT:
+                    display.screenshot()
+
                 case Event.MOUSE_MOVE:
                     mouse_x = event.data[0] / VARIABLES.screen_width * 1920
                     mouse_y = event.data[1] / VARIABLES.screen_height * 1080

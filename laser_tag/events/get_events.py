@@ -19,6 +19,8 @@ def get_events() -> list[EventInstance]:
                 events.append(EventInstance(Event.KEY_RETURN_PRESS))
             elif event.key == K_F11:
                 events.append(EventInstance(Event.WINDOW_FULLSCREEN))
+            elif event.key == K_F12:
+                events.append(EventInstance(Event.SCREENSHOT))
         elif event.type == pygame.VIDEORESIZE:
             events.append(EventInstance(Event.WINDOW_RESIZE, [event.w, event.h]))
 
