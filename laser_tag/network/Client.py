@@ -2,6 +2,7 @@ import socket
 from threading import Lock, Thread
 
 from ..configuration import CLIENT_TIMEOUT, NETWORK_BUFFER_SIZE, VARIABLES, VERSION
+from ..events.EventInstance import EventInstance
 from .safe_eval import safe_eval
 
 
@@ -14,7 +15,7 @@ class Client:
         self.connected = None
         self.thread = None
 
-        self.data_to_send = []
+        self.events_to_send: list[EventInstance] = []
         self.data_received = []
         self.mutex = Lock()
 
@@ -53,7 +54,7 @@ class Client:
             self.disconnect()
 
         while self.connected:
-            self.send(self.get_data_to_send())
+            self.send(self.get_events_to_send())
 
             data = self.recv()
             if data is None:
@@ -80,17 +81,17 @@ class Client:
                 print(f"CLIENT recv {e}")
         return None
 
-    def add_data_to_send(self, data):
+    def add_events_to_send(self, events: list[EventInstance]):
         self.mutex.acquire()
-        self.data_to_send.append(data)
+        self.events_to_send.append(events)
         self.mutex.release()
 
-    def get_data_to_send(self):
+    def get_events_to_send(self) -> list[EventInstance]:
         self.mutex.acquire()
-        data = self.data_to_send.copy()
-        self.data_to_send.clear()
+        events = self.events_to_send.copy()
+        self.events_to_send.clear()
         self.mutex.release()
-        return data
+        return events
 
     def add_received_data(self, data):
         self.mutex.acquire()
