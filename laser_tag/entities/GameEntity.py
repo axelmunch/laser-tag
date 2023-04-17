@@ -6,7 +6,7 @@ from .Entity import Entity
 
 
 class GameEntity(Entity):
-    def __init__(self, x, y, z, length, width, height):
+    def __init__(self, x, y, z, length=1, width=1, height=1):
         super().__init__(x, y, z, length, width, height)
 
         self.move_speed_multiplier = 1
