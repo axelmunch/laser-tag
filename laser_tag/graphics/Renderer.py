@@ -45,7 +45,7 @@ class Renderer:
             ),
         )
 
-        self.minimap.update(game.world.map.map)
+        self.minimap.update(game.world.map.map, game.world.entities.values())
         display.screen.blit(self.minimap.get(), (resize(10, "x"), resize(10, "y")))
 
         if VARIABLES.show_fps:
