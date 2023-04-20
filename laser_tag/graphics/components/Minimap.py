@@ -9,7 +9,7 @@ class Minimap(Component):
     def __init__(self, data={"world": [], "entities": []}):
         super().__init__()
 
-        self.set_surface_size(400, 400)
+        self.set_surface_size(1060, 1060)
 
         self.update(data["world"], data["entities"])
 
@@ -25,6 +25,7 @@ class Minimap(Component):
         super().update()
 
     def render(self):
+        self.surface.fill((0, 0, 0, 0))
         surface_width = self.surface.get_width()
         surface_height = self.surface.get_height()
         map_height = len(self.data["world"])

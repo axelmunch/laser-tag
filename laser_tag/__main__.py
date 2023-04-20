@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 
 from laser_tag.configuration import VARIABLES, WINDOW_WINDOWED_SIZE_RATIO
+from laser_tag.entities.Player import Player
 from laser_tag.events.Event import *
 from laser_tag.events.EventInstance import EventInstance
 from laser_tag.events.get_events import *
@@ -14,6 +15,7 @@ if __name__ == "__main__":
     pygame.init()
 
     game = Game()
+    game.world.set_controlled_entity(game.world.spawn_entity(Player(2, 3.25, 0)))
 
     clock = pygame.time.Clock()
 
