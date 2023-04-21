@@ -5,6 +5,9 @@ class Event(Enum):
     def _generate_next_value_(name, start, count, last_values):
         return start + count
 
+    START_GAME = auto()
+    MESSAGE = auto()
+    TYPE_CHAR = auto()
     GAME_MOVE_FORWARD = auto()
     GAME_MOVE_BACKWARD = auto()
     GAME_MOVE_LEFT = auto()
@@ -43,6 +46,9 @@ class Event(Enum):
 
 
 local_events = [
+    Event.TYPE_CHAR,
+    Event.MESSAGE,
+    Event.TYPE_CHAR,
     Event.KEY_ESCAPE,
     Event.KEY_ESCAPE_PRESS,
     Event.KEY_RETURN,
