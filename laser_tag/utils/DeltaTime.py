@@ -4,14 +4,15 @@ from ..configuration import TARGET_FPS
 
 
 class DeltaTime:
-    __instance = None
+    __instances = {}
 
-    def __new__(cls):
-        if not cls.__instance:
-            cls.__instance = super(DeltaTime, cls).__new__(cls)
-        return cls.__instance
+    def __new__(cls, id=None):
+        if not id in cls.__instances:
+            cls.__instances[id] = super().__new__(cls)
+        return cls.__instances[id]
 
-    def __init__(self):
+    def __init__(self, id=None):
+        self.id = id
         self.reset()
 
     def reset(self):
