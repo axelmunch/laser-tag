@@ -1,6 +1,8 @@
-from ..entities import GameEntity
+from ..entities.GameEntity import GameEntity
 from ..events.Event import Event
 from ..events.EventInstance import EventInstance
+from ..math.Box import Box
+from ..math.Point import Point
 from ..utils.DeltaTime import DeltaTime
 from .Map import Map
 
@@ -38,30 +40,61 @@ class World:
             for event in events:
                 match event.id:
                     case Event.GAME_MOVE_FORWARD:
-                        current_entity.move(
-                            current_entity.position.x,
-                            current_entity.position.y
-                            - 0.1 * self.delta_time.get_dt_target(),
-                            current_entity.position.z,
+                        self.move_entity(
+                            current_entity,
+                            Point(
+                                0,
+                                -0.1 * self.delta_time.get_dt_target(),
+                                0,
+                            ),
                         )
                     case Event.GAME_MOVE_BACKWARD:
-                        current_entity.move(
-                            current_entity.position.x,
-                            current_entity.position.y
-                            + 0.1 * self.delta_time.get_dt_target(),
-                            current_entity.position.z,
+                        self.move_entity(
+                            current_entity,
+                            Point(
+                                0,
+                                +0.1 * self.delta_time.get_dt_target(),
+                                0,
+                            ),
                         )
                     case Event.GAME_MOVE_LEFT:
-                        current_entity.move(
-                            current_entity.position.x
-                            - 0.1 * self.delta_time.get_dt_target(),
-                            current_entity.position.y,
-                            current_entity.position.z,
+                        self.move_entity(
+                            current_entity,
+                            Point(
+                                -0.1 * self.delta_time.get_dt_target(),
+                                0,
+                                0,
+                            ),
                         )
                     case Event.GAME_MOVE_RIGHT:
-                        current_entity.move(
-                            current_entity.position.x
-                            + 0.1 * self.delta_time.get_dt_target(),
-                            current_entity.position.y,
-                            current_entity.position.z,
+                        self.move_entity(
+                            current_entity,
+                            Point(
+                                0.1 * self.delta_time.get_dt_target(),
+                                0,
+                                0,
+                            ),
                         )
+
+    def move_entity(self, entity: GameEntity, movement_vector: Point):
+        moved_collider = Box(
+            Point(
+                entity.collider.origin.x + movement_vector.x,
+                entity.collider.origin.y + movement_vector.y,
+                entity.collider.origin.z + movement_vector.z
+                if entity.collider.origin.z is not None
+                else None,
+            ),
+            entity.collider.length,
+            entity.collider.width,
+            entity.collider.height,
+        )
+
+        if not self.map.collides_with(moved_collider):
+            entity.move(
+                entity.position.x + movement_vector.x,
+                entity.position.y + movement_vector.y,
+                entity.position.z + movement_vector.z
+                if entity.position.z is not None
+                else None,
+            )
