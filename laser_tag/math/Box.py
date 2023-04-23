@@ -11,7 +11,7 @@ class Box:
         self.height = height
 
     def __repr__(self):
-        return f"Box({self.origin}, {self.length}, {self.width}, {self.height})"
+        return f"[{self.origin}, {self.length}, {self.width}, {self.height}]"
 
     def collides_with(self, other):
         if isinstance(other, Box):

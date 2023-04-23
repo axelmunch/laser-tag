@@ -7,4 +7,4 @@ class Line:
         self.point2 = point2
 
     def __repr__(self):
-        return f"Line({self.point1}, {self.point2})"
+        return f"[{self.point1}, {self.point2}]"
