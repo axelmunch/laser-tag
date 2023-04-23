@@ -1,3 +1,4 @@
+from ..configuration import VARIABLES
 from ..entities.GameEntity import GameEntity
 from ..events.Event import Event
 from ..events.EventInstance import EventInstance
@@ -75,6 +76,13 @@ class World:
                                 0,
                             ),
                         )
+                    case Event.GAME_ROTATE:
+                        current_entity.rotation += (
+                            event.data[0]
+                            * VARIABLES.rotate_sensitivity
+                            * self.delta_time.get_dt_target()
+                        )
+                        current_entity.rotation %= 360
 
     def move_entity(self, entity: GameEntity, movement_vector: Point):
         moved_collider = Box(

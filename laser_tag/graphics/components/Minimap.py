@@ -2,6 +2,8 @@ from math import ceil
 
 import pygame
 
+from ...math.rotations import rotate
+from ..resize import resize
 from .Component import Component
 
 
@@ -55,4 +57,18 @@ class Minimap(Component):
                     ceil(entity.collider.length * surface_width / map_width),
                     ceil(entity.collider.width * surface_height / map_height),
                 ),
+            )
+            facing_direction_position = rotate(0.5, entity.rotation, entity.position)
+            pygame.draw.line(
+                self.surface,
+                (255, 255, 255),
+                (
+                    entity.position.x * surface_width / map_width,
+                    entity.position.y * surface_height / map_height,
+                ),
+                (
+                    facing_direction_position.x * surface_width / map_width,
+                    facing_direction_position.y * surface_height / map_height,
+                ),
+                max(1, int(resize(2))),
             )

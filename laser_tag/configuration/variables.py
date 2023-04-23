@@ -15,6 +15,8 @@ class Variables:
 
         self.debug = True
 
+        self.rotate_sensitivity = 3
+
         self.pseudo = "Player"
 
         # Load from file
