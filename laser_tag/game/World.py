@@ -4,6 +4,7 @@ from ..events.Event import Event
 from ..events.EventInstance import EventInstance
 from ..math.Box import Box
 from ..math.Point import Point
+from ..math.rotations import get_angle, rotate
 from ..utils.DeltaTime import DeltaTime
 from .Map import Map
 
@@ -38,44 +39,18 @@ class World:
         if self.controlled_entity is not None:
             current_entity = self.entities[self.controlled_entity]
 
+            movement_vector = [0, 0]
+
             for event in events:
                 match event.id:
                     case Event.GAME_MOVE_FORWARD:
-                        self.move_entity(
-                            current_entity,
-                            Point(
-                                0,
-                                -0.1 * self.delta_time.get_dt_target(),
-                                0,
-                            ),
-                        )
+                        movement_vector[0] += 1
                     case Event.GAME_MOVE_BACKWARD:
-                        self.move_entity(
-                            current_entity,
-                            Point(
-                                0,
-                                +0.1 * self.delta_time.get_dt_target(),
-                                0,
-                            ),
-                        )
+                        movement_vector[0] -= 1
                     case Event.GAME_MOVE_LEFT:
-                        self.move_entity(
-                            current_entity,
-                            Point(
-                                -0.1 * self.delta_time.get_dt_target(),
-                                0,
-                                0,
-                            ),
-                        )
+                        movement_vector[1] -= 1
                     case Event.GAME_MOVE_RIGHT:
-                        self.move_entity(
-                            current_entity,
-                            Point(
-                                0.1 * self.delta_time.get_dt_target(),
-                                0,
-                                0,
-                            ),
-                        )
+                        movement_vector[1] += 1
                     case Event.GAME_ROTATE:
                         current_entity.rotation += (
                             event.data[0]
@@ -84,6 +59,22 @@ class World:
                         )
                         current_entity.rotation %= 360
 
+            # Move
+            if movement_vector[0] != 0 or movement_vector[1] != 0:
+                movement_angle = get_angle(
+                    Point(
+                        movement_vector[0],
+                        movement_vector[1],
+                    )
+                )
+                self.move_entity(
+                    current_entity,
+                    rotate(
+                        0.1 * self.delta_time.get_dt_target(),
+                        current_entity.rotation + movement_angle,
+                    ),
+                )
+
     def move_entity(self, entity: GameEntity, movement_vector: Point):
         moved_collider = Box(
             Point(
@@ -91,6 +82,7 @@ class World:
                 entity.collider.origin.y + movement_vector.y,
                 entity.collider.origin.z + movement_vector.z
                 if entity.collider.origin.z is not None
+                and movement_vector.z is not None
                 else None,
             ),
             entity.collider.length,
@@ -103,6 +95,6 @@ class World:
                 entity.position.x + movement_vector.x,
                 entity.position.y + movement_vector.y,
                 entity.position.z + movement_vector.z
-                if entity.position.z is not None
+                if entity.position.z is not None and movement_vector.z is not None
                 else None,
             )
