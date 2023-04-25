@@ -76,25 +76,57 @@ class World:
                 )
 
     def move_entity(self, entity: GameEntity, movement_vector: Point):
-        moved_collider = Box(
+        moved_collider_x = Box(
             Point(
                 entity.collider.origin.x + movement_vector.x,
-                entity.collider.origin.y + movement_vector.y,
-                entity.collider.origin.z + movement_vector.z
-                if entity.collider.origin.z is not None
-                and movement_vector.z is not None
-                else None,
+                entity.collider.origin.y,
+                entity.collider.origin.z,
             ),
             entity.collider.length,
             entity.collider.width,
             entity.collider.height,
         )
 
-        if not self.map.collides_with(moved_collider):
+        if not self.map.collides_with(moved_collider_x):
             entity.move(
                 entity.position.x + movement_vector.x,
-                entity.position.y + movement_vector.y,
-                entity.position.z + movement_vector.z
-                if entity.position.z is not None and movement_vector.z is not None
-                else None,
+                entity.position.y,
+                entity.position.z,
             )
+
+        moved_collider_y = Box(
+            Point(
+                entity.collider.origin.x,
+                entity.collider.origin.y + movement_vector.y,
+                entity.collider.origin.z,
+            ),
+            entity.collider.length,
+            entity.collider.width,
+            entity.collider.height,
+        )
+
+        if not self.map.collides_with(moved_collider_y):
+            entity.move(
+                entity.position.x,
+                entity.position.y + movement_vector.y,
+                entity.position.z,
+            )
+
+        if entity.collider.origin.z is not None and movement_vector.z is not None:
+            moved_collider_z = Box(
+                Point(
+                    entity.collider.origin.x,
+                    entity.collider.origin.y,
+                    entity.collider.origin.z + movement_vector.z,
+                ),
+                entity.collider.length,
+                entity.collider.width,
+                entity.collider.height,
+            )
+
+            if not self.map.collides_with(moved_collider_z):
+                entity.move(
+                    entity.position.x,
+                    entity.position.y,
+                    entity.position.z + movement_vector.z,
+                )
