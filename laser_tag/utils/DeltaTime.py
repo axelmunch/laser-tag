@@ -27,8 +27,8 @@ class DeltaTime:
         self.dt_target = self.dt * TARGET_FPS
         self.previous_time = self.current_time
 
-    def get_dt(self):
+    def get_dt(self) -> float:
         return self.dt
 
-    def get_dt_target(self):
+    def get_dt_target(self) -> float:
         return self.dt_target

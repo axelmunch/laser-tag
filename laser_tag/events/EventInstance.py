@@ -5,6 +5,8 @@ from .Event import Event, local_events
 
 
 class EventInstance:
+    """An instance of an event"""
+
     def __init__(self, id: Event, data=None):
         self.timestamp = time()
         self.id = id

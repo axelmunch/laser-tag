@@ -2,6 +2,8 @@ from enum import Enum, auto
 
 
 class Event(Enum):
+    """Events that can be created by a player"""
+
     def _generate_next_value_(name, start, count, last_values):
         return start + count
 

@@ -4,6 +4,8 @@ from .Point import Point
 
 
 class Box:
+    """A box is represented by an origin point, a length, a width and a height. If height is not defined, the box is 2D"""
+
     def __init__(self, origin: Point, length, width, height=None):
         self.origin = origin
         self.length = length
@@ -13,7 +15,7 @@ class Box:
     def __repr__(self):
         return f"[{self.origin}, {self.length}, {self.width}, {self.height}]"
 
-    def collides_with(self, other):
+    def collides_with(self, other) -> bool:
         if isinstance(other, Box):
             return self.collides_with_box(other)
         elif isinstance(other, Point):

@@ -11,7 +11,7 @@ class Text:
         self.size_multiplier = size_multiplier
         self.cache = {}
 
-    def create_cache(self, size):
+    def create_cache(self, size) -> int:
         resized_size = int(resize(size * self.size_multiplier))
         if resized_size not in self.cache:
             if self.font_is_file:
@@ -26,10 +26,10 @@ class Text:
     def generate_text(self, text, size, color=(255, 255, 255)) -> pygame.Surface:
         return self.cache[size].render(str(text), True, color)
 
-    def get_size(self, generated_text):
+    def get_size(self, generated_text) -> tuple[int, int]:
         return generated_text.get_width(), generated_text.get_height()
 
-    def blit(self, generated_text, x, y, align_x, align_y):
+    def blit(self, generated_text, x, y, align_x, align_y) -> tuple[int, int]:
         text_width, text_height = self.get_size(generated_text)
 
         blit_x, blit_y = resize(x, "x"), resize(y, "y")
@@ -50,7 +50,7 @@ class Text:
 
     def text(
         self, text, x, y, size, color=(255, 255, 255), align_x="left", align_y="top"
-    ):
+    ) -> tuple[int, int]:
         resized_size = self.create_cache(size)
 
         generated_text = self.generate_text(text, resized_size, color)

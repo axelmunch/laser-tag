@@ -1,8 +1,11 @@
 from ..math.Box import Box
 from ..math.Point import Point
+from ..network.safe_eval import safe_eval
 
 
 class Entity:
+    """Default entity"""
+
     def __init__(self, x, y, z, length, width, height):
         self.position = Point(x, y, z)
 

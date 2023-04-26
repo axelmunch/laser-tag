@@ -3,6 +3,8 @@ from .Component import Component
 
 
 class Fps(Component):
+    """FPS component"""
+
     def __init__(self, data=0):
         super().__init__()
 
@@ -10,7 +12,7 @@ class Fps(Component):
 
         self.update(data)
 
-    def update(self, fps):
+    def update(self, fps: float):
         """
         Update the component.
 

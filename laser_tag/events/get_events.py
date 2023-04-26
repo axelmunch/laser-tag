@@ -6,6 +6,7 @@ from .EventInstance import EventInstance
 
 
 def get_events() -> list[EventInstance]:
+    """Returns a list of EventInstance objects"""
     events = []
 
     # Unique events

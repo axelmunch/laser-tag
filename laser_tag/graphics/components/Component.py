@@ -4,9 +4,11 @@ from ..resize import resize
 
 
 class Component:
+    """Graphical component"""
+
     def __init__(self, data=None):
         self.data = data
-        self.surface = None
+        self.surface: pygame.Surface = pygame.Surface((0, 0), pygame.SRCALPHA)
         self.set_surface_size(0, 0)
 
     def set_surface_size(self, width, height):
