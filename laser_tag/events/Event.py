@@ -2,7 +2,7 @@ from enum import Enum, auto
 
 
 class Event(Enum):
-    """Events that can be created by a player"""
+    """Events that can be created during the game"""
 
     def _generate_next_value_(name, start, count, last_values):
         return start + count
@@ -10,6 +10,7 @@ class Event(Enum):
     START_GAME = auto()
     MESSAGE = auto()
     TYPE_CHAR = auto()
+    GAME_MOVE = auto()
     GAME_MOVE_FORWARD = auto()
     GAME_MOVE_BACKWARD = auto()
     GAME_MOVE_LEFT = auto()
@@ -48,9 +49,12 @@ class Event(Enum):
 
 
 local_events = [
-    Event.TYPE_CHAR,
     Event.MESSAGE,
     Event.TYPE_CHAR,
+    Event.GAME_MOVE_FORWARD,
+    Event.GAME_MOVE_BACKWARD,
+    Event.GAME_MOVE_LEFT,
+    Event.GAME_MOVE_RIGHT,
     Event.KEY_ESCAPE,
     Event.KEY_ESCAPE_PRESS,
     Event.KEY_RETURN,

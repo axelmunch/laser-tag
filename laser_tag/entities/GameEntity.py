@@ -11,7 +11,7 @@ class GameEntity(Entity):
     def __init__(self, x, y, z, length=1, width=1, height=1):
         super().__init__(x, y, z, length, width, height)
 
-        self.move_speed_multiplier = 1
+        self.move_speed = 0.05
 
         # Attack cooldown (seconds)
         self.attack_speed = 1

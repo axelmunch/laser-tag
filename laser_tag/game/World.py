@@ -33,24 +33,42 @@ class World:
         self.controlled_entity = uid
 
     def enhance_events(self, events: list[EventInstance]):
-        pass
+        movement_vector = [0, 0]
+
+        i = 0
+        while i < len(events):
+            event = events[i]
+
+            if event.id == Event.GAME_MOVE_FORWARD:
+                movement_vector[0] += 1
+            if event.id == Event.GAME_MOVE_BACKWARD:
+                movement_vector[0] -= 1
+            if event.id == Event.GAME_MOVE_LEFT:
+                movement_vector[1] -= 1
+            if event.id == Event.GAME_MOVE_RIGHT:
+                movement_vector[1] += 1
+
+            i += 1
+
+        if movement_vector[0] != 0 or movement_vector[1] != 0:
+            events.append(
+                EventInstance(
+                    Event.GAME_MOVE,
+                    get_angle(
+                        Point(
+                            movement_vector[0],
+                            movement_vector[1],
+                        )
+                    ),
+                )
+            )
 
     def update(self, events: list[EventInstance]):
         if self.controlled_entity is not None:
             current_entity = self.entities[self.controlled_entity]
 
-            movement_vector = [0, 0]
-
             for event in events:
                 match event.id:
-                    case Event.GAME_MOVE_FORWARD:
-                        movement_vector[0] += 1
-                    case Event.GAME_MOVE_BACKWARD:
-                        movement_vector[0] -= 1
-                    case Event.GAME_MOVE_LEFT:
-                        movement_vector[1] -= 1
-                    case Event.GAME_MOVE_RIGHT:
-                        movement_vector[1] += 1
                     case Event.GAME_ROTATE:
                         current_entity.rotation += (
                             event.data[0]
@@ -58,22 +76,15 @@ class World:
                             * self.delta_time.get_dt_target()
                         )
                         current_entity.rotation %= 360
-
-            # Move
-            if movement_vector[0] != 0 or movement_vector[1] != 0:
-                movement_angle = get_angle(
-                    Point(
-                        movement_vector[0],
-                        movement_vector[1],
-                    )
-                )
-                self.move_entity(
-                    current_entity,
-                    rotate(
-                        0.1 * self.delta_time.get_dt_target(),
-                        current_entity.rotation + movement_angle,
-                    ),
-                )
+                    case Event.GAME_MOVE:
+                        self.move_entity(
+                            current_entity,
+                            rotate(
+                                current_entity.move_speed
+                                * self.delta_time.get_dt_target(),
+                                current_entity.rotation + event.data,
+                            ),
+                        )
 
     def move_entity(self, entity: GameEntity, movement_vector: Point):
         moved_collider_x = Box(
