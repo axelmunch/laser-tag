@@ -32,6 +32,9 @@ class GameEntity(Entity):
         self.hp = 0
         self.set_max_hp(1)
 
+    def __repr__(self):
+        return f"[{self.position}, {self.collider}, {self.rotation}, {self.team}, {self.score}, {self.eliminations}, {self.hp}, {self.next_attack_timestamps}]"
+
     def move(self, x, y, z):
         if self.can_move:
             super().move(x, y, z)

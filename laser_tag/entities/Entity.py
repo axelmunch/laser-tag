@@ -15,6 +15,9 @@ class Entity:
 
         self.rotation = 0
 
+    def __repr__(self):
+        return f"[{self.position}, {self.collider}, {self.rotation}]"
+
     def move(self, x, y, z):
         self.position.x = x
         self.position.y = y
