@@ -1,10 +1,5 @@
 eval_banned_elements = [
-    "del ",
-    "global",
-    "import",
-    "break",
-    "continue",
-    "return",
+    "import ",
     "(",
     ";",
     "=",
