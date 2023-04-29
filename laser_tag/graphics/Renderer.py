@@ -14,36 +14,17 @@ class Renderer:
         self.clock = clock
         # Load resources
 
-        self.delta_time = DeltaTime()
-
         self.fps = Fps()
         self.minimap = Minimap()
         self.components = [self.fps, self.minimap]
-
-        self.x_val = 0
 
     def resize(self):
         for component in self.components:
             component.resize()
 
     def render(self, game: Game):
-        # Moving object test
-        self.x_val += 10 * self.delta_time.get_dt_target()
-        self.x_val %= 1920
-
         # Update display
         display.screen.fill((42, 42, 42))
-
-        pygame.draw.rect(
-            display.screen,
-            (0, 128, 0),
-            (
-                resize(15 + self.x_val, "x"),
-                resize(15, "y"),
-                resize(125, "x"),
-                resize(125, "y"),
-            ),
-        )
 
         self.minimap.update(game.world.map.map, game.world.entities.values())
         display.screen.blit(self.minimap.get(), (resize(10, "x"), resize(10, "y")))
