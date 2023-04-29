@@ -9,20 +9,24 @@ class DeltaTime:
     def __new__(cls, id=None):
         if not id in cls.__instances:
             cls.__instances[id] = super().__new__(cls)
+            cls.__instances[id].id = id
+            cls.__instances[id].reset()
         return cls.__instances[id]
 
-    def __init__(self, id=None):
-        self.id = id
-        self.reset()
-
-    def reset(self):
-        self.previous_time = time()
+    def reset(self, current_time=None):
+        if current_time is None:
+            self.previous_time = time()
+        else:
+            self.previous_time = current_time
         self.current_time = self.previous_time
         self.dt = 0
         self.dt_target = 0
 
-    def update(self):
-        self.current_time = time()
+    def update(self, current_time=None):
+        if current_time is None:
+            self.current_time = time()
+        else:
+            self.current_time = current_time
         self.dt = self.current_time - self.previous_time
         self.dt_target = self.dt * TARGET_FPS
         self.previous_time = self.current_time
