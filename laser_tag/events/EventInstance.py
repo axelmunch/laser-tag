@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from time import time
 
 from ..network.safe_eval import safe_eval
@@ -12,19 +14,15 @@ class EventInstance:
         self.id = id
         self.data = data
         self.local = id in local_events
-        self.quantity = 1
-        self.time_pressed = 0
 
     def __repr__(self):
-        return f"[{self.id.value}, {self.data}, {self.quantity}, {self.time_pressed}]"
+        return f"[{self.id}, {self.data}, {self.timestamp}]"
 
     @staticmethod
-    def create(string):
-        parsed_event = safe_eval(string)
+    def create(parsed_object) -> EventInstance:
         try:
-            event = EventInstance(Event(parsed_event[0]), parsed_event[1])
-            event.quantity = parsed_event[2]
-            event.time_pressed = parsed_event[3]
+            event = EventInstance(Event(parsed_object[0]), parsed_object[1])
+            event.timestamp = float(parsed_object[2])
             return event
         except:
             return None

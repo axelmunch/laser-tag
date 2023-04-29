@@ -1,4 +1,5 @@
 from ..configuration import VARIABLES
+from ..entities.create_entity import create_entity
 from ..entities.GameEntity import GameEntity
 from ..events.Event import Event
 from ..events.EventInstance import EventInstance
@@ -20,14 +21,27 @@ class World:
 
         self.delta_time = DeltaTime()
 
+    def __repr__(self):
+        return f"{self.entities}"
+
+    def set_state(self, parsed_object):
+        try:
+            for entity in parsed_object:
+                new_entity = create_entity(parsed_object[entity])
+                if new_entity is not None:
+                    self.entities[int(entity)] = new_entity
+        except Exception as e:
+            if VARIABLES.debug:
+                print("Error setting world state", e)
+
     def get_uid(self):
-        uid = self.current_uid
         self.current_uid += 1
+        uid = self.current_uid
         return uid
 
     def spawn_entity(self, entity: GameEntity):
         self.entities[self.get_uid()] = entity
-        return self.current_uid - 1
+        return self.current_uid
 
     def set_controlled_entity(self, uid):
         self.controlled_entity = uid

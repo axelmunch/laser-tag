@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from ..math.Box import Box
 from ..math.Point import Point
 from ..network.safe_eval import safe_eval
@@ -16,7 +18,25 @@ class Entity:
         self.rotation = 0
 
     def __repr__(self):
-        return f"[{self.position}, {self.collider}, {self.rotation}]"
+        return f"['{self.__class__.__name__}', {self.position}, {self.collider}, {self.rotation}]"
+
+    @staticmethod
+    def create(parsed_object) -> Entity:
+        try:
+            position = Point.create(parsed_object[0])
+            collider = Box.create(parsed_object[1])
+            entity = Entity(
+                position.x,
+                position.y,
+                position.z,
+                collider.length,
+                collider.width,
+                collider.height,
+            )
+            entity.rotation = float(parsed_object[2])
+            return entity
+        except:
+            return None
 
     def move(self, x, y, z):
         self.position.x = x

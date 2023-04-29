@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from time import time
 
+from ..math.Box import Box
+from ..math.Point import Point
 from .Entity import Entity
 
 
@@ -33,7 +35,30 @@ class GameEntity(Entity):
         self.set_max_hp(1)
 
     def __repr__(self):
-        return f"[{self.position}, {self.collider}, {self.rotation}, {self.team}, {self.score}, {self.eliminations}, {self.hp}, {self.next_attack_timestamps}]"
+        return f"['{self.__class__.__name__}', {self.position}, {self.collider}, {self.rotation}, {self.team}, {self.score}, {self.eliminations}, {self.hp}, {self.next_attack_timestamps}]"
+
+    @staticmethod
+    def create(parsed_object) -> GameEntity:
+        try:
+            position = Point.create(parsed_object[0])
+            collider = Box.create(parsed_object[1])
+            entity = GameEntity(
+                position.x,
+                position.y,
+                position.z,
+                collider.length,
+                collider.width,
+                collider.height,
+            )
+            entity.rotation = float(parsed_object[2])
+            entity.team = int(parsed_object[3])
+            entity.score = float(parsed_object[4])
+            entity.eliminations = int(parsed_object[5])
+            entity.hp = float(parsed_object[6])
+            entity.next_attack_timestamps = float(parsed_object[7])
+            return entity
+        except:
+            return None
 
     def move(self, x, y, z):
         if self.can_move:

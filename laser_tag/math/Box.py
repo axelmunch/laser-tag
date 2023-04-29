@@ -15,6 +15,18 @@ class Box:
     def __repr__(self):
         return f"[{self.origin}, {self.length}, {self.width}, {self.height}]"
 
+    @staticmethod
+    def create(parsed_object) -> Box:
+        try:
+            return Box(
+                Point.create(parsed_object[0]),
+                float(parsed_object[1]),
+                float(parsed_object[2]),
+                None if len(parsed_object) < 4 else float(parsed_object[3]),
+            )
+        except:
+            return None
+
     def collides_with(self, other) -> bool:
         if isinstance(other, Box):
             return self.collides_with_box(other)

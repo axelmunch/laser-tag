@@ -7,6 +7,9 @@ class Event(Enum):
     def _generate_next_value_(name, start, count, last_values):
         return start + count
 
+    def __str__(self):
+        return str(self.value)
+
     START_GAME = auto()
     MESSAGE = auto()
     TYPE_CHAR = auto()
