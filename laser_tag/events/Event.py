@@ -51,6 +51,7 @@ class Event(Enum):
     SCREENSHOT = auto()
 
 
+# Events that are not sent to the server
 local_events = [
     Event.MESSAGE,
     Event.TYPE_CHAR,

@@ -2,26 +2,31 @@ import pygame
 from pygame.locals import *
 
 from laser_tag.configuration import VARIABLES, WINDOW_WINDOWED_SIZE_RATIO
-from laser_tag.entities.Player import Player
-from laser_tag.events.Event import *
-from laser_tag.events.EventInstance import EventInstance
+from laser_tag.events.Event import Event
 from laser_tag.events.get_events import *
 from laser_tag.game.Game import Game
 from laser_tag.graphics import display
 from laser_tag.graphics.Renderer import Renderer
+from laser_tag.network.Client import Client
+from laser_tag.network.Server import Server
 from laser_tag.utils.DeltaTime import DeltaTime
 
 if __name__ == "__main__":
     pygame.init()
 
     game = Game()
-    game.world.set_controlled_entity(game.world.spawn_entity(Player(2, 3.25, 0)))
 
     clock = pygame.time.Clock()
 
     renderer = Renderer(clock)
 
     delta_time = DeltaTime()
+
+    # Local server
+    server = Server(0, debug=True)
+    server.start()
+
+    client = Client("localhost", server.get_port())
 
     running = True
 
@@ -78,7 +83,13 @@ if __name__ == "__main__":
         game.update(events)
 
         # Send
-        pass
+        client.add_events_to_send([event for event in events if not event.local])
+
+        # Receive
+        if client.is_connected():
+            received_data = client.get_received_data()
+            for state in received_data:
+                game.set_state(state)
 
         # Display
         renderer.render(game)
@@ -86,3 +97,5 @@ if __name__ == "__main__":
         pygame.display.flip()
 
     pygame.quit()
+    client.disconnect()
+    server.stop()

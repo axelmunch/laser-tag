@@ -64,6 +64,7 @@ class World:
 
             i += 1
 
+        # Movement direction
         if movement_vector[0] != 0 or movement_vector[1] != 0:
             events.append(
                 EventInstance(
@@ -77,9 +78,21 @@ class World:
                 )
             )
 
-    def update(self, events: list[EventInstance]):
-        if self.controlled_entity is not None:
-            current_entity = self.entities[self.controlled_entity]
+    def update(
+        self,
+        events: list[EventInstance],
+        controlled_entity_id=None,
+        delta_time: DeltaTime = None,
+    ):
+        if self.controlled_entity is not None or controlled_entity_id is not None:
+            current_entity = (
+                self.entities[self.controlled_entity]
+                if self.controlled_entity is not None
+                else self.entities[controlled_entity_id]
+            )
+
+            if delta_time is None:
+                delta_time = self.delta_time
 
             for event in events:
                 match event.id:
@@ -87,15 +100,14 @@ class World:
                         current_entity.rotation += (
                             event.data[0]
                             * VARIABLES.rotate_sensitivity
-                            * self.delta_time.get_dt_target()
+                            * delta_time.get_dt_target()
                         )
                         current_entity.rotation %= 360
                     case Event.GAME_MOVE:
                         self.move_entity(
                             current_entity,
                             rotate(
-                                current_entity.move_speed
-                                * self.delta_time.get_dt_target(),
+                                current_entity.move_speed * delta_time.get_dt_target(),
                                 current_entity.rotation + event.data,
                             ),
                         )

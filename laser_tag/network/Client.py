@@ -1,5 +1,6 @@
 import socket
 from threading import Lock, Thread
+from time import sleep
 
 from ..configuration import CLIENT_TIMEOUT, NETWORK_BUFFER_SIZE, VARIABLES, VERSION
 from ..events.EventInstance import EventInstance
@@ -55,11 +56,15 @@ class Client:
 
         while self.connected:
             self.send(self.get_events_to_send())
+            if VARIABLES.fps > 0:
+                sleep(1 / VARIABLES.fps)
 
             data = self.recv()
             if data is None:
                 self.disconnect()
                 continue
+            else:
+                self.add_received_data(data)
 
         self.disconnect()
 
@@ -74,7 +79,6 @@ class Client:
         try:
             data = self.socket.recv(NETWORK_BUFFER_SIZE).decode("utf-8")
             data = safe_eval(data, self.debug)
-            self.add_received_data(data)
             return data
         except Exception as e:
             if self.debug:
@@ -83,7 +87,7 @@ class Client:
 
     def add_events_to_send(self, events: list[EventInstance]):
         self.mutex.acquire()
-        self.events_to_send.append(events)
+        self.events_to_send += events
         self.mutex.release()
 
     def get_events_to_send(self) -> list[EventInstance]:
@@ -104,6 +108,9 @@ class Client:
         self.data_received.clear()
         self.mutex.release()
         return data
+
+    def is_connected(self):
+        return self.connected
 
     def disconnect(self):
         if self.connected or self.connected is None:

@@ -4,13 +4,18 @@ from sys import exit as sys_exit
 from threading import Thread
 
 from laser_tag.configuration import (
+    DEFAULT_MAX_CLIENTS,
     NETWORK_BUFFER_SIZE,
     SERVER_SOCKET_TIMEOUT,
     SERVER_TIMEOUT,
     VARIABLES,
     VERSION,
 )
+from laser_tag.entities.Player import Player
+from laser_tag.events.EventInstance import EventInstance
+from laser_tag.game.Game import Game
 from laser_tag.network.safe_eval import safe_eval
+from laser_tag.utils.DeltaTime import DeltaTime
 
 
 class ClientInstance:
@@ -21,6 +26,8 @@ class ClientInstance:
         self.thread = None
 
         self.data = None
+
+        self.controlled_entity_id = None
 
 
 class Server:
@@ -44,8 +51,10 @@ class Server:
             print(f"SERVER bound to {self.socket.getsockname()}")
             print(f"SERVER IP: {socket.gethostbyname(socket.gethostname())}")
 
-        self.max_clients = None
+        self.max_clients = DEFAULT_MAX_CLIENTS
         self.clients = {}
+
+        self.game = Game()
 
         self.running = None
 
@@ -112,11 +121,28 @@ class Server:
         else:
             client.data = True
 
-        while client.data is not None and self.running:
-            client.data = self.recv(client)
-            # Process data
-            self.send(client, client.data)  # Send data back
+        # Create player
+        client.controlled_entity_id = self.game.world.spawn_entity(Player(4, 4, 0))
 
+        delta_time = DeltaTime(client.info)
+
+        while client.data is not None and self.running:
+            client.data = self.parse_events(self.recv(client))
+
+            delta_time.update()
+
+            if client.data is not None:
+                # Process data
+                self.game.update(
+                    client.data,
+                    controlled_entity_id=client.controlled_entity_id,
+                    delta_time=delta_time,
+                )
+
+            # Send data
+            self.send(client, self.get_state(client))
+
+        # Disconnect client
         client.conn.close()
         del self.clients[client.info]
 
@@ -141,6 +167,29 @@ class Server:
             if self.debug:
                 print(f"SERVER recv {client.info} {e}")
         return None
+
+    def set_max_clients(self, max_clients: int):
+        self.max_clients = max_clients
+
+    def get_state(self, client: ClientInstance) -> list:
+        state = {}
+
+        state["game"] = self.game
+        state["controlled_entity_id"] = client.controlled_entity_id
+
+        return state
+
+    def parse_events(self, data):
+        if not isinstance(data, list):
+            return None
+
+        events = []
+        for event in data:
+            created_event = EventInstance.create(event)
+            if created_event is not None:
+                events.append(created_event)
+
+        return events
 
     def stop(self):
         if self.running:

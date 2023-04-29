@@ -1,5 +1,6 @@
 from ..configuration import VARIABLES
 from ..events.EventInstance import EventInstance
+from ..utils.DeltaTime import DeltaTime
 from .World import World
 
 
@@ -24,5 +25,10 @@ class Game:
     def enhance_events(self, events: list[EventInstance]):
         self.world.enhance_events(events)
 
-    def update(self, events: list[EventInstance]):
-        self.world.update(events)
+    def update(
+        self,
+        events: list[EventInstance],
+        controlled_entity_id=None,
+        delta_time: DeltaTime = None,
+    ):
+        self.world.update(events, controlled_entity_id, delta_time)
