@@ -148,6 +148,7 @@ class Server:
         # Disconnect client
         client.conn.close()
         del self.clients[client.info]
+        self.game.world.remove_entity(client.controlled_entity_id)
 
         if self.debug:
             print(

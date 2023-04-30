@@ -25,6 +25,7 @@ class World:
         return f"{self.entities}"
 
     def set_state(self, parsed_object):
+        self.entities.clear()
         try:
             for entity in parsed_object:
                 new_entity = create_entity(parsed_object[entity])
@@ -42,6 +43,9 @@ class World:
     def spawn_entity(self, entity: GameEntity):
         self.entities[self.get_uid()] = entity
         return self.current_uid
+
+    def remove_entity(self, uid):
+        del self.entities[uid]
 
     def set_controlled_entity(self, uid):
         self.controlled_entity = uid
