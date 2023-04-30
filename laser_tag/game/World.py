@@ -11,8 +11,8 @@ from .Map import Map
 
 
 class World:
-    def __init__(self, map_id=None):
-        self.map = Map(map_id)
+    def __init__(self):
+        self.map = Map()
         self.entities = {}
 
         self.controlled_entity = None

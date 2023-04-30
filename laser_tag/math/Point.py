@@ -18,7 +18,9 @@ class Point:
             return Point(
                 float(parsed_object[0]),
                 float(parsed_object[1]),
-                None if len(parsed_object) < 3 else float(parsed_object[2]),
+                None
+                if len(parsed_object) < 3 or parsed_object[2] is None
+                else float(parsed_object[2]),
             )
         except:
             return None

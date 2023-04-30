@@ -5,8 +5,8 @@ from .World import World
 
 
 class Game:
-    def __init__(self, map_id=None):
-        self.world = World(map_id)
+    def __init__(self):
+        self.world = World()
 
     def __repr__(self):
         return f"[{self.world}]"

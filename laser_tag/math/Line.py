@@ -16,9 +16,10 @@ class Line:
     @staticmethod
     def create(parsed_object) -> Line:
         try:
-            return Line(
-                Point.create(parsed_object[0]),
-                Point.create(parsed_object[1]),
-            )
+            point1 = Point.create(parsed_object[0])
+            point2 = Point.create(parsed_object[1])
+            if point1 is None or point2 is None:
+                return None
+            return Line(point1, point2)
         except:
             return None

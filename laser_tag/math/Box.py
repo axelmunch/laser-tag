@@ -18,11 +18,16 @@ class Box:
     @staticmethod
     def create(parsed_object) -> Box:
         try:
+            point = Point.create(parsed_object[0])
+            if point is None:
+                return None
             return Box(
-                Point.create(parsed_object[0]),
+                point,
                 float(parsed_object[1]),
                 float(parsed_object[2]),
-                None if len(parsed_object) < 4 else float(parsed_object[3]),
+                None
+                if len(parsed_object) < 4 or parsed_object[3] is None
+                else float(parsed_object[3]),
             )
         except:
             return None
