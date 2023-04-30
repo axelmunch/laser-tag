@@ -10,6 +10,7 @@ def get_events() -> list[EventInstance]:
     events = []
 
     # Unique events
+    events.append(EventInstance(Event.TICK))
     for event in pygame.event.get():
         if event.type == QUIT:
             events.append(EventInstance(Event.WINDOW_QUIT))

@@ -4,6 +4,8 @@ from ..configuration import TARGET_FPS
 
 
 class DeltaTime:
+    """Keep track of elapsed time between updates"""
+
     __instances = {}
 
     def __new__(cls, id=None):
@@ -13,23 +15,25 @@ class DeltaTime:
             cls.__instances[id].reset()
         return cls.__instances[id]
 
-    def reset(self, current_time=None):
+    def reset(self, current_time: float = None):
         if current_time is None:
             self.previous_time = time()
         else:
             self.previous_time = current_time
         self.current_time = self.previous_time
-        self.dt = 0
-        self.dt_target = 0
+        self.set_dt(0)
 
-    def update(self, current_time=None):
+    def update(self, current_time: float = None):
         if current_time is None:
             self.current_time = time()
         else:
             self.current_time = current_time
-        self.dt = self.current_time - self.previous_time
-        self.dt_target = self.dt * TARGET_FPS
+        self.set_dt(self.current_time - self.previous_time)
         self.previous_time = self.current_time
+
+    def set_dt(self, dt: float):
+        self.dt = dt
+        self.dt_target = dt * TARGET_FPS
 
     def get_dt(self) -> float:
         return self.dt

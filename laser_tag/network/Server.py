@@ -132,14 +132,12 @@ class Server:
         while client.data is not None and self.running:
             client.data = self.parse_events(self.recv(client))
 
-            delta_time.update()
-
             if client.data is not None:
                 # Process data
                 self.game.update(
                     client.data,
                     controlled_entity_id=client.controlled_entity_id,
-                    delta_time=delta_time,
+                    player_delta_time=delta_time,
                 )
 
             # Send data
@@ -232,7 +230,7 @@ if __name__ == "__main__":
                 raise ValueError
             debug = len(argv) > 2
         except:
-            print("Usage: python -m laser_tag.network.Server <port> [debug]")
+            print("Usage: python -m laser_tag.network.Server [port] [debug]")
             sys_exit(1)
 
     server = Server(port, debug)

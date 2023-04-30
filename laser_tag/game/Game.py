@@ -29,6 +29,6 @@ class Game:
         self,
         events: list[EventInstance],
         controlled_entity_id=None,
-        delta_time: DeltaTime = None,
+        player_delta_time: DeltaTime = None,
     ):
-        self.world.update(events, controlled_entity_id, delta_time)
+        self.world.update(events, controlled_entity_id, player_delta_time)

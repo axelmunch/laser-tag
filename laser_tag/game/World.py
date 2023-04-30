@@ -86,7 +86,7 @@ class World:
         self,
         events: list[EventInstance],
         controlled_entity_id=None,
-        delta_time: DeltaTime = None,
+        player_delta_time: DeltaTime = None,
     ):
         if self.controlled_entity is not None or controlled_entity_id is not None:
             current_entity = (
@@ -95,11 +95,16 @@ class World:
                 else self.entities[controlled_entity_id]
             )
 
-            if delta_time is None:
-                delta_time = self.delta_time
+            delta_time = (
+                self.delta_time if player_delta_time is None else player_delta_time
+            )
 
             for event in events:
                 match event.id:
+                    case Event.TICK:
+                        # Synchonize delta time
+                        if player_delta_time is not None:
+                            delta_time.update(event.timestamp)
                     case Event.GAME_ROTATE:
                         current_entity.rotation += (
                             event.data[0]

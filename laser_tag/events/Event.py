@@ -10,6 +10,7 @@ class Event(Enum):
     def __str__(self):
         return str(self.value)
 
+    TICK = auto()
     START_GAME = auto()
     MESSAGE = auto()
     TYPE_CHAR = auto()
