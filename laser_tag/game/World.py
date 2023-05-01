@@ -106,20 +106,25 @@ class World:
                         if player_delta_time is not None:
                             delta_time.update(event.timestamp)
                     case Event.GAME_ROTATE:
-                        current_entity.rotation += (
-                            event.data[0]
-                            * VARIABLES.rotate_sensitivity
-                            * delta_time.get_dt_target()
-                        )
+                        if (
+                            isinstance(event.data, list)
+                            and len(event.data) == 2
+                            and isinstance(event.data[0], (int, float))
+                        ):
+                            current_entity.rotation += (
+                                event.data[0] * delta_time.get_dt_target()
+                            )
                         current_entity.rotation %= 360
                     case Event.GAME_MOVE:
-                        self.move_entity(
-                            current_entity,
-                            rotate(
-                                current_entity.move_speed * delta_time.get_dt_target(),
-                                current_entity.rotation + event.data,
-                            ),
-                        )
+                        if isinstance(event.data, (int, float)):
+                            self.move_entity(
+                                current_entity,
+                                rotate(
+                                    current_entity.move_speed
+                                    * delta_time.get_dt_target(),
+                                    current_entity.rotation + event.data,
+                                ),
+                            )
 
     def move_entity(self, entity: GameEntity, movement_vector: Point):
         moved_collider_x = Box(
