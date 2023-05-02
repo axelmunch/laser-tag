@@ -12,6 +12,7 @@ class Variables:
         self.fps = 60
 
         self.show_fps = True
+        self.show_network_stats = True
 
         self.debug = True
 

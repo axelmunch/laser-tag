@@ -2,10 +2,10 @@ import pygame
 
 from ..configuration import VARIABLES
 from ..game.Game import Game
-from ..utils.DeltaTime import DeltaTime
 from . import display
 from .components.Fps import Fps
 from .components.Minimap import Minimap
+from .components.NetworkStats import NetworkStats
 from .resize import resize
 
 
@@ -16,7 +16,18 @@ class Renderer:
 
         self.fps = Fps()
         self.minimap = Minimap()
-        self.components = [self.fps, self.minimap]
+        self.network_stats = NetworkStats()
+        self.components = [self.fps, self.minimap, self.network_stats]
+
+    def set_network_stats(
+        self,
+        pings: list[float],
+        connected: bool,
+        bytes_sent: list[int],
+        bytes_received: list[int],
+    ):
+        if VARIABLES.show_network_stats:
+            self.network_stats.update(pings, connected, bytes_sent, bytes_received)
 
     def resize(self):
         for component in self.components:
@@ -28,6 +39,16 @@ class Renderer:
 
         self.minimap.update(game.world.map.map, game.world.entities.values())
         display.screen.blit(self.minimap.get(), (resize(10, "x"), resize(10, "y")))
+
+        if VARIABLES.show_network_stats:
+            network_stats_surface = self.network_stats.get()
+            display.screen.blit(
+                network_stats_surface,
+                (
+                    resize(1910, "x") - network_stats_surface.get_width(),
+                    resize(10, "y"),
+                ),
+            )
 
         if VARIABLES.show_fps:
             self.fps.update(self.clock.get_fps())

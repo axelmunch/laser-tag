@@ -92,6 +92,10 @@ if __name__ == "__main__":
                 game.set_state(state)
 
         # Display
+        network_stats = client.get_network_stats()
+        renderer.set_network_stats(
+            network_stats[0], network_stats[1], network_stats[2], network_stats[3]
+        )
         renderer.render(game)
 
         pygame.display.flip()
