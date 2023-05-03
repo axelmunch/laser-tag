@@ -10,8 +10,8 @@ from .Entity import Entity
 class GameEntity(Entity):
     """Entity with game specific properties"""
 
-    def __init__(self, x, y, z, length=1, width=1, height=1):
-        super().__init__(x, y, z, length, width, height)
+    def __init__(self, position, length=1, width=1, height=1):
+        super().__init__(position, length, width, height)
 
         self.move_speed = 0.05
 
@@ -42,10 +42,11 @@ class GameEntity(Entity):
         try:
             position = Point.create(parsed_object[0])
             collider = Box.create(parsed_object[1])
+            if position is None or collider is None:
+                return None
+
             entity = GameEntity(
-                position.x,
-                position.y,
-                position.z,
+                position,
                 collider.length,
                 collider.width,
                 collider.height,

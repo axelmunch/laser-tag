@@ -7,8 +7,8 @@ from .GameEntity import GameEntity
 class Player(GameEntity):
     """Player entity"""
 
-    def __init__(self, x, y, z):
-        super().__init__(x, y, z, 0.5, 0.5, 1)
+    def __init__(self, position):
+        super().__init__(position, 0.5, 0.5, 1)
 
         self.move_speed = 0.1
 
@@ -23,11 +23,10 @@ class Player(GameEntity):
     def create(parsed_object) -> Player:
         try:
             position = Point.create(parsed_object[0])
-            entity = Player(
-                position.x,
-                position.y,
-                position.z,
-            )
+            if position is None:
+                return None
+
+            entity = Player(position)
             entity.rotation = float(parsed_object[1])
             entity.team = int(parsed_object[2])
             entity.score = float(parsed_object[3])

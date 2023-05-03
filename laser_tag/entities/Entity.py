@@ -8,11 +8,14 @@ from ..network.safe_eval import safe_eval
 class Entity:
     """Default entity"""
 
-    def __init__(self, x, y, z, length, width, height):
-        self.position = Point(x, y, z)
+    def __init__(self, position, length, width, height):
+        self.position = position
 
         self.collider = Box(
-            Point(x - length / 2, y - width / 2, z), length, width, height
+            Point(position.x - length / 2, position.y - width / 2, position.z),
+            length,
+            width,
+            height,
         )
 
         self.rotation = 0
@@ -25,10 +28,11 @@ class Entity:
         try:
             position = Point.create(parsed_object[0])
             collider = Box.create(parsed_object[1])
+            if position is None or collider is None:
+                return None
+
             entity = Entity(
-                position.x,
-                position.y,
-                position.z,
+                position,
                 collider.length,
                 collider.width,
                 collider.height,

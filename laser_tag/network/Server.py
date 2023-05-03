@@ -123,9 +123,7 @@ class Server:
 
         # Create player
         spawn_point = self.game.world.map.get_spawn_point()
-        client.controlled_entity_id = self.game.world.spawn_entity(
-            Player(spawn_point.x, spawn_point.y, spawn_point.z)
-        )
+        client.controlled_entity_id = self.game.world.spawn_entity(Player(spawn_point))
 
         delta_time = DeltaTime(client.info)
 
