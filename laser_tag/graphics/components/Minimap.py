@@ -74,5 +74,5 @@ class Minimap(Component):
                     facing_direction_position.x * surface_width / map_width,
                     facing_direction_position.y * surface_height / map_height,
                 ),
-                max(1, int(resize(2))),
+                max(1, int(resize(3))),
             )

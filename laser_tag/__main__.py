@@ -9,7 +9,6 @@ from laser_tag.graphics import display
 from laser_tag.graphics.Renderer import Renderer
 from laser_tag.network.Client import Client
 from laser_tag.network.Server import Server
-from laser_tag.utils.DeltaTime import DeltaTime
 
 if __name__ == "__main__":
     pygame.init()
@@ -19,8 +18,6 @@ if __name__ == "__main__":
     clock = pygame.time.Clock()
 
     renderer = Renderer(clock)
-
-    delta_time = DeltaTime()
 
     # Local server
     server = Server(0, debug=True)
@@ -32,8 +29,6 @@ if __name__ == "__main__":
 
     while running:
         clock.tick(VARIABLES.fps)
-
-        delta_time.update()
 
         # Events
         events = get_events()
@@ -75,9 +70,6 @@ if __name__ == "__main__":
                     mouse_x = event.data[0] / VARIABLES.screen_width * 1920
                     mouse_y = event.data[1] / VARIABLES.screen_height * 1080
                     # print(mouse_x, mouse_y)
-
-                case Event.MOUSE_LEFT_CLICK_PRESS:
-                    print("CLICK")
 
         # Predict
         game.update(events)

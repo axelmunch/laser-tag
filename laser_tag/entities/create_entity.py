@@ -1,6 +1,7 @@
 from .Entity import Entity
 from .GameEntity import GameEntity
 from .Player import Player
+from .Projectile import Projectile
 
 
 def create_entity(parsed_object: list):
@@ -13,6 +14,8 @@ def create_entity(parsed_object: list):
                 return GameEntity.create(entity_object)
             case "Player":
                 return Player.create(entity_object)
+            case "Projectile":
+                return Projectile.create(entity_object)
     except:
         pass
     return None

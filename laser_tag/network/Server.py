@@ -6,6 +6,7 @@ from threading import Thread
 from laser_tag.configuration import (
     DEFAULT_MAX_CLIENTS,
     NETWORK_BUFFER_SIZE,
+    SERVER_DELTA_TIME_NAME,
     SERVER_SOCKET_TIMEOUT,
     SERVER_TIMEOUT,
     VARIABLES,
@@ -55,6 +56,8 @@ class Server:
         self.clients = {}
 
         self.game = Game()
+
+        self.server_delta_time = DeltaTime(SERVER_DELTA_TIME_NAME)
 
         self.running = None
 
@@ -125,7 +128,7 @@ class Server:
         spawn_point = self.game.world.map.get_spawn_point()
         client.controlled_entity_id = self.game.world.spawn_entity(Player(spawn_point))
 
-        delta_time = DeltaTime(client.info)
+        client_delta_time = DeltaTime(client.info)
 
         while client.data is not None and self.running:
             client.data = self.parse_events(self.recv(client))
@@ -135,7 +138,8 @@ class Server:
                 self.game.update(
                     client.data,
                     controlled_entity_id=client.controlled_entity_id,
-                    player_delta_time=delta_time,
+                    delta_time=self.server_delta_time,
+                    player_delta_time=client_delta_time,
                 )
 
             # Send data
