@@ -18,7 +18,7 @@ class NetworkStats(Component):
 
         self.text = Text("calibri")
 
-        self.set_surface_size(250, 300)
+        self.set_surface_size(250, 400)
 
         self.precision = 100
         self.pings = []
@@ -132,9 +132,27 @@ class NetworkStats(Component):
 
         self.surface.blit(
             self.text.get_surface(
-                f"Avg recv: {round(sum(self.data['bytes_received']) / max(1, len(self.data['bytes_received']))/1000, 2)}kbits",
+                f"Max send: {round(0 if len(self.data['bytes_sent']) == 0 else max(self.data['bytes_sent']) / 1000, 2)}kbits",
                 30,
                 (255, 255, 255),
             ),
             (resize(0, "x"), resize(250, "y")),
+        )
+
+        self.surface.blit(
+            self.text.get_surface(
+                f"Avg recv: {round(sum(self.data['bytes_received']) / max(1, len(self.data['bytes_received']))/1000, 2)}kbits",
+                30,
+                (255, 255, 255),
+            ),
+            (resize(0, "x"), resize(300, "y")),
+        )
+
+        self.surface.blit(
+            self.text.get_surface(
+                f"Max recv: {round(0 if len(self.data['bytes_received']) == 0 else max(self.data['bytes_received']) / 1000, 2)}kbits",
+                30,
+                (255, 255, 255),
+            ),
+            (resize(0, "x"), resize(350, "y")),
         )
