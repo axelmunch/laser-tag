@@ -20,6 +20,8 @@ class Entity:
 
         self.rotation = 0
 
+        self.alive = True
+
     def __repr__(self):
         return f"['{self.__class__.__name__}', {self.position}, {self.collider}, {self.rotation}]"
 
@@ -50,3 +52,6 @@ class Entity:
         self.collider.origin.x = x - self.collider.length / 2
         self.collider.origin.y = y - self.collider.width / 2
         self.collider.origin.z = z
+
+    def collides_with(self, other):
+        return self.collider.collides_with(other.collider)

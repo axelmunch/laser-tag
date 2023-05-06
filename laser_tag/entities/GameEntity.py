@@ -70,7 +70,7 @@ class GameEntity(Entity):
         self.hp = self.max_hp
 
     def death(self):
-        pass
+        self.alive = False
 
     def attack(self):
         if self.can_attack and time() >= self.next_attack_timestamps:

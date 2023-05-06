@@ -1,3 +1,5 @@
+from threading import Lock
+
 from ..configuration import VARIABLES
 from ..entities.create_entity import create_entity
 from ..entities.GameEntity import GameEntity
@@ -19,6 +21,7 @@ class World:
         self.controlled_entity = None
 
         self.current_uid = 0
+        self.uid_mutex = Lock()
 
     def __repr__(self):
         return f"{self.entities}"
@@ -26,22 +29,30 @@ class World:
     def set_state(self, parsed_object):
         self.entities.clear()
         try:
-            for entity in parsed_object:
-                new_entity = create_entity(parsed_object[entity])
+            for key in parsed_object:
+                new_entity = create_entity(parsed_object[key])
                 if new_entity is not None:
-                    self.entities[int(entity)] = new_entity
+                    self.entities[key] = new_entity
         except Exception as e:
             if VARIABLES.debug:
                 print("Error setting world state", e)
 
     def get_uid(self):
+        self.uid_mutex.acquire()
         self.current_uid += 1
         uid = self.current_uid
+        self.uid_mutex.release()
         return uid
 
     def spawn_entity(self, entity: GameEntity):
         self.entities[self.get_uid()] = entity
         return self.current_uid
+
+    def get_entity(self, uid):
+        try:
+            return self.entities[uid]
+        except KeyError:
+            return None
 
     def remove_entity(self, uid):
         try:
@@ -93,10 +104,15 @@ class World:
     ):
         if self.controlled_entity is not None or controlled_entity_id is not None:
             current_entity = (
-                self.entities[self.controlled_entity]
+                self.get_entity(self.controlled_entity)
                 if self.controlled_entity is not None
-                else self.entities[controlled_entity_id]
+                else self.get_entity(controlled_entity_id)
             )
+
+            if current_entity is None:
+                if VARIABLES.debug:
+                    print("Invalid controlled entity")
+                return
 
             # Asynchronous mode (used by the server to process events in the past)
             async_mode = player_delta_time is not None
@@ -143,24 +159,59 @@ class World:
                             projectile.rotation = current_entity.rotation
                             projectile.team = current_entity.team
                             projectile.damages = current_entity.damages
+                            projectile.get_entity_fct = self.get_entity
                             self.spawn_entity(projectile)
 
             # Update other entities
             for key in list(self.entities.keys()):
-                try:
-                    entity = self.entities[key]
-                except KeyError:
+                entity = self.get_entity(key)
+                if entity is None:
                     continue
+                # Remove dead entities
+                if not entity.alive:
+                    self.remove_entity(key)
+                    continue
+
+                # Projectile
                 if isinstance(entity, Projectile):
-                    collision = self.move_entity(
-                        entity,
-                        rotate(
-                            entity.move_speed * delta_time.get_dt_target(),
-                            entity.rotation,
-                        ),
-                    )
-                    if collision:
-                        self.remove_entity(key)
+                    # Collision with entities
+                    if entity.can_attack:
+                        for key_target in list(self.entities.keys()):
+                            entity_target = self.get_entity(key_target)
+                            if (
+                                entity_target is None
+                                or key == key_target
+                                or entity.parent_id == key_target
+                            ):
+                                continue
+                            # Target is in a different team (or not in a team)
+                            if (
+                                entity.team != entity_target.team
+                                or entity_target.team == -1
+                            ):
+                                # If the projectile collides with the target
+                                if (
+                                    entity.collides_with(entity_target)
+                                    and entity.attack()
+                                ):
+                                    # Damage the target
+                                    killed = entity_target.damage(entity.damages)
+                                    entity.on_hit(entity_target)
+                                    if killed:
+                                        entity.on_kill(entity_target)
+
+                    # Collision with map
+                    if entity.can_move:
+                        collision = self.move_entity(
+                            entity,
+                            rotate(
+                                entity.move_speed * delta_time.get_dt_target(),
+                                entity.rotation,
+                            ),
+                        )
+                        if collision:
+                            entity.can_move = False
+                            entity.death()
 
     def move_entity(self, entity: GameEntity, movement_vector: Point):
         collision = False

@@ -14,7 +14,9 @@ class Player(GameEntity):
 
         self.attack_speed = 0.25
 
-        self.set_max_hp(100)
+        self.damages = 1
+
+        self.set_max_hp(1)
 
     def __repr__(self):
         return f"['{self.__class__.__name__}', {self.position}, {self.rotation}, {self.team}, {self.score}, {self.eliminations}, {self.hp}, {self.next_attack_timestamps}]"
@@ -36,3 +38,6 @@ class Player(GameEntity):
             return entity
         except:
             return None
+
+    def death(self):
+        pass
