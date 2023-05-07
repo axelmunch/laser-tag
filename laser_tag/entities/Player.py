@@ -16,6 +16,8 @@ class Player(GameEntity):
 
         self.damages = 1
 
+        self.score_reward = 100
+
         self.set_max_hp(1)
 
     def __repr__(self):
