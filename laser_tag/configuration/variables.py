@@ -13,6 +13,7 @@ class Variables:
 
         self.show_fps = True
         self.show_network_stats = True
+        self.show_components_outline = False
 
         self.debug = True
 

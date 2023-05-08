@@ -23,7 +23,7 @@ class NetworkStats(Component):
             DEFAULT_FONT["size_multiplier"],
         )
 
-        self.set_surface_size(250, 400)
+        self.set_original_size(250, 400)
 
         self.precision = 100
         self.pings = []
@@ -161,3 +161,5 @@ class NetworkStats(Component):
             ),
             (resize(0, "x"), resize(350, "y")),
         )
+
+        super().render()

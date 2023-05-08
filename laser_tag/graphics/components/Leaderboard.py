@@ -29,7 +29,7 @@ class Leaderboard(Component):
 
         self.max_length = 5
 
-        self.set_surface_size(250, 50 * self.max_length)
+        self.set_original_size(250, 50 * self.max_length)
 
         self.update(data)
 
@@ -74,7 +74,9 @@ class Leaderboard(Component):
             self.surface.blit(
                 value_text,
                 (
-                    self.surface.get_width() - resize(10, "x") - value_text.get_width(),
+                    self.width - resize(10, "x") - value_text.get_width(),
                     resize(i * 50 + 10, "y"),
                 ),
             )
+
+        super().render()

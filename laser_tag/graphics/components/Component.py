@@ -1,5 +1,6 @@
 import pygame
 
+from ...configuration import VARIABLES
 from ..resize import resize
 
 
@@ -8,17 +9,22 @@ class Component:
 
     def __init__(self, data=None):
         self.data = data
-        self.surface: pygame.Surface = pygame.Surface((0, 0), pygame.SRCALPHA)
-        self.set_surface_size(0, 0)
+        self.surface: pygame.Surface
+        self.set_original_size(0, 0)
 
-    def set_surface_size(self, width, height):
-        self.width = width
-        self.height = height
+    def set_original_size(self, width, height):
+        self.original_width = width
+        self.original_height = height
         self.resize()
 
+    def set_surface_size(self, width, height):
+        self.width = int(width)
+        self.height = int(height)
+        self.surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+
     def resize(self):
-        self.surface = pygame.Surface(
-            (resize(self.width, "x"), resize(self.height, "y")), pygame.SRCALPHA
+        self.set_surface_size(
+            resize(self.original_width, "x"), resize(self.original_height, "y")
         )
 
     def get(self) -> pygame.Surface:
@@ -30,4 +36,7 @@ class Component:
         self.render()
 
     def render(self):
-        pass
+        if VARIABLES.show_components_outline:
+            pygame.draw.rect(
+                self.surface, (0, 255, 0), (0, 0, self.width, self.height), 1
+            )
