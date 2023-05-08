@@ -178,6 +178,7 @@ class World:
                     if entity.can_attack:
                         for key_target in list(self.entities.keys()):
                             entity_target = self.get_entity(key_target)
+                            # Target is not the projectile nor its parent
                             if (
                                 entity_target is None
                                 or key == key_target
@@ -189,16 +190,18 @@ class World:
                                 entity.team != entity_target.team
                                 or entity_target.team == -1
                             ):
-                                # If the projectile collides with the target
+                                # Collision with the target
                                 if (
                                     entity.collides_with(entity_target)
                                     and entity.attack()
                                 ):
                                     # Damage the target
                                     killed = entity_target.damage(entity.damages)
-                                    entity.on_hit(entity_target)
-                                    if killed:
-                                        entity.on_kill(entity_target)
+                                    # The target was hit
+                                    if killed is not None:
+                                        entity.on_hit(entity_target)
+                                        if killed:
+                                            entity.on_kill(entity_target)
 
                     # Collision with map
                     if entity.can_move:

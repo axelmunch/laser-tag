@@ -17,5 +17,5 @@ def safe_eval(data, debug=False):
         return eval(data, {}, {})
     except Exception as e:
         if debug:
-            print(f"EVAL {e}. Evaluating: {data}")
+            print(f"EVAL {e}. Evaluating: {data} (length: {len(data)})")
         return None

@@ -3,8 +3,8 @@ from threading import Lock, Thread
 from time import sleep
 
 from ..configuration import (
+    CLIENT_MINIMUM_TICK,
     CLIENT_TIMEOUT,
-    MINIMUM_TICK,
     NETWORK_BUFFER_SIZE,
     VARIABLES,
     VERSION,
@@ -71,7 +71,7 @@ class Client:
             ping_timer.start()
             bytes_sent = self.send(self.get_events_to_send())
             if VARIABLES.fps > 0:
-                sleep(1 / max(MINIMUM_TICK, VARIABLES.fps))
+                sleep(1 / max(CLIENT_MINIMUM_TICK, VARIABLES.fps))
 
             data, bytes_received = self.recv()
             ping_timer.stop()

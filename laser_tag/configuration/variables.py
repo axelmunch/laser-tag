@@ -1,10 +1,10 @@
 class Variables:
     def __init__(self):
         # Default values
-        self.full_screen_width = 1920
-        self.full_screen_height = 1080
-        self.screen_width = 1280
-        self.screen_height = 720
+        self.full_screen_width = 0
+        self.full_screen_height = 0
+        self.screen_width = self.full_screen_width
+        self.screen_height = self.full_screen_height
         self.fullscreen = False
 
         self.server_port = 16168

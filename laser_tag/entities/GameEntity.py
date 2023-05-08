@@ -84,8 +84,11 @@ class GameEntity(Entity):
             self.hp = max(0, self.hp)
             if self.hp == 0:
                 self.death()
+                # Killed
                 return True
+            # Damaged
             return False
+        # Can't be attacked
         return None
 
     def heal(self, heal):

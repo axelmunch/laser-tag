@@ -4,8 +4,8 @@ from sys import exit as sys_exit
 from threading import Thread
 
 from laser_tag.configuration import (
-    DEFAULT_MAX_CLIENTS,
     NETWORK_BUFFER_SIZE,
+    SERVER_DEFAULT_MAX_CLIENTS,
     SERVER_DELTA_TIME_NAME,
     SERVER_SOCKET_TIMEOUT,
     SERVER_TIMEOUT,
@@ -52,7 +52,7 @@ class Server:
             print(f"SERVER bound to {self.socket.getsockname()}")
             print(f"SERVER IP: {socket.gethostbyname(socket.gethostname())}")
 
-        self.max_clients = DEFAULT_MAX_CLIENTS
+        self.max_clients = SERVER_DEFAULT_MAX_CLIENTS
         self.clients = {}
 
         self.game = Game()
