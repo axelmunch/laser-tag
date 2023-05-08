@@ -3,6 +3,7 @@ from time import time
 
 import pygame
 
+from ...configuration import DEFAULT_FONT
 from ...entities.GameEntity import GameEntity
 from ...game.Team import get_color
 from ...math.rotations import rotate
@@ -20,7 +21,11 @@ class Leaderboard(Component):
     ):
         super().__init__()
 
-        self.text = Text("calibri")
+        self.text = Text(
+            DEFAULT_FONT["font"],
+            DEFAULT_FONT["font_is_file"],
+            DEFAULT_FONT["size_multiplier"],
+        )
 
         self.max_length = 5
 

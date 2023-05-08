@@ -1,6 +1,7 @@
 from math import ceil
 from time import time
 
+from ...configuration import DEFAULT_FONT
 from ...math.rotations import rotate
 from ..resize import resize
 from ..Text import Text
@@ -16,7 +17,11 @@ class NetworkStats(Component):
     ):
         super().__init__()
 
-        self.text = Text("calibri")
+        self.text = Text(
+            DEFAULT_FONT["font"],
+            DEFAULT_FONT["font_is_file"],
+            DEFAULT_FONT["size_multiplier"],
+        )
 
         self.set_surface_size(250, 400)
 

@@ -1,3 +1,4 @@
+from ...configuration import DEFAULT_FONT
 from ..Text import Text
 from .Component import Component
 
@@ -8,7 +9,11 @@ class Fps(Component):
     def __init__(self, data=0):
         super().__init__()
 
-        self.text = Text("calibri")
+        self.text = Text(
+            DEFAULT_FONT["font"],
+            DEFAULT_FONT["font_is_file"],
+            DEFAULT_FONT["size_multiplier"],
+        )
 
         self.update(data)
 
