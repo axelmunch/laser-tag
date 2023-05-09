@@ -42,7 +42,7 @@ class Renderer:
         self.minimap.update(game.world.map.map, game.world.entities.values())
         display.screen.blit(self.minimap.get(), (resize(10, "x"), resize(10, "y")))
 
-        self.leaderboard.update(game.leaderboard)
+        self.leaderboard.update(game.game_mode.leaderboard)
         display.screen.blit(
             self.leaderboard.get(),
             (

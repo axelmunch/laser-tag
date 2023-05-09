@@ -1,0 +1,81 @@
+from enum import Enum, auto
+from time import time
+
+from ..configuration import VARIABLES
+from ..entities.GameEntity import GameEntity
+from ..entities.Player import Player
+
+
+class Mode(Enum):
+    """Game modes"""
+
+    def __str__(self):
+        return str(self.value)
+
+    SOLO = auto()
+    TEAM = auto()
+    SOLO_ELIMINATION = auto()
+    TEAM_ELIMINATION = auto()
+
+
+class GameMode:
+    """Game mode manager"""
+
+    def __init__(self, game_mode=Mode.SOLO):
+        self.reset(game_mode)
+
+    def __repr__(self):
+        return f"[{self.game_mode}, {self.game_started}, {self.grace_period_end}, {self.game_time_end}, {self.game_time_seconds}]"
+
+    def set_state(self, parsed_object):
+        try:
+            self.game_mode = Mode(parsed_object[0])
+            self.game_started = bool(parsed_object[1])
+            self.grace_period_end = float(parsed_object[2])
+            self.game_time_end = float(parsed_object[3])
+            self.game_time_seconds = float(parsed_object[4])
+        except Exception as e:
+            if VARIABLES.debug:
+                print("Error setting game mode state", e)
+
+    def reset(self, game_mode):
+        self.game_started = False
+        self.game_mode = game_mode
+        self.grace_period_seconds = 20
+        self.grace_period_end = 0
+        self.game_time_end = 0
+        self.game_time_seconds = 0
+        self.leaderboard = []
+
+        match game_mode:
+            case Mode.SOLO:
+                self.grace_period_seconds = 20
+                self.game_time_seconds = 10 * 60
+
+    def start(self):
+        self.game_started = True
+        self.grace_period_end = time() + self.grace_period_seconds
+
+    def update_leaderboard(self, entities: list[GameEntity]):
+        self.leaderboard.clear()
+        for entity in entities.values():
+            if isinstance(entity, Player):
+                self.leaderboard.append([entity.eliminations, entity.team, "Name"])
+        # Sort
+        self.leaderboard.sort(key=lambda element: element[0], reverse=True)
+
+    def update(self, entities: list[GameEntity]):
+        if not self.game_started:
+            return
+
+        # Time
+        if self.grace_period_end > 0 and time() > self.grace_period_end:
+            if self.game_time_end == 0:
+                self.game_time_end = time() + self.game_time_seconds
+                # End grace period
+            else:
+                if time() > self.game_time_end:
+                    self.game_started = False
+
+        # Leaderboard
+        self.update_leaderboard(entities)

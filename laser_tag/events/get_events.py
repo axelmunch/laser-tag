@@ -20,6 +20,7 @@ def get_events() -> list[EventInstance]:
                 events.append(EventInstance(Event.KEY_ESCAPE_PRESS))
             elif event.key == K_RETURN:
                 events.append(EventInstance(Event.KEY_RETURN_PRESS))
+                events.append(EventInstance(Event.START_GAME))
             elif event.key == K_F11:
                 events.append(EventInstance(Event.WINDOW_FULLSCREEN))
             elif event.key == K_F12:
@@ -72,7 +73,7 @@ def get_events() -> list[EventInstance]:
     if key_pressed[K_r]:
         events.append(EventInstance(Event.GAME_RELOAD))
 
-    if mouse_buttons[0]:
+    if key_pressed[K_SPACE]:
         events.append(EventInstance(Event.GAME_SHOOT))
 
     # Key events

@@ -2,7 +2,7 @@ from .variables import *
 
 VARIABLES = Variables()
 
-VERSION = "v0.0.6"
+VERSION = "v0.0.7"
 GAME_NAME = "Laser Tag"
 
 WINDOW_WINDOWED_SIZE_RATIO = 0.5

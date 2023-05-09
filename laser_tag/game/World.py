@@ -14,6 +14,8 @@ from .Map import Map
 
 
 class World:
+    """World class, contains all entities and map"""
+
     def __init__(self):
         self.map = Map()
         self.entities = {}

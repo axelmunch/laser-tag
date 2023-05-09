@@ -5,6 +5,8 @@ from ..math.Point import Point
 
 
 class Map:
+    """Represents a map in the game and checks collisions"""
+
     def __init__(self):
         self.map = [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],

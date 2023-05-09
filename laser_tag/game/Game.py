@@ -1,22 +1,27 @@
 from ..configuration import VARIABLES
 from ..entities.GameEntity import GameEntity
 from ..entities.Player import Player
+from ..events.Event import Event
 from ..events.EventInstance import EventInstance
 from ..utils.DeltaTime import DeltaTime
+from .GameMode import GameMode, Mode
 from .World import World
 
 
 class Game:
+    """Game manager"""
+
     def __init__(self):
+        self.game_mode = GameMode()
         self.world = World()
-        self.leaderboard = []
 
     def __repr__(self):
-        return f"[{self.world}]"
+        return f"[{self.game_mode}, {self.world}]"
 
     def set_state(self, parsed_object):
         try:
-            self.world.set_state(parsed_object["game"][0])
+            self.game_mode.set_state(parsed_object["game"][0])
+            self.world.set_state(parsed_object["game"][1])
             self.world.set_controlled_entity(int(parsed_object["controlled_entity_id"]))
         except Exception as e:
             if VARIABLES.debug:
@@ -28,14 +33,6 @@ class Game:
     def enhance_events(self, events: list[EventInstance]):
         self.world.enhance_events(events)
 
-    def update_leaderboard(self, entities: list[GameEntity]):
-        self.leaderboard.clear()
-        for entity in entities.values():
-            if isinstance(entity, Player):
-                self.leaderboard.append([entity.eliminations, entity.team, "Name"])
-        # Sort
-        self.leaderboard.sort(key=lambda element: element[0], reverse=True)
-
     def update(
         self,
         events: list[EventInstance],
@@ -45,6 +42,11 @@ class Game:
     ):
         delta_time.update()
 
+        for event in events:
+            match event.id:
+                case Event.START_GAME:
+                    self.game_mode.start()
+
         self.world.update(events, controlled_entity_id, delta_time, player_delta_time)
 
-        self.update_leaderboard(self.world.entities)
+        self.game_mode.update(self.world.entities)
