@@ -18,7 +18,7 @@ class World:
 
     def __init__(self):
         self.map = Map()
-        self.entities = {}
+        self.entities: list[GameEntity] = {}
 
         self.controlled_entity = None
 

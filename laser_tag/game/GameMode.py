@@ -49,7 +49,7 @@ class GameMode:
 
         match game_mode:
             case Mode.SOLO:
-                self.grace_period_seconds = 20
+                self.grace_period_seconds = 3
                 self.game_time_seconds = 10 * 60
 
     def start(self):
@@ -66,13 +66,17 @@ class GameMode:
 
     def update(self, entities: list[GameEntity]):
         if not self.game_started:
+            for entity in entities.values():
+                entity.can_attack = False
             return
 
         # Time
         if self.grace_period_end > 0 and time() > self.grace_period_end:
             if self.game_time_end == 0:
                 self.game_time_end = time() + self.game_time_seconds
-                # End grace period
+                # End grace period (game started)
+                for entity in entities.values():
+                    entity.can_attack = True
             else:
                 if time() > self.game_time_end:
                     self.game_started = False
