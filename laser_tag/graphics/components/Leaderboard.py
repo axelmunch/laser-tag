@@ -50,6 +50,7 @@ class Leaderboard(Component):
         for i in range(min(len(self.data), self.max_length)):
             data = self.data[i]
 
+            # Team color
             pygame.draw.circle(
                 self.surface,
                 get_color(data[1]),
@@ -57,6 +58,7 @@ class Leaderboard(Component):
                 resize(10),
             )
 
+            # Rank and team name
             self.surface.blit(
                 self.text.get_surface(
                     f"#{i + 1} {data[2]}",
@@ -66,6 +68,7 @@ class Leaderboard(Component):
                 (resize(40, "x"), resize(i * 50 + 10, "y")),
             )
 
+            # Score
             value_text = self.text.get_surface(
                 data[0],
                 30,

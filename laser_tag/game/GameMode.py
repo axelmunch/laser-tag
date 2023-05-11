@@ -51,6 +51,15 @@ class GameMode:
             case Mode.SOLO:
                 self.grace_period_seconds = 3
                 self.game_time_seconds = 10 * 60
+            case Mode.SOLO_ELIMINATION:
+                self.grace_period_seconds = 3
+                self.game_time_seconds = 10 * 60
+            case Mode.TEAM:
+                self.grace_period_seconds = 3
+                self.game_time_seconds = 10 * 60
+            case Mode.TEAM_ELIMINATION:
+                self.grace_period_seconds = 3
+                self.game_time_seconds = 10 * 60
 
     def start(self):
         self.game_started = True
@@ -58,9 +67,32 @@ class GameMode:
 
     def update_leaderboard(self, entities: list[GameEntity]):
         self.leaderboard.clear()
-        for entity in entities.values():
-            if isinstance(entity, Player):
-                self.leaderboard.append([entity.eliminations, entity.team, "Name"])
+
+        if self.game_mode in [Mode.SOLO, Mode.SOLO_ELIMINATION]:
+            for entity in entities.values():
+                if isinstance(entity, Player):
+                    if self.game_mode == Mode.SOLO:
+                        self.leaderboard.append(
+                            [int(entity.score), entity.team, "Name"]
+                        )
+                    else:
+                        self.leaderboard.append(
+                            [entity.eliminations, entity.team, "Name"]
+                        )
+        elif self.game_mode in [Mode.TEAM, Mode.TEAM_ELIMINATION]:
+            teams = {}
+            for entity in entities.values():
+                if isinstance(entity, Player):
+                    if self.game_mode == Mode.TEAM:
+                        teams[entity.team] = teams.get(entity.team, 0) + entity.score
+                    else:
+                        teams[entity.team] = (
+                            teams.get(entity.team, 0) + entity.eliminations
+                        )
+
+            for team, score in teams.items():
+                self.leaderboard.append([int(score), team, team])
+
         # Sort
         self.leaderboard.sort(key=lambda element: element[0], reverse=True)
 
