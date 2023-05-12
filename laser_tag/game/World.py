@@ -11,6 +11,7 @@ from ..math.Point import Point
 from ..math.rotations import get_angle, rotate
 from ..utils.DeltaTime import DeltaTime
 from .Map import Map
+from .Team import Team
 
 
 class World:
@@ -163,6 +164,9 @@ class World:
                             projectile.damages = current_entity.damages
                             projectile.get_entity_fct = self.get_entity
                             self.spawn_entity(projectile)
+                    case Event.GAME_SELECT_TEAM:
+                        if event.data in [t.value for t in Team]:
+                            current_entity.team = event.data
 
             # Update other entities
             for key in list(self.entities.keys()):

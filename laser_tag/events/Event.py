@@ -10,6 +10,7 @@ class Event(Enum):
     def __str__(self):
         return str(self.value)
 
+    NONE = auto()
     TICK = auto()
     START_GAME = auto()
     MESSAGE = auto()
@@ -25,6 +26,7 @@ class Event(Enum):
     GAME_RELOAD = auto()
     GAME_SHOOT = auto()
     GAME_ROTATE = auto()
+    GAME_SELECT_TEAM = auto()
     KEY_ESCAPE = auto()
     KEY_ESCAPE_PRESS = auto()
     KEY_RETURN = auto()

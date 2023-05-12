@@ -62,8 +62,10 @@ class GameMode:
                 self.game_time_seconds = 10 * 60
 
     def start(self):
-        self.game_started = True
-        self.grace_period_end = time() + self.grace_period_seconds
+        if not self.game_started:
+            self.game_started = True
+            self.grace_period_end = time() + self.grace_period_seconds
+            self.game_time_end = 0
 
     def update_leaderboard(self, entities: list[GameEntity]):
         self.leaderboard.clear()
@@ -112,6 +114,7 @@ class GameMode:
             else:
                 if time() > self.game_time_end:
                     self.game_started = False
+                    # End of game
 
         # Leaderboard
         self.update_leaderboard(entities)

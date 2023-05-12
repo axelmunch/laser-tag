@@ -46,6 +46,9 @@ class Game:
             match event.id:
                 case Event.START_GAME:
                     self.game_mode.start()
+                case Event.GAME_SELECT_TEAM:
+                    if self.game_mode.game_started:
+                        event.id = Event.NONE
 
         self.world.update(events, controlled_entity_id, delta_time, player_delta_time)
 
