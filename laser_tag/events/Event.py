@@ -27,6 +27,7 @@ class Event(Enum):
     GAME_SHOOT = auto()
     GAME_ROTATE = auto()
     GAME_SELECT_TEAM = auto()
+    GAME_SCOREBOARD = auto()
     KEY_ESCAPE = auto()
     KEY_ESCAPE_PRESS = auto()
     KEY_RETURN = auto()
@@ -62,6 +63,7 @@ local_events = [
     Event.GAME_MOVE_BACKWARD,
     Event.GAME_MOVE_LEFT,
     Event.GAME_MOVE_RIGHT,
+    Event.GAME_SCOREBOARD,
     Event.KEY_ESCAPE,
     Event.KEY_ESCAPE_PRESS,
     Event.KEY_RETURN,

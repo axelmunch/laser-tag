@@ -7,6 +7,7 @@ from .components.Fps import Fps
 from .components.Leaderboard import Leaderboard
 from .components.Minimap import Minimap
 from .components.NetworkStats import NetworkStats
+from .components.Scoreboard import Scoreboard
 from .resize import resize
 
 
@@ -19,7 +20,14 @@ class Renderer:
         self.minimap = Minimap()
         self.network_stats = NetworkStats()
         self.leaderboard = Leaderboard()
-        self.components = [self.fps, self.minimap, self.network_stats, self.leaderboard]
+        self.scoreboard = Scoreboard()
+        self.components = [
+            self.fps,
+            self.minimap,
+            self.network_stats,
+            self.leaderboard,
+            self.scoreboard,
+        ]
 
     def set_network_stats(
         self,
@@ -58,6 +66,17 @@ class Renderer:
                 (
                     resize(1910, "x") - network_stats_surface.get_width(),
                     resize(10, "y"),
+                ),
+            )
+
+        if game.show_scoreboard:
+            self.scoreboard.update(list(game.world.entities.values()))
+            scoreboard = self.scoreboard.get()
+            display.screen.blit(
+                scoreboard,
+                (
+                    resize(960, "x") - scoreboard.get_width() / 2,
+                    resize(540, "y") - scoreboard.get_height() / 2,
                 ),
             )
 

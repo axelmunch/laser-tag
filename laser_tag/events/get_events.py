@@ -98,6 +98,7 @@ def get_events() -> list[EventInstance]:
         events.append(EventInstance(Event.KEY_RETURN))
     if key_pressed[K_TAB]:
         events.append(EventInstance(Event.KEY_TAB))
+        events.append(EventInstance(Event.GAME_SCOREBOARD))
 
     if key_pressed[K_UP]:
         events.append(EventInstance(Event.KEY_UP))

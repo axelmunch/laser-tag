@@ -2,7 +2,7 @@ from math import ceil
 
 import pygame
 
-from ...entities.Entity import Entity
+from ...entities.GameEntity import GameEntity
 from ...math.rotations import rotate
 from ..resize import resize
 from .Component import Component
@@ -18,7 +18,7 @@ class Minimap(Component):
 
         self.update(data["world"], data["entities"])
 
-    def update(self, world: list[list[int]], entities: list[Entity]):
+    def update(self, world: list[list[int]], entities: list[GameEntity]):
         """
         Update the component.
 

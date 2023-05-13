@@ -15,6 +15,8 @@ class Game:
         self.game_mode = GameMode()
         self.world = World()
 
+        self.show_scoreboard = False
+
     def __repr__(self):
         return f"[{self.game_mode}, {self.world}]"
 
@@ -42,6 +44,8 @@ class Game:
     ):
         delta_time.update()
 
+        self.show_scoreboard = False
+
         for event in events:
             match event.id:
                 case Event.START_GAME:
@@ -49,6 +53,8 @@ class Game:
                 case Event.GAME_SELECT_TEAM:
                     if self.game_mode.game_started:
                         event.id = Event.NONE
+                case Event.GAME_SCOREBOARD:
+                    self.show_scoreboard = True
 
         self.world.update(events, controlled_entity_id, delta_time, player_delta_time)
 
