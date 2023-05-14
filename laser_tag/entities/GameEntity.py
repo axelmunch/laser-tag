@@ -29,13 +29,14 @@ class GameEntity(Entity):
         self.score = 0
         self.score_reward = 0
         self.eliminations = 0
+        self.deaths = 0
         self.team = -1
 
         self.hp = 0
         self.set_max_hp(1)
 
     def __repr__(self):
-        return f"['{self.__class__.__name__}', {self.position}, {self.collider}, {self.rotation}, {self.team}, {self.score}, {self.eliminations}, {self.hp}, {self.next_attack_timestamps}]"
+        return f"['{self.__class__.__name__}', {self.position}, {self.collider}, {self.rotation}, {self.team}, {self.score}, {self.eliminations}, {self.deaths}, {self.hp}, {self.next_attack_timestamps}]"
 
     @staticmethod
     def create(parsed_object) -> GameEntity:
@@ -55,8 +56,9 @@ class GameEntity(Entity):
             entity.team = int(parsed_object[3])
             entity.score = float(parsed_object[4])
             entity.eliminations = int(parsed_object[5])
-            entity.hp = float(parsed_object[6])
-            entity.next_attack_timestamps = float(parsed_object[7])
+            entity.deaths = int(parsed_object[6])
+            entity.hp = float(parsed_object[8])
+            entity.next_attack_timestamps = float(parsed_object[8])
             return entity
         except:
             return None
@@ -69,8 +71,10 @@ class GameEntity(Entity):
         self.max_hp = max_hp
         self.hp = self.max_hp
 
-    def death(self):
-        self.alive = False
+    def death(self, no_deletion=False):
+        if not no_deletion:
+            self.alive = False
+        self.deaths += 1
 
     def attack(self):
         if self.can_attack and time() >= self.next_attack_timestamps:

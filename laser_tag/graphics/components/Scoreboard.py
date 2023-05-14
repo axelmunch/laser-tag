@@ -152,7 +152,7 @@ class Scoreboard(Component):
                 # Deaths
                 self.surface.blit(
                     self.text.get_surface(
-                        None,
+                        entity.deaths,
                         40,
                         (255, 255, 255),
                     ),
