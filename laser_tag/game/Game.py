@@ -1,10 +1,8 @@
 from ..configuration import VARIABLES
-from ..entities.GameEntity import GameEntity
-from ..entities.Player import Player
 from ..events.Event import Event
 from ..events.EventInstance import EventInstance
 from ..utils.DeltaTime import DeltaTime
-from .GameMode import GameMode, Mode
+from .GameMode import GameMode
 from .World import World
 
 
@@ -29,6 +27,10 @@ class Game:
             if VARIABLES.debug:
                 print("Error setting game state", e)
 
+    def reset(self):
+        for entity in self.world.entities.values():
+            entity.reset()
+
     def update_state(self, state):
         self.state = state
 
@@ -49,8 +51,11 @@ class Game:
         for event in events:
             match event.id:
                 case Event.START_GAME:
-                    self.game_mode.start()
+                    if self.game_mode.start():
+                        # Reset
+                        self.reset()
                 case Event.GAME_SELECT_TEAM:
+                    # Can only select team if game has not started
                     if self.game_mode.game_started:
                         event.id = Event.NONE
                 case Event.GAME_SCOREBOARD:

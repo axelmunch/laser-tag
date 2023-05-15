@@ -63,6 +63,13 @@ class GameEntity(Entity):
         except:
             return None
 
+    def reset(self):
+        self.hp = self.max_hp
+        self.next_attack_timestamps = time()
+        self.score = 0
+        self.eliminations = 0
+        self.deaths = 0
+
     def move(self, x, y, z):
         if self.can_move:
             super().move(x, y, z)
