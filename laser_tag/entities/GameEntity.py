@@ -14,6 +14,8 @@ class GameEntity(Entity):
         super().__init__(position, length, width, height)
 
         self.move_speed = 0.05
+        self.run_speed_multiplier = 1.4
+        self.crouch_speed_multiplier = 0.8
 
         # Attack cooldown (seconds)
         self.attack_speed = 1
@@ -25,6 +27,8 @@ class GameEntity(Entity):
         self.can_move = True
         self.can_attack = True
         self.can_be_attacked = True
+        self.is_running = False
+        self.is_crouching = False
 
         self.score = 0
         self.score_reward = 0
@@ -84,8 +88,14 @@ class GameEntity(Entity):
         self.deaths += 1
 
     def attack(self):
-        if self.can_attack and time() >= self.next_attack_timestamps:
-            self.next_attack_timestamps = time() + self.attack_speed
+        if (
+            self.can_attack
+            and time() >= self.next_attack_timestamps
+            and not self.is_running
+        ):
+            self.next_attack_timestamps = time() + self.attack_speed * (
+                self.crouch_speed_multiplier if self.is_crouching else 1
+            )
             return True
         return False
 

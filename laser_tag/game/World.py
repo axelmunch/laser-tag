@@ -121,12 +121,20 @@ class World:
             async_mode = player_delta_time is not None
             player_delta_time = delta_time if not async_mode else player_delta_time
 
+            current_entity.is_running = False
+            current_entity.is_crouching = False
+
             for event in events:
                 match event.id:
                     case Event.TICK:
                         # Synchonize delta time for each tick
                         if async_mode:
                             player_delta_time.update(event.timestamp)
+                    case Event.GAME_CROUCH:
+                        current_entity.is_crouching = True
+                    case Event.GAME_RUN:
+                        if not current_entity.is_crouching:
+                            current_entity.is_running = True
                     case Event.GAME_ROTATE:
                         if (
                             isinstance(event.data, list)
@@ -143,6 +151,16 @@ class World:
                                 current_entity,
                                 rotate(
                                     current_entity.move_speed
+                                    * (
+                                        current_entity.run_speed_multiplier
+                                        if current_entity.is_running
+                                        else 1
+                                    )
+                                    * (
+                                        current_entity.crouch_speed_multiplier
+                                        if current_entity.is_crouching
+                                        else 1
+                                    )
                                     * player_delta_time.get_dt_target(),
                                     current_entity.rotation + event.data,
                                 ),
