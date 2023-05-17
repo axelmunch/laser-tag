@@ -15,6 +15,8 @@ class Variables:
         self.show_network_stats = True
         self.show_components_outline = False
 
+        self.anti_aliased_text = True
+
         self.debug = True
 
         self.rotate_sensitivity = 3
