@@ -1,8 +1,6 @@
-from math import ceil
 from time import time
 
 from ...configuration import DEFAULT_FONT
-from ...math.rotations import rotate
 from ..resize import resize
 from ..Text import Text
 from .Component import Component

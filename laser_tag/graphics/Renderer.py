@@ -4,6 +4,7 @@ from ..configuration import VARIABLES
 from ..game.Game import Game
 from . import display
 from .components.Fps import Fps
+from .components.GameTimer import GameTimer
 from .components.Leaderboard import Leaderboard
 from .components.Minimap import Minimap
 from .components.NetworkStats import NetworkStats
@@ -21,12 +22,14 @@ class Renderer:
         self.network_stats = NetworkStats()
         self.leaderboard = Leaderboard()
         self.scoreboard = Scoreboard()
+        self.game_timer = GameTimer()
         self.components = [
             self.fps,
             self.minimap,
             self.network_stats,
             self.leaderboard,
             self.scoreboard,
+            self.game_timer,
         ]
 
     def set_network_stats(
@@ -59,8 +62,10 @@ class Renderer:
             ),
         )
 
+        network_stats_width = 0
         if VARIABLES.show_network_stats:
             network_stats_surface = self.network_stats.get()
+            network_stats_width = network_stats_surface.get_width()
             display.screen.blit(
                 network_stats_surface,
                 (
@@ -79,6 +84,27 @@ class Renderer:
                     resize(540, "y") - scoreboard.get_height() / 2,
                 ),
             )
+
+        self.game_timer.update(
+            game.game_mode.grace_period_seconds,
+            game.game_mode.grace_period_end,
+            game.game_mode.game_time_seconds,
+            game.game_mode.game_time_end,
+        )
+        game_timer = self.game_timer.get()
+        display.screen.blit(
+            game_timer,
+            (
+                resize(1910, "x")
+                - game_timer.get_width()
+                - (
+                    network_stats_width + resize(10, "x")
+                    if network_stats_width > 0
+                    else 0
+                ),
+                resize(10, "y"),
+            ),
+        )
 
         if VARIABLES.show_fps:
             self.fps.update(self.clock.get_fps())

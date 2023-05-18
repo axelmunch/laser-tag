@@ -1,13 +1,9 @@
-from math import ceil
-from time import time
-
 import pygame
 
 from ...configuration import DEFAULT_FONT
 from ...entities.GameEntity import GameEntity
 from ...entities.Player import Player
 from ...game.Team import get_color
-from ...math.rotations import rotate
 from ..resize import resize
 from ..Text import Text
 from .Component import Component

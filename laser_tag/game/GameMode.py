@@ -109,13 +109,14 @@ class GameMode:
         if self.grace_period_end > 0 and time() > self.grace_period_end:
             if self.game_time_end == 0:
                 self.game_time_end = time() + self.game_time_seconds
+                self.grace_period_end = 0
                 # End grace period (game started)
                 for entity in entities.values():
                     entity.can_attack = True
-            else:
-                if time() > self.game_time_end:
-                    self.game_started = False
-                    # End of game
+        elif self.game_time_end > 0 and time() > self.game_time_end:
+            self.game_started = False
+            self.game_time_end = 0
+            # End of game
 
         # Leaderboard
         self.update_leaderboard(entities)
