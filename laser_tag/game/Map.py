@@ -2,6 +2,8 @@ from math import ceil
 
 from ..math.Box import Box
 from ..math.Point import Point
+from ..math.rotations import rotate
+from .Ray import Ray
 
 
 class Map:
@@ -39,3 +41,18 @@ class Map:
 
                 if self.map[y][x] == 1:
                     return True
+
+    def cast_ray(self, origin: Point, direction: float) -> Ray:
+        max_ray_length = 100
+
+        ray = Ray(origin, direction)
+
+        # Cast
+        precision = 5
+        for i in range(max_ray_length * precision):
+            point = rotate(i / precision, direction, center=origin)
+            if self.map[int(point.y)][int(point.x)] == 1:
+                ray.set_hit(point, None)
+                break
+
+        return ray

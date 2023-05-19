@@ -50,7 +50,8 @@ class Renderer:
         # Update display
         display.screen.fill((42, 42, 42))
 
-        self.minimap.update(game.world.map.map, game.world.entities.values())
+        rays = game.world.cast_rays()
+        self.minimap.update(game.world.map.map, game.world.entities.values(), rays)
         display.screen.blit(self.minimap.get(), (resize(10, "x"), resize(10, "y")))
 
         self.leaderboard.update(game.game_mode.leaderboard)

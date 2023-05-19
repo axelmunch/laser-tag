@@ -305,3 +305,16 @@ class World:
                 collision = True
 
         return collision
+
+    def cast_rays(self):
+        rays = []
+
+        entity = self.get_entity(self.controlled_entity)
+
+        if entity is not None:
+            for rotation in range(-VARIABLES.fov // 2, VARIABLES.fov // 2):
+                rays.append(
+                    self.map.cast_ray(entity.position, entity.rotation + rotation)
+                )
+
+        return rays
