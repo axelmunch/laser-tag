@@ -52,6 +52,7 @@ class Minimap(Component):
                             ceil(self.height / map_height),
                         ),
                     )
+
         for ray in self.data["rays"]:
             if ray.hit_point is not None:
                 pygame.draw.line(

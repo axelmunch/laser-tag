@@ -1,4 +1,4 @@
-from math import ceil
+from math import ceil, sqrt
 
 from ..math.Box import Box
 from ..math.Point import Point
@@ -43,16 +43,75 @@ class Map:
                     return True
 
     def cast_ray(self, origin: Point, direction: float) -> Ray:
-        max_ray_length = 100
+        # DDA: Digital Differential Analyzer
 
         ray = Ray(origin, direction)
 
-        # Cast
-        precision = 5
-        for i in range(max_ray_length * precision):
-            point = rotate(i / precision, direction, center=origin)
-            if self.map[int(point.y)][int(point.x)] == 1:
-                ray.set_hit(point, None)
-                break
+        cell = Point(int(origin.x), int(origin.y))
+
+        max_distance = 100
+
+        end_point = rotate(1, direction, center=origin)
+
+        dx = end_point.x - origin.x
+        dy = end_point.y - origin.y
+        one_unit_x = sqrt(1 + (dy / dx) ** 2) if dx != 0 else max_distance
+        one_unit_y = sqrt(1 + (dx / dy) ** 2) if dy != 0 else max_distance
+
+        x_distance = 0
+        y_distance = 0
+
+        casting_direction = [0, 0]
+        if direction > 180:
+            # Up
+            casting_direction[1] = -1
+            y_distance = (origin.y - cell.y) * one_unit_y
+        else:
+            # Down
+            casting_direction[1] = 1
+            y_distance = (cell.y + 1 - origin.y) * one_unit_y
+        if direction > 90 and direction < 270:
+            # Left
+            casting_direction[0] = -1
+            x_distance = (origin.x - cell.x) * one_unit_x
+        else:
+            # Right
+            casting_direction[0] = 1
+            x_distance = (cell.x + 1 - origin.x) * one_unit_x
+
+        casting = True
+        total_distance = 0
+        while casting and total_distance < max_distance:
+            if x_distance < y_distance:
+                cell.x += casting_direction[0]
+                total_distance = x_distance
+                x_distance += one_unit_x
+            else:
+                cell.y += casting_direction[1]
+                total_distance = y_distance
+                y_distance += one_unit_y
+
+            # Collision
+            if (
+                cell.x >= 0
+                or cell.x < len(self.map[0])
+                or cell.y >= 0
+                or cell.y < len(self.map)
+            ):
+                if self.map[cell.y][cell.x] == 1:
+                    casting = False
+
+                    ray.set_hit(
+                        rotate(
+                            total_distance,
+                            direction,
+                            center=origin,
+                        ),
+                        hit_infos=None,
+                        distance=total_distance,
+                    )
+            else:
+                # Out of the map
+                casting = False
 
         return ray

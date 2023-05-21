@@ -314,7 +314,9 @@ class World:
         if entity is not None:
             for rotation in range(-VARIABLES.fov // 2, VARIABLES.fov // 2):
                 rays.append(
-                    self.map.cast_ray(entity.position, entity.rotation + rotation)
+                    self.map.cast_ray(
+                        entity.position, (entity.rotation + rotation) % 360
+                    )
                 )
 
         return rays
