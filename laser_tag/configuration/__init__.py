@@ -17,6 +17,8 @@ SERVER_SOCKET_TIMEOUT = 2
 CLIENT_TIMEOUT = 5
 CLIENT_MINIMUM_TICK = 30
 
+MAX_RAY_DISTANCE = 50
+
 DEFAULT_FONT = {"font": "calibri", "font_is_file": False, "size_multiplier": 1}
 
 SCREENSHOTS_PATH = "./screenshots"

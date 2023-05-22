@@ -1,5 +1,6 @@
 from math import ceil, sqrt
 
+from ..configuration import MAX_RAY_DISTANCE
 from ..math.Box import Box
 from ..math.Point import Point
 from ..math.rotations import rotate
@@ -49,14 +50,12 @@ class Map:
 
         cell = Point(int(origin.x), int(origin.y))
 
-        max_distance = 100
-
         end_point = rotate(1, direction, center=origin)
 
         dx = end_point.x - origin.x
         dy = end_point.y - origin.y
-        one_unit_x = sqrt(1 + (dy / dx) ** 2) if dx != 0 else max_distance
-        one_unit_y = sqrt(1 + (dx / dy) ** 2) if dy != 0 else max_distance
+        one_unit_x = sqrt(1 + (dy / dx) ** 2) if dx != 0 else MAX_RAY_DISTANCE
+        one_unit_y = sqrt(1 + (dx / dy) ** 2) if dy != 0 else MAX_RAY_DISTANCE
 
         x_distance = 0
         y_distance = 0
@@ -81,7 +80,7 @@ class Map:
 
         casting = True
         total_distance = 0
-        while casting and total_distance < max_distance:
+        while casting and total_distance < MAX_RAY_DISTANCE:
             if x_distance < y_distance:
                 cell.x += casting_direction[0]
                 total_distance = x_distance
@@ -94,21 +93,21 @@ class Map:
             # Collision
             if (
                 cell.x >= 0
-                or cell.x < len(self.map[0])
-                or cell.y >= 0
-                or cell.y < len(self.map)
+                and cell.x < len(self.map[0])
+                and cell.y >= 0
+                and cell.y < len(self.map)
             ):
                 if self.map[cell.y][cell.x] == 1:
                     casting = False
 
                     ray.set_hit(
                         rotate(
-                            total_distance,
+                            min(total_distance, MAX_RAY_DISTANCE),
                             direction,
                             center=origin,
                         ),
                         hit_infos=None,
-                        distance=total_distance,
+                        distance=min(total_distance, MAX_RAY_DISTANCE),
                     )
             else:
                 # Out of the map
