@@ -8,9 +8,9 @@ class Player(GameEntity):
     """Player entity"""
 
     def __init__(self, position):
-        super().__init__(position, 0.5, 0.5, 1)
+        super().__init__(position, 0.4, 0.4, 1)
 
-        self.move_speed = 0.1
+        self.move_speed = 0.05
 
         self.attack_speed = 0.25
 

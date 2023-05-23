@@ -15,7 +15,7 @@ class Minimap(Component):
     def __init__(self, data={"world": [], "entities": [], "rays": []}):
         super().__init__()
 
-        self.set_original_size(1060, 1060)
+        self.set_original_size(400, 400)
 
         self.update(data["world"], data["entities"], data["rays"])
 

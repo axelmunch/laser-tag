@@ -9,6 +9,7 @@ from .components.Leaderboard import Leaderboard
 from .components.Minimap import Minimap
 from .components.NetworkStats import NetworkStats
 from .components.Scoreboard import Scoreboard
+from .components.World import World
 from .resize import resize
 
 
@@ -23,6 +24,7 @@ class Renderer:
         self.leaderboard = Leaderboard()
         self.scoreboard = Scoreboard()
         self.game_timer = GameTimer()
+        self.world = World()
         self.components = [
             self.fps,
             self.minimap,
@@ -30,6 +32,7 @@ class Renderer:
             self.leaderboard,
             self.scoreboard,
             self.game_timer,
+            self.world,
         ]
 
     def set_network_stats(
@@ -48,9 +51,16 @@ class Renderer:
 
     def render(self, game: Game):
         # Update display
-        display.screen.fill((42, 42, 42))
 
         rays = game.world.cast_rays()
+
+        self.world.update(
+            rays,
+            game.world.entities.values(),
+            game.world.get_entity(game.world.controlled_entity),
+        )
+        display.screen.blit(self.world.get(), (0, 0))
+
         self.minimap.update(game.world.map.map, game.world.entities.values(), rays)
         display.screen.blit(self.minimap.get(), (resize(10, "x"), resize(10, "y")))
 
@@ -58,7 +68,7 @@ class Renderer:
         display.screen.blit(
             self.leaderboard.get(),
             (
-                resize(1080, "x"),
+                resize(420, "x"),
                 resize(10, "y"),
             ),
         )
