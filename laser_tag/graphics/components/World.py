@@ -56,10 +56,12 @@ class World(Component):
                     ray_world_size = world_scale / ray.distance
                 ray_world_size = min(ray_world_size, 1080)
 
+                color_intensity = 128 / max(1, ray.distance / 3)
+
                 if ray.hit_point is not None:
                     pygame.draw.rect(
                         self.surface,
-                        (192, 192, 192),
+                        (color_intensity, color_intensity, color_intensity + 64),
                         (
                             resize(i * step - 1, "x"),
                             resize(540 - ray_world_size / 2, "y"),
