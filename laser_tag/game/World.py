@@ -312,10 +312,14 @@ class World:
         entity = self.get_entity(self.controlled_entity)
 
         if entity is not None:
-            for rotation in range(-VARIABLES.fov // 2, VARIABLES.fov // 2):
+            start = -VARIABLES.fov / 2
+            step = VARIABLES.fov / VARIABLES.rays_quantity
+
+            for i in range(VARIABLES.rays_quantity):
                 rays.append(
                     self.map.cast_ray(
-                        entity.position, (entity.rotation + rotation) % 360
+                        entity.position,
+                        (entity.rotation + start + i * step) % 360,
                     )
                 )
 

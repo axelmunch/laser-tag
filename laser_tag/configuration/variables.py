@@ -23,7 +23,8 @@ class Variables:
 
         self.pseudo = "Player"
 
-        self.fov = 45
+        self.fov = 80
+        self.rays_quantity = 1920 // 15
 
         # Load from file
         self.load()
