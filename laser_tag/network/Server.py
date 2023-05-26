@@ -190,7 +190,7 @@ class Server:
         events = []
         for event in data:
             created_event = EventInstance.create(event)
-            if created_event is not None:
+            if created_event is not None and not created_event.local:
                 events.append(created_event)
 
         return events

@@ -88,9 +88,6 @@ def get_events() -> list[EventInstance]:
     if key_pressed[K_r]:
         events.append(EventInstance(Event.GAME_RELOAD))
 
-    if key_pressed[K_SPACE]:
-        events.append(EventInstance(Event.GAME_SHOOT))
-
     # Key events
     if key_pressed[K_ESCAPE]:
         events.append(EventInstance(Event.KEY_ESCAPE))
@@ -118,6 +115,7 @@ def get_events() -> list[EventInstance]:
     # Mouse events
     if mouse_buttons[0]:
         events.append(EventInstance(Event.MOUSE_LEFT_CLICK))
+        events.append(EventInstance(Event.GAME_SHOOT))
     if mouse_buttons[1]:
         events.append(EventInstance(Event.MOUSE_MIDDLE_CLICK))
     if mouse_buttons[2]:

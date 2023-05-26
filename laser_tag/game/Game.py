@@ -1,6 +1,7 @@
 from ..configuration import VARIABLES
 from ..events.Event import Event
 from ..events.EventInstance import EventInstance
+from ..graphics.resize import resize
 from ..utils.DeltaTime import DeltaTime
 from .GameMode import GameMode
 from .World import World
@@ -12,6 +13,9 @@ class Game:
     def __init__(self):
         self.game_mode = GameMode()
         self.world = World()
+
+        self.mouse_x = None
+        self.mouse_y = None
 
         self.show_scoreboard = False
 
@@ -35,6 +39,29 @@ class Game:
         self.state = state
 
     def enhance_events(self, events: list[EventInstance]):
+        i = 0
+        while i < len(events):
+            event = events[i]
+
+            if event.id == Event.MOUSE_MOVE:
+                self.mouse_x = event.data[0] / VARIABLES.screen_width * 1920
+                self.mouse_y = event.data[1] / VARIABLES.screen_height * 1080
+
+                if self.mouse_x != 960 or self.mouse_y != 540:
+                    events.append(
+                        EventInstance(
+                            Event.GAME_ROTATE,
+                            [
+                                -(960 - self.mouse_x)
+                                * resize(VARIABLES.rotate_sensitivity, "x"),
+                                -(540 - self.mouse_y)
+                                * resize(VARIABLES.rotate_sensitivity, "y"),
+                            ],
+                        )
+                    )
+
+            i += 1
+
         self.world.enhance_events(events)
 
     def update(

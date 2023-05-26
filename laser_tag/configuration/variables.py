@@ -19,7 +19,7 @@ class Variables:
 
         self.debug = True
 
-        self.rotate_sensitivity = 3
+        self.rotate_sensitivity = 0.05
 
         self.pseudo = "Player"
 

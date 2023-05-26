@@ -141,9 +141,7 @@ class World:
                             and len(event.data) == 2
                             and isinstance(event.data[0], (int, float))
                         ):
-                            current_entity.rotation += (
-                                event.data[0] * player_delta_time.get_dt_target()
-                            )
+                            current_entity.rotation += event.data[0]
                         current_entity.rotation %= 360
                     case Event.GAME_MOVE:
                         if isinstance(event.data, (int, float)):

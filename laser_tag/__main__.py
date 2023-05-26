@@ -7,6 +7,7 @@ from laser_tag.events.get_events import *
 from laser_tag.game.Game import Game
 from laser_tag.graphics import display
 from laser_tag.graphics.Renderer import Renderer
+from laser_tag.graphics.resize import resize
 from laser_tag.network.Client import Client
 from laser_tag.network.Server import Server
 
@@ -62,14 +63,11 @@ if __name__ == "__main__":
                         VARIABLES.set_screen_size(event.data[0], event.data[1])
                         display.refresh_display()
                         renderer.resize()
-
                 case Event.SCREENSHOT:
                     display.screenshot()
-
-                case Event.MOUSE_MOVE:
-                    mouse_x = event.data[0] / VARIABLES.screen_width * 1920
-                    mouse_y = event.data[1] / VARIABLES.screen_height * 1080
-                    # print(mouse_x, mouse_y)
+                case Event.GAME_ROTATE:
+                    # Center mouse cursor
+                    pygame.mouse.set_pos(resize(960, "x"), resize(540, "y"))
 
         # Predict
         game.update(events)
