@@ -16,7 +16,7 @@ class EventInstance:
         self.local = id in local_events
 
     def __repr__(self):
-        return f"[{self.id}, {self.data}, {self.timestamp}]"
+        return f"[{self.id},{self.data},{self.timestamp}]"
 
     @staticmethod
     def create(parsed_object) -> EventInstance:

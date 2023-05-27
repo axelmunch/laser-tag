@@ -10,7 +10,7 @@ class Point:
         self.z = z
 
     def __repr__(self):
-        return f"[{self.x}, {self.y}, {self.z}]"
+        return f"[{self.x},{self.y},{self.z}]"
 
     @staticmethod
     def create(parsed_object) -> Point:

@@ -11,7 +11,7 @@ class Line:
         self.point2 = point2
 
     def __repr__(self):
-        return f"[{self.point1}, {self.point2}]"
+        return f"[{self.point1},{self.point2}]"
 
     @staticmethod
     def create(parsed_object) -> Line:

@@ -21,7 +21,7 @@ class Projectile(GameEntity):
         self.give_stats_to_parent_mutex = Lock()
 
     def __repr__(self):
-        return f"['{self.__class__.__name__}', {self.position}, {self.rotation}, {self.team}, {self.damages}, {self.score}, {self.eliminations}, {self.parent_id}]"
+        return f"['{self.__class__.__name__}',{self.position},{self.rotation},{self.team},{self.damages},{self.score},{self.eliminations},{self.parent_id}]"
 
     @staticmethod
     def create(parsed_object) -> Projectile:

@@ -13,7 +13,7 @@ class Box:
         self.height = height
 
     def __repr__(self):
-        return f"[{self.origin}, {self.length}, {self.width}, {self.height}]"
+        return f"[{self.origin},{self.length},{self.width},{self.height}]"
 
     @staticmethod
     def create(parsed_object) -> Box:

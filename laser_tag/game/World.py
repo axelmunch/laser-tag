@@ -19,7 +19,7 @@ class World:
 
     def __init__(self):
         self.map = Map()
-        self.entities: list[GameEntity] = {}
+        self.entities: dict[int, GameEntity] = {}
 
         self.controlled_entity = None
 

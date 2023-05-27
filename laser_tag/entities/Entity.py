@@ -23,7 +23,7 @@ class Entity:
         self.alive = True
 
     def __repr__(self):
-        return f"['{self.__class__.__name__}', {self.position}, {self.collider}, {self.rotation}]"
+        return f"['{self.__class__.__name__}',{self.position},{self.collider},{self.rotation}]"
 
     @staticmethod
     def create(parsed_object) -> Entity:
