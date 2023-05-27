@@ -26,6 +26,7 @@ class Variables:
 
         self.fov = 80
         self.rays_quantity = 1920 // 15
+        self.world_scale = 750
 
         # Load from file
         self.load()

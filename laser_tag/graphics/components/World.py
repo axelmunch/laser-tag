@@ -2,6 +2,7 @@ from math import cos
 
 import pygame
 
+from ...configuration import VARIABLES
 from ...entities.GameEntity import GameEntity
 from ...game.Ray import Ray
 from ...math.degrees_radians import degrees_to_radians
@@ -48,8 +49,6 @@ class World(Component):
         self.surface.fill((42, 42, 42))
 
         if len(self.data["rays"]) > 0:
-            world_scale = 500
-
             step = 1920 / len(self.data["rays"])
             for i in range(len(self.data["rays"])):
                 ray = self.data["rays"][i]
@@ -58,7 +57,7 @@ class World(Component):
                 if ray.distance != 0:
                     if self.data["current_entity"] is not None:
                         # Fix fisheye effect
-                        ray_world_size = world_scale / (
+                        ray_world_size = VARIABLES.world_scale / (
                             ray.distance
                             * cos(
                                 degrees_to_radians(
@@ -70,7 +69,7 @@ class World(Component):
                             )
                         )
                     else:
-                        ray_world_size = world_scale / ray.distance
+                        ray_world_size = VARIABLES.world_scale / ray.distance
                 ray_world_size = min(ray_world_size, 1080)
 
                 color_intensity = 128 / max(1, ray.distance / 3)
