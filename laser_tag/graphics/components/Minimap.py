@@ -2,6 +2,7 @@ from math import ceil
 
 import pygame
 
+from ...configuration import VARIABLES
 from ...entities.GameEntity import GameEntity
 from ...game.Ray import Ray
 from ...math.rotations import rotate
@@ -53,21 +54,22 @@ class Minimap(Component):
                         ),
                     )
 
-        for ray in self.data["rays"]:
-            if ray.hit_point is not None:
-                pygame.draw.line(
-                    self.surface,
-                    (255, 255, 0),
-                    (
-                        ray.origin.x * self.width / map_width,
-                        ray.origin.y * self.height / map_height,
-                    ),
-                    (
-                        ray.hit_point.x * self.width / map_width,
-                        ray.hit_point.y * self.height / map_height,
-                    ),
-                    max(1, int(resize(3))),
-                )
+        if VARIABLES.show_rays_minimap:
+            for ray in self.data["rays"]:
+                if ray.hit_point is not None:
+                    pygame.draw.line(
+                        self.surface,
+                        (255, 255, 0),
+                        (
+                            ray.origin.x * self.width / map_width,
+                            ray.origin.y * self.height / map_height,
+                        ),
+                        (
+                            ray.hit_point.x * self.width / map_width,
+                            ray.hit_point.y * self.height / map_height,
+                        ),
+                        max(1, int(resize(3))),
+                    )
 
         for entity in self.data["entities"]:
             pygame.draw.rect(

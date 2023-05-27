@@ -14,6 +14,7 @@ class Variables:
         self.show_fps = True
         self.show_network_stats = True
         self.show_components_outline = False
+        self.show_rays_minimap = False
 
         self.anti_aliased_text = True
 
