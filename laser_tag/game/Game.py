@@ -1,7 +1,6 @@
 from ..configuration import VARIABLES
 from ..events.Event import Event
 from ..events.EventInstance import EventInstance
-from ..graphics.resize import resize
 from ..utils.DeltaTime import DeltaTime
 from .GameMode import GameMode
 from .World import World
@@ -53,9 +52,13 @@ class Game:
                             Event.GAME_ROTATE,
                             [
                                 -(960 - self.mouse_x)
-                                * resize(VARIABLES.rotate_sensitivity, "x"),
+                                * VARIABLES.rotate_sensitivity
+                                * VARIABLES.screen_width
+                                / 1920,
                                 -(540 - self.mouse_y)
-                                * resize(VARIABLES.rotate_sensitivity, "y"),
+                                * VARIABLES.rotate_sensitivity
+                                * VARIABLES.screen_height
+                                / 1080,
                             ],
                         )
                     )
