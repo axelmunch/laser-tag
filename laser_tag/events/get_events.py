@@ -103,14 +103,8 @@ def get_events() -> list[EventInstance]:
         events.append(EventInstance(Event.KEY_DOWN))
     if key_pressed[K_LEFT]:
         events.append(EventInstance(Event.KEY_LEFT))
-        events.append(
-            EventInstance(Event.GAME_ROTATE, [-1 * VARIABLES.rotate_sensitivity, 0])
-        )
     if key_pressed[K_RIGHT]:
         events.append(EventInstance(Event.KEY_RIGHT))
-        events.append(
-            EventInstance(Event.GAME_ROTATE, [1 * VARIABLES.rotate_sensitivity, 0])
-        )
 
     # Mouse events
     if mouse_buttons[0]:
