@@ -8,9 +8,16 @@ from .resize import resize
 class Text:
     """A class for generating text"""
 
-    def __init__(
-        self, font: str, font_is_file: bool = False, size_multiplier: float = 1
-    ):
+    __instances = {}
+
+    def __new__(cls, font: str, font_is_file: bool = False, size_multiplier: float = 1):
+        id = (font, font_is_file, size_multiplier)
+        if not id in cls.__instances:
+            cls.__instances[id] = super().__new__(cls)
+            cls.__instances[id].reset(font, font_is_file, size_multiplier)
+        return cls.__instances[id]
+
+    def reset(self, font: str, font_is_file: bool, size_multiplier: float):
         self.font = font
         self.font_is_file = font_is_file
         self.size_multiplier = size_multiplier
