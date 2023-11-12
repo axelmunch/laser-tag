@@ -1,3 +1,4 @@
+from math import atan
 from threading import Lock
 
 from ..configuration import VARIABLES
@@ -7,6 +8,7 @@ from ..entities.Projectile import Projectile
 from ..events.Event import Event
 from ..events.EventInstance import EventInstance
 from ..math.Box import Box
+from ..math.degrees_radians import radians_to_degrees
 from ..math.Point import Point
 from ..math.rotations import get_angle, rotate
 from ..utils.DeltaTime import DeltaTime
@@ -310,14 +312,16 @@ class World:
         entity = self.get_entity(self.controlled_entity)
 
         if entity is not None:
-            start = -VARIABLES.fov / 2
-            step = VARIABLES.fov / VARIABLES.rays_quantity
-
             for i in range(VARIABLES.rays_quantity):
+                # Even ray distribution
+                normalized_distance = (i / VARIABLES.rays_quantity - 0.5) * 2  # -1 to 1
+                ray_rotation = radians_to_degrees(atan(normalized_distance))
+                ray_rotation = ray_rotation / 90 * VARIABLES.fov
+
                 rays.append(
                     self.map.cast_ray(
                         entity.position,
-                        (entity.rotation + start + i * step) % 360,
+                        (entity.rotation + ray_rotation) % 360,
                     )
                 )
 
