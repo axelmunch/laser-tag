@@ -6,6 +6,9 @@ from ...configuration import VARIABLES
 from ...entities.GameEntity import GameEntity
 from ...game.Ray import Ray
 from ...math.degrees_radians import degrees_to_radians
+from ...math.distance import distance_points
+from ...math.Point import Point
+from ...math.rotations import get_angle
 from ..resize import resize
 from .Component import Component
 
@@ -45,6 +48,19 @@ class World(Component):
         }
         super().update()
 
+    def position_to_screen(self, point: Point) -> float:
+        # In view if value between 0 and 1
+
+        if self.data["current_entity"] is None:
+            return None
+
+        angle_with_current_entity = (
+            get_angle(point, center=self.data["current_entity"].position)
+            - self.data["current_entity"].rotation
+        )
+
+        return 0.5 + angle_with_current_entity / VARIABLES.fov
+
     def render(self):
         self.surface.fill((42, 42, 42))
 
@@ -83,6 +99,38 @@ class World(Component):
                             resize(540 - ray_world_size / 2, "y"),
                             resize(step + 2, "x"),
                             resize(ray_world_size, "y"),
+                        ),
+                        0,
+                    )
+
+        for entity in self.data["entities"]:
+            distance = distance_points(
+                self.data["current_entity"].position, entity.position
+            )
+
+            if distance > 0:
+                # Temporary scale
+                entity_world_size = min(VARIABLES.world_scale / distance / 4, 1080)
+
+                x_pos = self.position_to_screen(entity.position)
+                margin = 5
+                if (
+                    x_pos is not None
+                    and x_pos * 100 > -margin
+                    and x_pos * 100 < 100 + margin
+                ):
+                    # Draw the entity
+                    pygame.draw.rect(
+                        self.surface,
+                        (255, 255, 255),
+                        (
+                            resize(
+                                x_pos * 1920 - entity_world_size / 2,
+                                "x",
+                            ),
+                            resize(540 - entity_world_size / 2, "y"),
+                            resize(entity_world_size, "x"),
+                            resize(entity_world_size, "y"),
                         ),
                         0,
                     )
