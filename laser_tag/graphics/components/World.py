@@ -64,10 +64,42 @@ class World(Component):
     def render(self):
         self.surface.fill((42, 42, 42))
 
+        render_list = RenderList()
+
+        # List rays
         if len(self.data["rays"]) > 0:
             step = 1920 / len(self.data["rays"])
             for i in range(len(self.data["rays"])):
                 ray = self.data["rays"][i]
+
+                if ray.hit_point is not None:
+                    render_list.add(i * step, ray.distance, ray)
+
+        # List entities
+        for entity in self.data["entities"]:
+            distance = distance_points(
+                self.data["current_entity"].position, entity.position
+            )
+
+            if distance > 0:
+                x_position = self.position_to_screen(entity.position)
+                margin = 5
+                if (
+                    x_position is not None
+                    and x_position * 100 > -margin
+                    and x_position * 100 < 100 + margin
+                ):
+                    render_list.add(x_position, distance, entity)
+
+        render_queue = render_list.get()
+
+        for element in render_queue:
+            x_position = element["x_position"]
+            distance = element["distance"]
+            object = element["object"]
+
+            if isinstance(object, Ray):
+                ray = object
 
                 ray_world_size = 0
                 if ray.distance != 0:
@@ -90,49 +122,56 @@ class World(Component):
 
                 color_intensity = 128 / max(1, ray.distance / 3)
 
-                if ray.hit_point is not None:
-                    pygame.draw.rect(
-                        self.surface,
-                        (color_intensity, color_intensity, color_intensity + 64),
-                        (
-                            resize(i * step, "x"),
-                            resize(540 - ray_world_size / 2, "y"),
-                            ceil(resize(step, "x")),
-                            resize(ray_world_size, "y"),
-                        ),
-                        0,
-                    )
-
-        for entity in self.data["entities"]:
-            distance = distance_points(
-                self.data["current_entity"].position, entity.position
-            )
-
-            if distance > 0:
+                # Draw the ray
+                pygame.draw.rect(
+                    self.surface,
+                    (color_intensity, color_intensity, color_intensity + 64),
+                    (
+                        resize(x_position, "x"),
+                        resize(540 - ray_world_size / 2, "y"),
+                        ceil(resize(step, "x")),
+                        resize(ray_world_size, "y"),
+                    ),
+                    0,
+                )
+            elif isinstance(object, GameEntity):
                 # Temporary scale
                 entity_world_size = min(VARIABLES.world_scale / distance / 4, 1080)
 
-                x_pos = self.position_to_screen(entity.position)
-                margin = 5
-                if (
-                    x_pos is not None
-                    and x_pos * 100 > -margin
-                    and x_pos * 100 < 100 + margin
-                ):
-                    # Draw the entity
-                    pygame.draw.rect(
-                        self.surface,
-                        (255, 255, 255),
-                        (
-                            resize(
-                                x_pos * 1920 - entity_world_size / 2,
-                                "x",
-                            ),
-                            resize(540 - entity_world_size / 2, "y"),
-                            resize(entity_world_size, "x"),
-                            resize(entity_world_size, "y"),
+                # Draw the entity
+                pygame.draw.rect(
+                    self.surface,
+                    (255, 255, 255),
+                    (
+                        resize(
+                            x_position * 1920 - entity_world_size / 2,
+                            "x",
                         ),
-                        0,
-                    )
+                        resize(540 - entity_world_size / 2, "y"),
+                        resize(entity_world_size, "x"),
+                        resize(entity_world_size, "y"),
+                    ),
+                    0,
+                )
 
         super().render()
+
+
+class RenderList:
+    """Render list to order elements by distance"""
+
+    def __init__(self):
+        self.list: list[dict[float, float, Ray | GameEntity]] = []
+
+    def add(self, x_position: float, distance: float, object: Ray | GameEntity):
+        self.list.append(
+            {"x_position": x_position, "distance": distance, "object": object}
+        )
+
+    def sort(self):
+        # Sort by greatest distance
+        self.list.sort(key=lambda x: x["distance"], reverse=True)
+
+    def get(self):
+        self.sort()
+        return self.list

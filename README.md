@@ -16,7 +16,7 @@ This game is a multiplayer laser tag game that uses raycasting to simulate a 3D 
 - [X] Multiplayer
 - [X] Authoritative Server
 - [X] Playable laser tag
-- [ ] Raycasting
+- [X] Raycasting
 - [ ] Vectorial map
 - [ ] Textures
 - [ ] Controller support
