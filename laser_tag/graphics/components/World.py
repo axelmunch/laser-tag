@@ -1,4 +1,4 @@
-from math import cos
+from math import ceil, cos
 
 import pygame
 
@@ -95,9 +95,9 @@ class World(Component):
                         self.surface,
                         (color_intensity, color_intensity, color_intensity + 64),
                         (
-                            resize(i * step - 1, "x"),
+                            resize(i * step, "x"),
                             resize(540 - ray_world_size / 2, "y"),
-                            resize(step + 2, "x"),
+                            ceil(resize(step, "x")),
                             resize(ray_world_size, "y"),
                         ),
                         0,
