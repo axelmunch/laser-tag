@@ -31,29 +31,31 @@ This game is a multiplayer laser tag game that uses raycasting to simulate a 3D 
 
 ## Installation
 
-### Create a virtual environment
+### Python virtual environment (optional)
 
-```bash
+#### Create
+
+```shell
 python3 -m venv .venv
 ```
 
-### Activate the virtual environment
+#### Activate
 
 Linux
 
-```bash
+```shell
 source .venv/bin/activate
 ```
 
 Windows
 
-```bash
+```shell
 .\.venv\Scripts\activate
 ```
 
 ### Install the dependencies
 
-```bash
+```shell
 pip install -r requirements.txt
 ```
 
@@ -61,18 +63,26 @@ pip install -r requirements.txt
 
 ### Run the game
 
-```bash
+```shell
 python -m laser_tag
 ```
 
 ### Run the standalone server
 
-```bash
+```shell
 python -m laser_tag.network.Server [port] [debug]
 ```
 
 ## Build
 
-```bash
-sh build.sh
+Linux
+
+```shell
+./build.sh
+```
+
+Windows
+
+```shell
+build
 ```
