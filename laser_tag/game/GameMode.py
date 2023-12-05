@@ -1,21 +1,9 @@
-from enum import Enum, auto
 from time import time
 
 from ..configuration import VARIABLES
 from ..entities.GameEntity import GameEntity
 from ..entities.Player import Player
-
-
-class Mode(Enum):
-    """Game modes"""
-
-    def __str__(self):
-        return str(self.value)
-
-    SOLO = auto()
-    TEAM = auto()
-    SOLO_ELIMINATION = auto()
-    TEAM_ELIMINATION = auto()
+from .Mode import Mode
 
 
 class GameMode:
@@ -50,7 +38,7 @@ class GameMode:
         match game_mode:
             case Mode.SOLO:
                 self.grace_period_seconds = 3
-                self.game_time_seconds = 10 * 60
+                self.game_time_seconds = 5
             case Mode.SOLO_ELIMINATION:
                 self.grace_period_seconds = 3
                 self.game_time_seconds = 10 * 60
