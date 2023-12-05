@@ -4,6 +4,7 @@ import pygame
 
 from ...configuration import VARIABLES
 from ...entities.GameEntity import GameEntity
+from ...entities.Projectile import Projectile
 from ...game.Ray import Ray
 from ...math.degrees_radians import degrees_to_radians
 from ...math.distance import distance_points
@@ -138,10 +139,15 @@ class World(Component):
                 # Temporary scale
                 entity_world_size = min(VARIABLES.world_scale / distance / 4, 1080)
 
+                color = (255, 255, 255)
+                if isinstance(object, Projectile):
+                    entity_world_size /= 4
+                    color = (0, 192, 0)
+
                 # Draw the entity
                 pygame.draw.rect(
                     self.surface,
-                    (255, 255, 255),
+                    color,
                     (
                         resize(
                             x_position * 1920 - entity_world_size / 2,
