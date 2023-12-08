@@ -53,7 +53,7 @@ class World:
         self.entities[self.get_uid()] = entity
         return self.current_uid
 
-    def get_entity(self, uid):
+    def get_entity(self, uid) -> GameEntity | None:
         try:
             return self.entities[uid]
         except KeyError:
@@ -144,7 +144,7 @@ class World:
                             and isinstance(event.data[0], (int, float))
                         ):
                             current_entity.rotation += event.data[0]
-                        current_entity.rotation %= 360
+                            current_entity.rotation %= 360
                     case Event.GAME_MOVE:
                         if isinstance(event.data, (int, float)):
                             self.move_entity(

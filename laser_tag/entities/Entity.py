@@ -53,5 +53,5 @@ class Entity:
         self.collider.origin.y = y - self.collider.width / 2
         self.collider.origin.z = z
 
-    def collides_with(self, other):
+    def collides_with(self, other: Entity) -> bool:
         return self.collider.collides_with(other.collider)

@@ -44,7 +44,7 @@ class Text:
         return generated_text.get_width(), generated_text.get_height()
 
     def blit(
-        self, generated_text: pygame.Surface, x, y, align_x, align_y
+        self, generated_text: pygame.Surface, x, y, align_x: str, align_y: str
     ) -> tuple[int, int]:
         text_width, text_height = self.get_size(generated_text)
 

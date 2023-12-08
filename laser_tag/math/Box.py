@@ -32,7 +32,7 @@ class Box:
         except:
             return None
 
-    def collides_with(self, other) -> bool:
+    def collides_with(self, other: Box | Point) -> bool:
         if isinstance(other, Box):
             return self.collides_with_box(other)
         elif isinstance(other, Point):

@@ -18,4 +18,5 @@ def create_entity(parsed_object: list):
                 return Projectile.create(entity_object)
     except:
         pass
+
     return None

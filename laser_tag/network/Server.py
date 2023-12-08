@@ -175,7 +175,7 @@ class Server:
     def set_max_clients(self, max_clients: int):
         self.max_clients = max_clients
 
-    def get_state(self, client: ClientInstance) -> list:
+    def get_state(self, client: ClientInstance):
         state = {}
 
         state["game"] = self.game
