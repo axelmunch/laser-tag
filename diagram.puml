@@ -1,0 +1,488 @@
+@startuml "Diagram Laser Tag"
+
+skinparam classFontStyle Bold
+
+package laser_tag {
+    package configuration {
+        class configuration {
+            VARIABLES: Variables
+            VERSION
+            GAME_NAME
+            WINDOW_WINDOWED_SIZE_RATIO
+            TARGET_FPS
+            NETWORK_BUFFER_SIZE
+            SERVER_DEFAULT_MAX_CLIENTS
+            SERVER_DELTA_TIME_NAME
+            SERVER_TIMEOUT
+            SERVER_SOCKET_TIMEOUT
+            CLIENT_TIMEOUT
+            CLIENT_MINIMUM_TICK
+            MAX_RAY_DISTANCE
+            DEFAULT_FONT
+            SCREENSHOTS_PATH
+        }
+
+        class Variables {
+            full_screen_width
+            full_screen_height
+            screen_width
+            screen_height
+            fullscreen
+            server_port
+            fps
+            show_fps
+            show_network_stats
+            show_components_outline
+            show_rays_minimap
+            anti_aliased_text
+            debug
+            rotate_sensitivity
+            pseudo
+            fov
+            rays_quantity
+            world_scale
+
+            load()
+            set_full_screen_size(width, height)
+            set_screen_size(width, height)
+        }
+
+        configuration --> Variables
+    }
+
+    package math {
+        class Box {
+            origin: Point
+            length
+            width
+            height
+
+            create(parsed_object): Box
+            collides_with(other): Boolean
+            collides_with_box(other: Box): Boolean
+            collides_with_point(other: Point): Boolean
+        }
+
+        class Line {
+            point1: Point
+            point2: Point
+
+            create(parsed_object): Line
+        }
+
+        class Point {
+            x
+            y
+            z
+
+            create(parsed_object): Point
+        }
+
+        Box --> Point
+        Line --> Point
+    }
+
+    package utils {
+        class DeltaTime {
+            id
+            previous_time
+            current_time
+            dt
+            dt_target
+
+            reset(current_time)
+            update(current_time)
+            set_dt(dt)
+            get_dt()
+            get_dt_target()
+        }
+
+        class Timer {
+            timer_start
+            timer_end
+
+            start()
+            stop()
+            get_time()
+        }
+    }
+
+    package events {
+        enum Event {
+            NONE
+            TICK
+            START_GAME
+            MESSAGE
+            TYPE_CHAR
+            GAME_MOVE
+            GAME_MOVE_FORWARD
+            GAME_MOVE_BACKWARD
+            GAME_MOVE_LEFT
+            GAME_MOVE_RIGHT
+            GAME_RUN
+            GAME_JUMP
+            GAME_CROUCH
+            GAME_RELOAD
+            GAME_SHOOT
+            GAME_ROTATE
+            GAME_SELECT_TEAM
+            GAME_SCOREBOARD
+            KEY_ESCAPE
+            KEY_ESCAPE_PRESS
+            KEY_RETURN
+            KEY_RETURN_PRESS
+            KEY_TAB
+            KEY_UP
+            KEY_DOWN
+            KEY_LEFT
+            KEY_RIGHT
+            MOUSE_MOVE
+            MOUSE_LEFT_CLICK
+            MOUSE_LEFT_CLICK_PRESS
+            MOUSE_LEFT_CLICK_RELEASE
+            MOUSE_RIGHT_CLICK
+            MOUSE_RIGHT_CLICK_PRESS
+            MOUSE_RIGHT_CLICK_RELEASE
+            MOUSE_MIDDLE_CLICK
+            MOUSE_MIDDLE_CLICK_PRESS
+            MOUSE_MIDDLE_CLICK_RELEASE
+            MOUSE_SCROLL_UP
+            MOUSE_SCROLL_DOWN
+            WINDOW_RESIZE
+            WINDOW_FULLSCREEN
+            WINDOW_QUIT
+            SCREENSHOT
+        }
+
+        class EventInstance {
+            timestamp
+            id
+            data
+            local: Boolean
+
+            create(parsed_object): EventInstance
+        }
+
+        EventInstance --> Event
+    }
+
+    package entities {
+        class Entity {
+            position: Point
+            collider: Box
+            rotation
+            alive: Boolean
+
+            create(parsed_object): Entity
+            move(x, y, z)
+            collides_with(other: Entity): Boolean
+        }
+
+        class GameEntity extends Entity {
+            move_speed
+            run_speed_multiplier
+            crouch_speed_multiplier
+            attack_speed
+            next_attack_timestamps
+            damages
+            can_move: Boolean
+            can_attack: Boolean
+            can_be_attacked: Boolean
+            is_running: Boolean
+            is_crouching: Boolean
+            score
+            score_reward
+            eliminations
+            deaths
+            team
+            hp
+
+            create(parsed_object): GameEntity
+            reset()
+            move(x, y, z)
+            set_max_hp(max_hp)
+            death(no_deletion: Boolean)
+            attack(): Boolean
+            damage(damage): Boolean
+            heal(heal)
+            on_hit(entity: GameEntity)
+            on_kill(entity: GameEntity)
+        }
+
+        class Player extends GameEntity {
+            create(parsed_object): Player
+            death()
+        }
+
+        class Projectile extends Entity {
+            parent_id
+            get_entity_fct
+
+            create(parsed_object): Projectile
+            on_hit(entity: GameEntity)
+            on_kill(entity: GameEntity)
+            death()
+            give_stats_to_parent()
+        }
+
+        Entity --> Point
+        Entity --> Box
+    }
+
+    package game {
+        class Game {
+            game_mode: GameMode
+            world: World
+            mouse_x
+            mouse_y
+            show_scoreboard: Boolean
+
+            set_state(parsed_object)
+            reset()
+            update_state(state)
+            enhance_events(events: EventInstance[])
+            update(events: EventInstance[], controlled_entity_id, delta_time: DeltaTime, player_delta_time: DeltaTime)
+        }
+
+        enum Mode {
+            SOLO
+            TEAM
+            SOLO_ELIMINATION
+            TEAM_ELIMINATION
+        }
+
+        class GameMode {
+            game_mode: Mode
+            game_started: Boolean
+            grace_period_end
+            game_time_end
+            grace_time_seconds
+            leaderboard
+
+            set_state(parsed_object)
+            reset(game_mode)
+            start(): Boolean
+            update_leaderboard(entities: GameEntity[])
+            update(entities: GameEntity[])
+        }
+
+        class World {
+            map: Map
+            entities
+            controller_entity
+            current_uid
+
+            set_state(parsed_object)
+            get_uid()
+            spawn_entity(entity: GameEntity)
+            get_entity(uid): GameEntity
+            remove_entity(uid)
+            set_controlled_entity(uid)
+            enhance_events(events: EventInstance[])
+            update(events: EventInstance[], controlled_entity_id, delta_time: DeltaTime, player_delta_time: DeltaTime)
+            move_entity(entity: GameEntity, movement_vector: Point)
+            cast_rays()
+        }
+
+        class Map {
+            map
+
+            get_spawn_point()
+            collides_with(collider: Box)
+            cast_ray(origin: Point, direction): Ray
+        }
+
+        class Ray {
+            origin: Point
+            direction
+            distance
+
+            set_hit(hit_point: Point, hit_infos, distance)
+        }
+
+        enum Team {
+            NONE
+            RED
+            BLUE
+            GREEN
+            YELLOW
+            ORANGE
+            PINK
+            BLACK
+            WHITE
+        }
+
+        Game --> GameMode
+        Game --> World
+        Game --> EventInstance
+        Game --> DeltaTime
+        GameMode --> Mode
+        GameMode --> GameEntity
+        World --> Map
+        World --> GameEntity
+        World --> EventInstance
+        Map --> Box
+        Map --> Ray
+        Ray --> Point
+    }
+
+    package network {
+        class Client {
+            ip
+            port
+            debug: Boolean
+            connected: Boolean
+            thread
+            events_to_send
+            data_received
+            bytes_sent
+            bytes_received
+            pings
+            socket
+
+            client()
+            send(data)
+            recv()
+            add_events_to_send(events: EventInstance[])
+            get_events_to_send(): EventInstance[]
+            add_received_data(data)
+            get_received_data()
+            set_network_stats(ping, bytes_sent, bytes_received)
+            get_network_stats()
+            is_connected(): Boolean
+            disconnect()
+        }
+
+        class Server {
+            port
+            debug: Boolean
+            socket
+            max_clients
+            clients
+            game: Game
+            server_delta_time: DeltaTime
+            running: Boolean
+            running_thread
+
+            start()
+            run()
+            client(client: ClientInstance)
+            send(client: ClientInstance, data)
+            recv(client: ClientInstance)
+            set_max_clients(max_clients)
+            get_state(client: ClientInstance)
+            parse_events(data)
+            stop()
+            get_port()
+        }
+
+        class ClientInstance {
+            info
+            conn
+            thread
+            data
+            controlled_entity_id
+        }
+
+        Client --> EventInstance
+        Server --> Game
+        Server --> DeltaTime
+        Server --> ClientInstance
+    }
+
+    package graphics {
+        package components {
+            class Component {
+                data
+                surface
+                width
+                height
+
+                set_original_size(width, height)
+                set_surface_size(width, height)
+                resize()
+                get()
+                update(data)
+                render()
+            }
+
+            class Fps extends Component {
+                update(fps)
+            }
+
+            class GameTimer extends Component {
+                update(grace_period_seconds, grace_period_end, game_time_seconds, game_time_end)
+            }
+
+            class Leaderboard extends Component {
+                update(leaderboard)
+            }
+
+            class Minimap extends Component {
+                update(world, entities: GameEntity[], rays: Ray[])
+            }
+
+            class NetworkStats extends Component {
+                update(pings, connected: Boolean, bytes_sent, bytes_received)
+            }
+
+            class Scoreboard extends Component {
+                update(entities: GameEntity[])
+            }
+
+            class "World" as WorldComponent extends Component {
+                update(rays: Ray[], entities: GameEntity[], current_entity: GameEntity)
+                position_to_screen(point: Point)
+            }
+        }
+
+        class Display {
+            screen
+            refresh_display()
+            screenshot()
+        }
+
+        class Renderer {
+            clock
+            components: Component[]
+            set_network_stats(pings, connected: Boolean, bytes_sent, bytes_received)
+            resize()
+            render(game: Game)
+        }
+
+        class Text {
+            reset(font, font_is_file: Boolean, size_multiplier)
+            create_cache(size)
+            clear_cache()
+            generate_text(text, size, color)
+            get_size(generated_text)
+            blit(generated_text, x, y, align_x, align_y)
+            text(text, x, y, size, color, align_x, align_y)
+            get_surface(text, size, color)
+
+            font
+            font_is_file: Boolean
+            size_multiplier
+            cache
+            create_cache(size)
+            clear_cache()
+            generate_text(text, size, color)
+            get_size(generated_text)
+            blit(generated_text, x, y, align_x, align_y)
+            text(text, x, y, size, color, align_x, align_y)
+        }
+
+        Renderer --> Component
+    }
+
+    class __main__ {}
+
+    __main__ --> configuration
+    __main__ --> Game
+    __main__ --> Renderer
+    __main__ --> Server
+    __main__ --> Client
+    __main__ --> Event
+}
+
+@enduml
