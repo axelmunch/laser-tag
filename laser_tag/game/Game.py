@@ -46,16 +46,24 @@ class Game:
                 self.mouse_x = event.data[0] / VARIABLES.screen_width * 1920
                 self.mouse_y = event.data[1] / VARIABLES.screen_height * 1080
 
-                if self.mouse_x != 960 or self.mouse_y != 540:
+                # Center of screen with current resolution
+                middle_x = (
+                    int(VARIABLES.screen_width / 2) / VARIABLES.screen_width * 1920
+                )
+                middle_y = (
+                    int(VARIABLES.screen_height / 2) / VARIABLES.screen_height * 1080
+                )
+
+                if self.mouse_x != middle_x or self.mouse_y != middle_y:
                     events.append(
                         EventInstance(
                             Event.GAME_ROTATE,
                             [
-                                -(960 - self.mouse_x)
+                                -(middle_x - self.mouse_x)
                                 * VARIABLES.rotate_sensitivity
                                 * VARIABLES.screen_width
                                 / 1920,
-                                -(540 - self.mouse_y)
+                                -(middle_y - self.mouse_y)
                                 * VARIABLES.rotate_sensitivity
                                 * VARIABLES.screen_height
                                 / 1080,
