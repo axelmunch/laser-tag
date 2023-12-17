@@ -73,7 +73,7 @@ class Circle:
             # Nearest point is on the segment
             nearest_point = Point(
                 other.point1.x + scale * segment_vector[0],
-                other.point1[1] + scale * segment_vector[1],
+                other.point1.y + scale * segment_vector[1],
             )
 
         return distance_points(self.origin, nearest_point) <= self.radius

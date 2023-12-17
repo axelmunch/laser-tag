@@ -40,11 +40,26 @@ class Line:
             return None
 
         if (
-            self.point1.x <= intersection.x <= self.point2.x
-            or self.point1.x >= intersection.x >= self.point2.x
-        ) and (
-            self.point1.y <= intersection.y <= self.point2.y
-            or self.point1.y >= intersection.y >= self.point2.y
+            (
+                min(line.point1.x, line.point2.x)
+                <= intersection.x
+                <= max(line.point1.x, line.point2.x)
+            )
+            and (
+                min(line.point1.y, line.point2.y)
+                <= intersection.y
+                <= max(line.point1.y, line.point2.y)
+            )
+            and (
+                min(self.point1.x, self.point2.x)
+                <= intersection.x
+                <= max(self.point1.x, self.point2.x)
+            )
+            and (
+                min(self.point1.y, self.point2.y)
+                <= intersection.y
+                <= max(self.point1.y, self.point2.y)
+            )
         ):
             return intersection
 
