@@ -68,6 +68,8 @@ package laser_tag {
             point2: Point
 
             create(parsed_object): Line
+            get_intersection_line(line: Line): Point
+            get_intersection_segment(line: Line): Point
         }
 
         class Point {
