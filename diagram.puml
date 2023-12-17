@@ -63,6 +63,18 @@ package laser_tag {
             collides_with_point(other: Point): Boolean
         }
 
+        class Circle
+        {
+            origin: Point
+            radius
+
+            create(parsed_object): Circle
+            collides_with(other): Boolean
+            collides_with_circle(other: Circle): Boolean
+            collides_with_point(other: Point): Boolean
+            collides_with_segment(other: Line): Boolean
+        }
+
         class Line {
             point1: Point
             point2: Point
@@ -171,7 +183,7 @@ package laser_tag {
     package entities {
         class Entity {
             position: Point
-            collider: Box
+            collider: Circle
             rotation
             alive: Boolean
 
@@ -290,7 +302,7 @@ package laser_tag {
             map
 
             get_spawn_point()
-            collides_with(collider: Box)
+            collides_with(collider: Circle): Boolean
             cast_ray(origin: Point, direction): Ray
         }
 

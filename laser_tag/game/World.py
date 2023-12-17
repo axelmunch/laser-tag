@@ -8,6 +8,7 @@ from ..entities.Projectile import Projectile
 from ..events.Event import Event
 from ..events.EventInstance import EventInstance
 from ..math.Box import Box
+from ..math.Circle import Circle
 from ..math.degrees_radians import radians_to_degrees
 from ..math.Point import Point
 from ..math.rotations import get_angle, rotate
@@ -243,15 +244,14 @@ class World:
     def move_entity(self, entity: GameEntity, movement_vector: Point):
         collision = False
 
-        moved_collider_x = Box(
+        # X
+        moved_collider_x = Circle(
             Point(
                 entity.collider.origin.x + movement_vector.x,
                 entity.collider.origin.y,
                 entity.collider.origin.z,
             ),
-            entity.collider.length,
-            entity.collider.width,
-            entity.collider.height,
+            entity.collider.radius,
         )
 
         if not self.map.collides_with(moved_collider_x):
@@ -263,15 +263,14 @@ class World:
         else:
             collision = True
 
-        moved_collider_y = Box(
+        # Y
+        moved_collider_y = Circle(
             Point(
                 entity.collider.origin.x,
                 entity.collider.origin.y + movement_vector.y,
                 entity.collider.origin.z,
             ),
-            entity.collider.length,
-            entity.collider.width,
-            entity.collider.height,
+            entity.collider.radius,
         )
 
         if not self.map.collides_with(moved_collider_y):
@@ -284,15 +283,14 @@ class World:
             collision = True
 
         if entity.collider.origin.z is not None and movement_vector.z is not None:
-            moved_collider_z = Box(
+            # Z
+            moved_collider_z = Circle(
                 Point(
                     entity.collider.origin.x,
                     entity.collider.origin.y,
                     entity.collider.origin.z + movement_vector.z,
                 ),
                 entity.collider.length,
-                entity.collider.width,
-                entity.collider.height,
             )
 
             if not self.map.collides_with(moved_collider_z):

@@ -7,8 +7,8 @@ from .GameEntity import GameEntity
 class Player(GameEntity):
     """Player entity"""
 
-    def __init__(self, position):
-        super().__init__(position, 0.4, 0.4, 1)
+    def __init__(self, position: Point):
+        super().__init__(position, 0.2)
 
         self.move_speed = 0.05
 

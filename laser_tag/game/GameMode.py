@@ -38,7 +38,7 @@ class GameMode:
         match game_mode:
             case Mode.SOLO:
                 self.grace_period_seconds = 3
-                self.game_time_seconds = 5
+                self.game_time_seconds = 10 * 60
             case Mode.SOLO_ELIMINATION:
                 self.grace_period_seconds = 3
                 self.game_time_seconds = 10 * 60

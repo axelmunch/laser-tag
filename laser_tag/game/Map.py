@@ -1,7 +1,8 @@
 from math import ceil, sqrt
 
 from ..configuration import MAX_RAY_DISTANCE
-from ..math.Box import Box
+from ..math.Circle import Circle
+from ..math.distance import distance_points
 from ..math.Point import Point
 from ..math.rotations import rotate
 from .Ray import Ray
@@ -32,21 +33,27 @@ class Map:
     def get_spawn_point(self):
         return Point(4, 4)
 
-    def collides_with(self, collider: Box):
-        if collider.origin.x < 0 or collider.origin.y < 0:
-            return True
+    def collides_with(self, collider: Circle) -> bool:
+        for y in range(len(self.map)):
+            for x in range(len(self.map[y])):
+                if self.map[y][x] != 0:
+                    closest_point = Point(
+                        max(
+                            x,
+                            min(collider.origin.x, x + 1),
+                        ),
+                        max(
+                            y,
+                            min(collider.origin.y, y + 1),
+                        ),
+                    )
 
-        for y in range(
-            int(collider.origin.y), ceil(collider.origin.y + collider.width)
-        ):
-            for x in range(
-                int(collider.origin.x), ceil(collider.origin.x + collider.length)
-            ):
-                if y > len(self.map) - 1 or x > len(self.map[y]) - 1:
-                    return True
-
-                if self.map[y][x] == 1:
-                    return True
+                    if (
+                        distance_points(collider.origin, closest_point)
+                        < collider.radius
+                    ):
+                        return True
+        return False
 
     def cast_ray(self, origin: Point, direction: float) -> Ray:
         # DDA: Digital Differential Analyzer

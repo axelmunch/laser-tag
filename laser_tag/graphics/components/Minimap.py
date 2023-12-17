@@ -72,18 +72,16 @@ class Minimap(Component):
                     )
 
         for entity in self.data["entities"]:
-            pygame.draw.rect(
+            pygame.draw.circle(
                 self.surface,
                 (0, 128, 192),
                 (
-                    entity.position.x * self.width / map_width
-                    - entity.collider.length / 2 * self.width / map_width,
-                    entity.position.y * self.height / map_height
-                    - entity.collider.width / 2 * self.height / map_height,
-                    ceil(entity.collider.length * self.width / map_width),
-                    ceil(entity.collider.width * self.height / map_height),
+                    entity.position.x * self.width / map_width,
+                    entity.position.y * self.height / map_height,
                 ),
+                ceil(entity.collider.radius * self.width / map_width),
             )
+
             facing_direction_position = rotate(0.5, entity.rotation, entity.position)
             pygame.draw.line(
                 self.surface,

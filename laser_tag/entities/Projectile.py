@@ -9,8 +9,8 @@ from .GameEntity import GameEntity
 class Projectile(GameEntity):
     """Projectile entity"""
 
-    def __init__(self, position, parent_id=None):
-        super().__init__(position, 0.2, 0.2, 0.2)
+    def __init__(self, position: Point, parent_id=None):
+        super().__init__(position, 0.05)
 
         self.move_speed = 0.2
         self.attack_speed = 0

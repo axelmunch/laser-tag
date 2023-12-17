@@ -11,7 +11,7 @@ def get_angle(point: Point, center=Point(0, 0)) -> float:
     return radians_to_degrees(atan2(y - cy, x - cx)) % 360
 
 
-def rotate(distance, angle, center=Point(0, 0)) -> Point:
+def rotate(distance: float, angle: float, center=Point(0, 0)) -> Point:
     """Returns a point rotated around a center point by a given angle (degrees) and distance"""
     a = degrees_to_radians(angle)
     return Point(center.x + distance * cos(a), center.y + distance * sin(a))

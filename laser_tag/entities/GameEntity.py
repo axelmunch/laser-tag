@@ -10,8 +10,8 @@ from .Entity import Entity
 class GameEntity(Entity):
     """Entity with game specific properties"""
 
-    def __init__(self, position, length=1, width=1, height=1):
-        super().__init__(position, length, width, height)
+    def __init__(self, position: Point, radius: float):
+        super().__init__(position, radius)
 
         self.move_speed = 0.05
         self.run_speed_multiplier = 1.4
@@ -40,22 +40,17 @@ class GameEntity(Entity):
         self.set_max_hp(1)
 
     def __repr__(self):
-        return f"['{self.__class__.__name__}',{self.position},{self.collider},{self.rotation},{self.team},{self.score},{self.eliminations},{self.deaths},{self.hp},{self.next_attack_timestamps},{self.can_move},{self.can_attack}]"
+        return f"['{self.__class__.__name__}',{self.position},{self.collider.radius},{self.rotation},{self.team},{self.score},{self.eliminations},{self.deaths},{self.hp},{self.next_attack_timestamps},{self.can_move},{self.can_attack}]"
 
     @staticmethod
     def create(parsed_object) -> GameEntity:
         try:
             position = Point.create(parsed_object[0])
-            collider = Box.create(parsed_object[1])
-            if position is None or collider is None:
+            radius = parsed_object[1]
+            if position is None or radius is None:
                 return None
 
-            entity = GameEntity(
-                position,
-                collider.length,
-                collider.width,
-                collider.height,
-            )
+            entity = GameEntity(position, radius)
             entity.rotation = float(parsed_object[2])
             entity.team = int(parsed_object[3])
             entity.score = float(parsed_object[4])
