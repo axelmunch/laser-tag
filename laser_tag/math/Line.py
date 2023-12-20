@@ -40,31 +40,28 @@ class Line:
             return None
 
         rounding_precision = 10
-        rounded_intersection = Point(
-            round(intersection.x, rounding_precision),
-            round(intersection.y, rounding_precision),
-        )
+        margin = 10**-rounding_precision
 
         if (
             (
-                min(line.point1.x, line.point2.x)
-                <= rounded_intersection.x
-                <= max(line.point1.x, line.point2.x)
+                min(line.point1.x, line.point2.x) - margin
+                <= intersection.x
+                <= max(line.point1.x, line.point2.x) + margin
             )
             and (
-                min(line.point1.y, line.point2.y)
-                <= rounded_intersection.y
-                <= max(line.point1.y, line.point2.y)
+                min(line.point1.y, line.point2.y) - margin
+                <= intersection.y
+                <= max(line.point1.y, line.point2.y) + margin
             )
             and (
-                min(self.point1.x, self.point2.x)
-                <= rounded_intersection.x
-                <= max(self.point1.x, self.point2.x)
+                min(self.point1.x, self.point2.x) - margin
+                <= intersection.x
+                <= max(self.point1.x, self.point2.x) + margin
             )
             and (
-                min(self.point1.y, self.point2.y)
-                <= rounded_intersection.y
-                <= max(self.point1.y, self.point2.y)
+                min(self.point1.y, self.point2.y) - margin
+                <= intersection.y
+                <= max(self.point1.y, self.point2.y) + margin
             )
         ):
             return intersection
