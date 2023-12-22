@@ -18,7 +18,7 @@ class Team(Enum):
     WHITE = 7
 
 
-def get_color(team):
+def get_color(team: Team | int):
     try:
         team = Team(team)
     except ValueError:

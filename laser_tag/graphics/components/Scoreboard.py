@@ -33,7 +33,7 @@ class Scoreboard(Component):
         entities: list[GameEntity],
     ):
         """
-        Update the component.
+        Update the component
 
         Parameters:
             entities (list): List of entities in the world

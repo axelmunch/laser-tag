@@ -1,7 +1,7 @@
 import pygame
 
 from ...configuration import DEFAULT_FONT
-from ...game.Team import get_color
+from ...game.Team import Team, get_color
 from ..resize import resize
 from ..Text import Text
 from .Component import Component
@@ -28,9 +28,9 @@ class Leaderboard(Component):
 
         self.update(data)
 
-    def update(self, leaderboard):
+    def update(self, leaderboard: list[tuple[float, Team, str]]):
         """
-        Update the component.
+        Update the component
 
         Parameters:
             leaderboard (list): Leaderboard (value, team, title)

@@ -43,7 +43,7 @@ class GameTimer(Component):
         game_time_end: float,
     ):
         """
-        Update the component.
+        Update the component
 
         Parameters:
             grace_period_seconds (float): Grace period in seconds

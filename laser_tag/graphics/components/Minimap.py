@@ -24,7 +24,7 @@ class Minimap(Component):
         self, world: list[list[int]], entities: list[GameEntity], rays: list[Ray] = []
     ):
         """
-        Update the component.
+        Update the component
 
         Parameters:
             world (grid): Map of the level as a grid

@@ -34,7 +34,7 @@ class World(Component):
         current_entity: GameEntity = None,
     ):
         """
-        Update the component.
+        Update the component
 
         Parameters:
             rays (list): List of rays to render
@@ -103,7 +103,7 @@ class World(Component):
                 ray = object
 
                 ray_world_size = 0
-                if ray.distance != 0:
+                if ray.distance is not None and ray.distance != 0:
                     if self.data["current_entity"] is not None:
                         # Fix fisheye effect
                         ray_world_size = VARIABLES.world_scale / (

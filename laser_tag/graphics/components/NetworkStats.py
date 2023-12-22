@@ -44,7 +44,7 @@ class NetworkStats(Component):
         bytes_received: list[int],
     ):
         """
-        Update the component.
+        Update the component
 
         Parameters:
             pings (list): Pings in seconds the last game tick

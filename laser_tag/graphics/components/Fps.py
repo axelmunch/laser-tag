@@ -19,7 +19,7 @@ class Fps(Component):
 
     def update(self, fps: float):
         """
-        Update the component.
+        Update the component
 
         Parameters:
             fps (float): FPS
