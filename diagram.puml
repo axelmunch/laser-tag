@@ -82,6 +82,7 @@ package laser_tag {
             create(parsed_object): Line
             get_intersection_line(line: Line): Point
             get_intersection_segment(line: Line): Point
+            get_coordinates(map_bounds)
         }
 
         class Point {
@@ -300,8 +301,15 @@ package laser_tag {
 
         class Map {
             map
+            spatial_partitioning
+            map_min_x
+            map_min_y
+            map_max_x
+            map_max_y
 
-            get_spawn_point()
+            get_spawn_point(): Point
+            get_map_bounds()
+            generate_partitioning_cache()
             collides_with(collider: Circle): Boolean
             cast_ray(origin: Point, direction): Ray
         }
@@ -335,7 +343,8 @@ package laser_tag {
         World --> Map
         World --> GameEntity
         World --> EventInstance
-        Map --> Box
+        Map --> Point
+        Map --> Circle
         Map --> Ray
         Ray --> Point
     }
@@ -413,6 +422,7 @@ package laser_tag {
                 height
 
                 set_original_size(width, height)
+                get_size()
                 set_surface_size(width, height)
                 resize()
                 get()
@@ -433,7 +443,7 @@ package laser_tag {
             }
 
             class Minimap extends Component {
-                update(world, entities: GameEntity[], rays: Ray[])
+                update(map, map_bounds, entities: GameEntity[], rays: Ray[])
             }
 
             class NetworkStats extends Component {

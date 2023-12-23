@@ -12,10 +12,13 @@ class Component:
         self.surface: pygame.Surface
         self.set_original_size(0, 0)
 
-    def set_original_size(self, width, height):
+    def set_original_size(self, width: int, height: int):
         self.original_width = width
         self.original_height = height
         self.resize()
+
+    def get_size(self) -> tuple[int, int]:
+        return self.original_width, self.original_height
 
     def set_surface_size(self, width, height):
         self.width = int(width)

@@ -121,7 +121,7 @@ class World(Component):
                         ray_world_size = VARIABLES.world_scale / ray.distance
                 ray_world_size = min(ray_world_size, 1080)
 
-                color_intensity = 128 / max(1, ray.distance / 3)
+                color_intensity = max(0, (1 - (ray.distance / 8))) * 127 + 64
 
                 # Draw the ray
                 pygame.draw.rect(

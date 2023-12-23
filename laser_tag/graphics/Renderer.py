@@ -16,7 +16,6 @@ from .resize import resize
 class Renderer:
     def __init__(self, clock: pygame.time.Clock):
         self.clock = clock
-        # Load resources
 
         self.fps = Fps()
         self.minimap = Minimap()
@@ -61,14 +60,19 @@ class Renderer:
         )
         display.screen.blit(self.world.get(), (0, 0))
 
-        self.minimap.update(game.world.map.map, game.world.entities.values(), rays=rays)
+        self.minimap.update(
+            game.world.map.map,
+            game.world.map.get_map_bounds(),
+            game.world.entities.values(),
+            rays=rays,
+        )
         display.screen.blit(self.minimap.get(), (resize(10, "x"), resize(10, "y")))
 
         self.leaderboard.update(game.game_mode.leaderboard)
         display.screen.blit(
             self.leaderboard.get(),
             (
-                resize(420, "x"),
+                resize(20 + self.minimap.get_size()[0], "x"),
                 resize(10, "y"),
             ),
         )

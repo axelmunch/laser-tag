@@ -1,8 +1,7 @@
-from math import ceil, sqrt
-
 from ..configuration import MAX_RAY_DISTANCE
 from ..math.Circle import Circle
 from ..math.distance import distance_points
+from ..math.Line import Line
 from ..math.Point import Point
 from ..math.rotations import rotate
 from .Ray import Ray
@@ -13,116 +12,86 @@ class Map:
 
     def __init__(self):
         self.map = [
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1],
-            [1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1],
-            [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1],
-            [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1],
-            [1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1],
-            [1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            Line(Point(7.5, 5.5), Point(10, 10)),
+            Line(Point(1.5, 0), Point(1.5, 10)),
+            Line(Point(0, 1.5), Point(10, 1.5)),
         ]
 
-    def get_spawn_point(self):
+        # Spatial grid partitioning, stores wall index in each cell
+        self.spatial_partitioning = {}
+        self.map_min_x = self.map_min_y = self.map_max_x = self.map_max_y = None
+
+        self.generate_partitioning_cache()
+
+    def get_spawn_point(self) -> Point:
         return Point(4, 4)
 
-    def collides_with(self, collider: Circle) -> bool:
-        for y in range(len(self.map)):
-            for x in range(len(self.map[y])):
-                if self.map[y][x] != 0:
-                    closest_point = Point(
-                        max(
-                            x,
-                            min(collider.origin.x, x + 1),
-                        ),
-                        max(
-                            y,
-                            min(collider.origin.y, y + 1),
-                        ),
-                    )
+    def get_map_bounds(self) -> tuple[int, int, int, int]:
+        return (
+            self.map_min_x,
+            self.map_min_y,
+            self.map_max_x,
+            self.map_max_y,
+        )
 
-                    if (
-                        distance_points(collider.origin, closest_point)
-                        < collider.radius
-                    ):
-                        return True
+    def generate_partitioning_cache(self):
+        self.spatial_partitioning = {}
+        self.map_min_x = self.map_min_y = self.map_max_x = self.map_max_y = None
+
+        for i in range(len(self.map)):
+            line = self.map[i]
+
+            # Min and max
+            if self.map_min_x is None:
+                self.map_min_x = line.point1.x
+                self.map_min_y = line.point1.y
+                self.map_max_x = line.point1.x
+                self.map_max_y = line.point1.y
+            self.map_min_x = min(self.map_min_x, line.point1.x, line.point2.x)
+            self.map_min_y = min(self.map_min_y, line.point1.y, line.point2.y)
+            self.map_max_x = max(self.map_max_x, line.point1.x, line.point2.x)
+            self.map_max_y = max(self.map_max_y, line.point1.y, line.point2.y)
+
+            for x, y in line.get_coordinates():
+                if (x, y) not in self.spatial_partitioning:
+                    self.spatial_partitioning[(x, y)] = []
+                self.spatial_partitioning[(x, y)].append(i)
+
+    def collides_with(self, collider: Circle) -> bool:
+        for line in self.map:
+            if collider.collides_with(line):
+                return True
+
         return False
 
     def cast_ray(self, origin: Point, direction: float) -> Ray:
-        # DDA: Digital Differential Analyzer
-
         ray = Ray(origin, direction)
 
-        cell = Point(int(origin.x), int(origin.y))
+        end_point = rotate(MAX_RAY_DISTANCE, direction, center=origin)
+        ray_line = Line(origin, end_point)
 
-        end_point = rotate(1, direction, center=origin)
+        intersection_points = []
 
-        dx = end_point.x - origin.x
-        dy = end_point.y - origin.y
-        one_unit_x = sqrt(1 + (dy / dx) ** 2) if dx != 0 else MAX_RAY_DISTANCE
-        one_unit_y = sqrt(1 + (dx / dy) ** 2) if dy != 0 else MAX_RAY_DISTANCE
+        for coordinate in ray_line.get_coordinates(map_bounds=self.get_map_bounds()):
+            if coordinate not in self.spatial_partitioning:
+                continue
 
-        x_distance = 0
-        y_distance = 0
+            for line_index in self.spatial_partitioning[coordinate]:
+                line = self.map[line_index]
 
-        casting_direction = [0, 0]
-        if direction > 180:
-            # Up
-            casting_direction[1] = -1
-            y_distance = (origin.y - cell.y) * one_unit_y
-        else:
-            # Down
-            casting_direction[1] = 1
-            y_distance = (cell.y + 1 - origin.y) * one_unit_y
-        if direction > 90 and direction < 270:
-            # Left
-            casting_direction[0] = -1
-            x_distance = (origin.x - cell.x) * one_unit_x
-        else:
-            # Right
-            casting_direction[0] = 1
-            x_distance = (cell.x + 1 - origin.x) * one_unit_x
+                intersection = ray_line.get_intersection_segment(line)
+                if intersection is not None:
+                    intersection_points.append(intersection)
 
-        casting = True
-        total_distance = 0
-        while casting and total_distance < MAX_RAY_DISTANCE:
-            if x_distance < y_distance:
-                cell.x += casting_direction[0]
-                total_distance = x_distance
-                x_distance += one_unit_x
-            else:
-                cell.y += casting_direction[1]
-                total_distance = y_distance
-                y_distance += one_unit_y
-
-            # Collision
-            if (
-                cell.x >= 0
-                and cell.x < len(self.map[0])
-                and cell.y >= 0
-                and cell.y < len(self.map)
-            ):
-                if self.map[cell.y][cell.x] == 1:
-                    casting = False
-
-                    ray.set_hit(
-                        rotate(
-                            min(total_distance, MAX_RAY_DISTANCE),
-                            direction,
-                            center=origin,
-                        ),
-                        hit_infos=None,
-                        distance=min(total_distance, MAX_RAY_DISTANCE),
-                    )
-            else:
-                # Out of the map
-                casting = False
+        if len(intersection_points) > 0:
+            intersection_points.sort(
+                key=lambda point: distance_points(origin, point),
+            )
+            # Nearest intersection point
+            ray.set_hit(
+                intersection_points[0],
+                hit_infos=None,
+                distance=distance_points(origin, intersection_points[0]),
+            )
 
         return ray
