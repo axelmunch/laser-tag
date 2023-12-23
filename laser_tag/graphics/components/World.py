@@ -52,13 +52,11 @@ class World(Component):
     def position_to_screen(self, point: Point) -> float:
         # In view if value between 0 and 1
 
-        if self.data["current_entity"] is None:
-            return None
-
         angle_with_current_entity = (
             get_angle(point, center=self.data["current_entity"].position)
             - self.data["current_entity"].rotation
-        )
+            + 180
+        ) % 360 - 180
 
         return 0.5 + angle_with_current_entity / VARIABLES.fov
 
@@ -84,6 +82,7 @@ class World(Component):
 
             if distance > 0:
                 x_position = self.position_to_screen(entity.position)
+                # print(x_position)
                 margin = 5
                 if (
                     x_position is not None
