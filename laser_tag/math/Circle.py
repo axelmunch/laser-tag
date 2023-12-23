@@ -62,6 +62,9 @@ class Circle:
         )
         segment_length_squared = segment_vector[0] ** 2 + segment_vector[1] ** 2
 
+        if segment_length_squared == 0:
+            return distance_points(self.origin, other.point1) <= self.radius
+
         scale = dot_product / segment_length_squared
 
         # Nearest point is outside the segment

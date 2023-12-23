@@ -109,8 +109,16 @@ class Line:
         one_unit_x = sqrt(1 + (dy / dx) ** 2) if dx != 0 else max_distance
         one_unit_y = sqrt(1 + (dx / dy) ** 2) if dy != 0 else max_distance
 
-        dir_x = 1 if self.point1.x < self.point2.x else -1
-        dir_y = 1 if self.point1.y < self.point2.y else -1
+        dir_x = (
+            1
+            if self.point1.x < self.point2.x
+            else (-1 if self.point1.x > self.point2.x else 0)
+        )
+        dir_y = (
+            1
+            if self.point1.y < self.point2.y
+            else (-1 if self.point1.y > self.point2.y else 0)
+        )
 
         x_distance = (
             ((cell.x + 1 - origin.x) * one_unit_x)
