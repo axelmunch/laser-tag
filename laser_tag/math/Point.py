@@ -2,7 +2,7 @@ from __future__ import annotations
 
 
 class Point:
-    """A point is represented by three positions: x, y and z. If z is not defined, the point is 2D"""
+    """A point is represented by x and y"""
 
     def __init__(self, x: float, y: float):
         self.x = x
@@ -17,3 +17,6 @@ class Point:
             return Point(float(parsed_object[0]), float(parsed_object[1]))
         except:
             return None
+
+    def __eq__(self, other) -> bool:
+        return self.x == other.x and self.y == other.y

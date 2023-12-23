@@ -4,7 +4,7 @@ from .Point import Point
 
 
 class Box:
-    """A box is represented by an origin point, a length, a width and a height. If height is not defined, the box is 2D"""
+    """A box is represented by an origin point, a length and a width"""
 
     def __init__(self, origin: Point, length: float, width: float):
         self.origin = origin
@@ -23,6 +23,13 @@ class Box:
             return Box(point, float(parsed_object[1]), float(parsed_object[2]))
         except:
             return None
+
+    def __eq__(self, other) -> bool:
+        return (
+            self.origin == other.origin
+            and self.length == other.length
+            and self.width == other.width
+        )
 
     def collides_with(self, other: Box | Point) -> bool:
         if isinstance(other, Box):

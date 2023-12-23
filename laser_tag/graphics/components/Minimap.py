@@ -28,7 +28,7 @@ class Minimap(Component):
         map: list[Line],
         map_bounds: tuple[int, int, int, int],
         entities: list[GameEntity],
-        rays: list[Ray] = [],
+        rays: list[tuple[int, Ray]] = [],
     ):
         """
         Update the component
@@ -76,7 +76,7 @@ class Minimap(Component):
             )
 
         if VARIABLES.show_rays_minimap:
-            for ray in self.data["rays"]:
+            for _, ray in self.data["rays"]:
                 if ray.hit_point is not None:
                     pygame.draw.line(
                         self.surface,

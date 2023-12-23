@@ -12,6 +12,7 @@ class Line:
     def __init__(self, point1: Point, point2: Point):
         self.point1 = point1
         self.point2 = point2
+        self.distance = distance_points(self.point1, self.point2)
 
     def __repr__(self):
         return f"[{self.point1},{self.point2}]"
@@ -26,6 +27,9 @@ class Line:
             return Line(point1, point2)
         except:
             return None
+
+    def __eq__(self, other) -> bool:
+        return self.point1 == other.point1 and self.point2 == other.point2
 
     def get_intersection_line(self, line: Line) -> Point | None:
         """Returns the intersection point between two lines"""
@@ -157,3 +161,9 @@ class Line:
                 grid_cells.append((cell.x, cell.y))
 
         return grid_cells
+
+    def get_point_ratio_on_line(self, intersection_point: Point):
+        if intersection_point == self.point1:
+            return 0
+
+        return distance_points(self.point1, intersection_point) / self.distance

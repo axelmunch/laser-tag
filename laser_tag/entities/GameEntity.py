@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from time import time
 
-from ..math.Box import Box
 from ..math.Point import Point
 from .Entity import Entity
 

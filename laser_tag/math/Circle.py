@@ -26,6 +26,9 @@ class Circle:
         except:
             return None
 
+    def __eq__(self, other) -> bool:
+        return self.origin == other.origin and self.radius == other.radius
+
     def collides_with(self, other: Circle | Line | Point) -> bool:
         if isinstance(other, Circle):
             return self.collides_with_circle(other)

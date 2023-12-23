@@ -7,7 +7,7 @@ from ..entities.GameEntity import GameEntity
 from ..entities.Projectile import Projectile
 from ..events.Event import Event
 from ..events.EventInstance import EventInstance
-from ..math.Box import Box
+from ..game.Ray import Ray
 from ..math.Circle import Circle
 from ..math.degrees_radians import radians_to_degrees
 from ..math.Point import Point
@@ -270,8 +270,8 @@ class World:
 
         return collision
 
-    def cast_rays(self):
-        rays = []
+    def cast_rays(self) -> list[tuple[int, Ray]]:
+        rays: list[tuple[int, Ray]] = []
 
         entity = self.get_entity(self.controlled_entity)
 
@@ -282,11 +282,11 @@ class World:
                 ray_rotation = radians_to_degrees(atan(normalized_distance))
                 ray_rotation = ray_rotation / 90 * VARIABLES.fov
 
-                rays.append(
-                    self.map.cast_ray(
-                        entity.position,
-                        (entity.rotation + ray_rotation) % 360,
-                    )
+                ray = self.map.cast_ray(
+                    entity.position,
+                    (entity.rotation + ray_rotation) % 360,
                 )
+                if ray.distance != 0:
+                    rays.append((i, ray))
 
         return rays

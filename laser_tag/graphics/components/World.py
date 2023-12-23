@@ -29,7 +29,7 @@ class World(Component):
 
     def update(
         self,
-        rays: list[Ray],
+        rays: list[tuple[int, Ray]],
         entities: list[GameEntity],
         current_entity: GameEntity = None,
     ):
@@ -67,10 +67,8 @@ class World(Component):
 
         # List rays
         if len(self.data["rays"]) > 0:
-            step = 1920 / len(self.data["rays"])
-            for i in range(len(self.data["rays"])):
-                ray = self.data["rays"][i]
-
+            step = 1920 / VARIABLES.rays_quantity
+            for i, ray in self.data["rays"]:
                 if ray.hit_point is not None:
                     render_list.add(i * step, ray.distance, ray)
 
@@ -82,7 +80,6 @@ class World(Component):
 
             if distance > 0:
                 x_position = self.position_to_screen(entity.position)
-                # print(x_position)
                 margin = 5
                 if (
                     x_position is not None
@@ -102,7 +99,7 @@ class World(Component):
                 ray = object
 
                 ray_world_size = 0
-                if ray.distance is not None and ray.distance != 0:
+                if ray.distance != 0:
                     if self.data["current_entity"] is not None:
                         # Fix fisheye effect
                         ray_world_size = VARIABLES.world_scale / (

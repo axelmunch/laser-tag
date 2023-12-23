@@ -70,7 +70,8 @@ class Map:
         end_point = rotate(MAX_RAY_DISTANCE, direction, center=origin)
         ray_line = Line(origin, end_point)
 
-        intersection_points = []
+        # Line intersecting, intersection point, distance between origin and intersection point
+        intersections: list[tuple(Point, Line, float)] = []
 
         for coordinate in ray_line.get_coordinates(map_bounds=self.get_map_bounds()):
             if coordinate not in self.spatial_partitioning:
@@ -79,19 +80,27 @@ class Map:
             for line_index in self.spatial_partitioning[coordinate]:
                 line = self.map[line_index]
 
-                intersection = ray_line.get_intersection_segment(line)
-                if intersection is not None:
-                    intersection_points.append(intersection)
+                intersection_point = ray_line.get_intersection_segment(line)
+                if intersection_point is not None:
+                    intersections.append(
+                        (
+                            intersection_point,
+                            line,
+                            distance_points(origin, intersection_point),
+                        )
+                    )
 
-        if len(intersection_points) > 0:
-            intersection_points.sort(
-                key=lambda point: distance_points(origin, point),
-            )
-            # Nearest intersection point
+        if len(intersections) > 0:
+            # Sort by distance
+            intersections.sort(key=lambda intersection: intersection[2])
+
+            # Nearest intersection
             ray.set_hit(
-                intersection_points[0],
-                hit_infos=None,
-                distance=distance_points(origin, intersection_points[0]),
+                intersections[0][0],
+                hit_infos=intersections[0][1].get_point_ratio_on_line(
+                    intersections[0][0]
+                ),
+                distance=intersections[0][2],
             )
 
         return ray
