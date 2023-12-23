@@ -170,9 +170,7 @@ class World:
                         if current_entity.attack():
                             projectile = Projectile(
                                 Point(
-                                    current_entity.position.x,
-                                    current_entity.position.y,
-                                    current_entity.position.z,
+                                    current_entity.position.x, current_entity.position.y
                                 ),
                                 self.controlled_entity
                                 if self.controlled_entity is not None
@@ -247,60 +245,28 @@ class World:
         # X
         moved_collider_x = Circle(
             Point(
-                entity.collider.origin.x + movement_vector.x,
-                entity.collider.origin.y,
-                entity.collider.origin.z,
+                entity.collider.origin.x + movement_vector.x, entity.collider.origin.y
             ),
             entity.collider.radius,
         )
 
         if not self.map.collides_with(moved_collider_x):
-            entity.move(
-                entity.position.x + movement_vector.x,
-                entity.position.y,
-                entity.position.z,
-            )
+            entity.move(entity.position.x + movement_vector.x, entity.position.y)
         else:
             collision = True
 
         # Y
         moved_collider_y = Circle(
             Point(
-                entity.collider.origin.x,
-                entity.collider.origin.y + movement_vector.y,
-                entity.collider.origin.z,
+                entity.collider.origin.x, entity.collider.origin.y + movement_vector.y
             ),
             entity.collider.radius,
         )
 
         if not self.map.collides_with(moved_collider_y):
-            entity.move(
-                entity.position.x,
-                entity.position.y + movement_vector.y,
-                entity.position.z,
-            )
+            entity.move(entity.position.x, entity.position.y + movement_vector.y)
         else:
             collision = True
-
-        if entity.collider.origin.z is not None and movement_vector.z is not None:
-            # Z
-            moved_collider_z = Circle(
-                Point(
-                    entity.collider.origin.x,
-                    entity.collider.origin.y,
-                    entity.collider.origin.z + movement_vector.z,
-                ),
-                entity.collider.length,
-            )
-
-            if not self.map.collides_with(moved_collider_z):
-                entity.move(
-                    entity.position.x,
-                    entity.position.y,
-                    entity.position.z + movement_vector.z,
-                )
-            else:
-                collision = True
 
         return collision
 

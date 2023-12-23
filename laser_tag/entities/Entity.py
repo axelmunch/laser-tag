@@ -33,10 +33,9 @@ class Entity:
         except:
             return None
 
-    def move(self, x, y, z):
+    def move(self, x: float, y: float):
         self.position.x = x
         self.position.y = y
-        self.position.z = z
 
         self.collider.origin = self.position
 

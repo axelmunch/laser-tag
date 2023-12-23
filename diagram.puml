@@ -55,7 +55,6 @@ package laser_tag {
             origin: Point
             length
             width
-            height
 
             create(parsed_object): Box
             collides_with(other): Boolean
@@ -88,12 +87,13 @@ package laser_tag {
         class Point {
             x
             y
-            z
 
             create(parsed_object): Point
         }
 
         Box --> Point
+        Circle --> Point
+        Circle --> Line
         Line --> Point
     }
 
@@ -189,7 +189,7 @@ package laser_tag {
             alive: Boolean
 
             create(parsed_object): Entity
-            move(x, y, z)
+            move(x, y)
             collides_with(other: Entity): Boolean
         }
 
@@ -214,7 +214,7 @@ package laser_tag {
 
             create(parsed_object): GameEntity
             reset()
-            move(x, y, z)
+            move(x, y)
             set_max_hp(max_hp)
             death(no_deletion: Boolean)
             attack(): Boolean
@@ -241,7 +241,7 @@ package laser_tag {
         }
 
         Entity --> Point
-        Entity --> Box
+        Entity --> Circle
     }
 
     package game {

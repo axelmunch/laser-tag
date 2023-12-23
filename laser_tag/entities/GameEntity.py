@@ -71,9 +71,9 @@ class GameEntity(Entity):
         self.eliminations = 0
         self.deaths = 0
 
-    def move(self, x, y, z):
+    def move(self, x: float, y: float):
         if self.can_move:
-            super().move(x, y, z)
+            super().move(x, y)
 
     def set_max_hp(self, max_hp):
         self.max_hp = max_hp
