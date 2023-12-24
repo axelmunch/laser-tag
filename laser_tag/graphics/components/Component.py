@@ -1,3 +1,5 @@
+from math import ceil
+
 import pygame
 
 from ...configuration import VARIABLES
@@ -21,8 +23,8 @@ class Component:
         return self.original_width, self.original_height
 
     def set_surface_size(self, width, height):
-        self.width = int(width)
-        self.height = int(height)
+        self.width = ceil(width)
+        self.height = ceil(height)
         self.surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
 
     def resize(self):

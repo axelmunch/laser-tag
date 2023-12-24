@@ -67,7 +67,8 @@ if __name__ == "__main__":
                     display.screenshot()
                 case Event.GAME_ROTATE:
                     # Center mouse cursor
-                    pygame.mouse.set_pos(resize(960, "x"), resize(540, "y"))
+                    if game.lock_cursor:
+                        pygame.mouse.set_pos(resize(960, "x"), resize(540, "y"))
 
         # Predict
         game.update(events)
@@ -86,6 +87,7 @@ if __name__ == "__main__":
         renderer.set_network_stats(
             network_stats[0], network_stats[1], network_stats[2], network_stats[3]
         )
+        renderer.set_events(events)
         renderer.render(game)
 
         pygame.display.flip()

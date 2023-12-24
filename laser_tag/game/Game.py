@@ -18,6 +18,8 @@ class Game:
 
         self.show_scoreboard = False
 
+        self.lock_cursor = True
+
     def __repr__(self):
         return f"[{self.game_mode}, {self.world}]"
 
@@ -45,6 +47,7 @@ class Game:
             if event.id == Event.MOUSE_MOVE:
                 self.mouse_x = event.data[0] / VARIABLES.screen_width * 1920
                 self.mouse_y = event.data[1] / VARIABLES.screen_height * 1080
+                event.data = [self.mouse_x, self.mouse_y]
 
                 # Center of screen with current resolution
                 middle_x = (
@@ -102,3 +105,6 @@ class Game:
         self.world.update(events, controlled_entity_id, delta_time, player_delta_time)
 
         self.game_mode.update(self.world.entities)
+
+        if VARIABLES.level_editor:
+            self.lock_cursor = False

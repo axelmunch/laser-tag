@@ -1,11 +1,13 @@
 import pygame
 
 from ..configuration import VARIABLES
+from ..events.EventInstance import EventInstance
 from ..game.Game import Game
 from . import display
 from .components.Fps import Fps
 from .components.GameTimer import GameTimer
 from .components.Leaderboard import Leaderboard
+from .components.LevelEditor.LevelEditor import LevelEditor
 from .components.Minimap import Minimap
 from .components.NetworkStats import NetworkStats
 from .components.Scoreboard import Scoreboard
@@ -24,6 +26,7 @@ class Renderer:
         self.scoreboard = Scoreboard()
         self.game_timer = GameTimer()
         self.world = World()
+        self.level_editor = LevelEditor()
         self.components = [
             self.fps,
             self.minimap,
@@ -32,6 +35,7 @@ class Renderer:
             self.scoreboard,
             self.game_timer,
             self.world,
+            self.level_editor,
         ]
 
     def set_network_stats(
@@ -43,6 +47,10 @@ class Renderer:
     ):
         if VARIABLES.show_network_stats:
             self.network_stats.update(pings, connected, bytes_sent, bytes_received)
+
+    def set_events(self, events: list[EventInstance]):
+        if VARIABLES.level_editor:
+            self.level_editor.update(events)
 
     def resize(self):
         for component in self.components:
@@ -120,6 +128,9 @@ class Renderer:
                 resize(10, "y"),
             ),
         )
+
+        if VARIABLES.level_editor:
+            display.screen.blit(self.level_editor.get(), (0, 0))
 
         if VARIABLES.show_fps:
             self.fps.update(self.clock.get_fps())
