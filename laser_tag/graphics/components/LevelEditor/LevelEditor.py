@@ -5,7 +5,7 @@ from ...resize import resize
 from ...Text import Text
 from ..Component import Component
 from .ItemMenu import ItemMenu
-from .ToolBar import ToolBar
+from .Toolbar import Toolbar
 from .View import View
 
 
@@ -16,11 +16,11 @@ class LevelEditor(Component):
         self,
         data=[],
     ):
-        self.tool_bar = ToolBar()
+        self.toolbar = Toolbar()
         self.item_menu = ItemMenu()
         self.view = View()
         self.components = [
-            self.tool_bar,
+            self.toolbar,
             self.item_menu,
             self.view,
         ]
@@ -38,9 +38,9 @@ class LevelEditor(Component):
         self.mouse_x = 0
         self.mouse_y = 0
 
-        self.tool_bar_position = (0, 0)
+        self.toolbar_position = (0, 0)
         self.item_menu_position = (0, 1080 - self.item_menu.get_size()[1])
-        self.view_position = (self.item_menu.get_size()[0], self.tool_bar.get_size()[1])
+        self.view_position = (self.item_menu.get_size()[0], self.toolbar.get_size()[1])
 
         self.update(data)
 
@@ -64,12 +64,12 @@ class LevelEditor(Component):
                 self.mouse_x = event.data[0]
                 self.mouse_y = event.data[1]
 
-        # Tool bar
-        self.tool_bar.update(
+        # Toolbar
+        self.toolbar.update(
             self.data,
             (
-                self.mouse_x - self.tool_bar_position[0],
-                self.mouse_y - self.tool_bar_position[1],
+                self.mouse_x - self.toolbar_position[0],
+                self.mouse_y - self.toolbar_position[1],
             ),
         )
 
@@ -83,9 +83,9 @@ class LevelEditor(Component):
         )
 
         # View
-        self.view.set_editor_state(self.tool_bar.get_editor_state())
+        self.view.set_editor_state(self.toolbar.get_editor_state())
         self.view.set_selected_item(self.item_menu.get_selected_item())
-        variables = self.tool_bar.get_view_variables()
+        variables = self.toolbar.get_view_variables()
         self.view.set_view_variables(variables[0], variables[1], variables[2])
 
         self.view.update(
@@ -102,10 +102,10 @@ class LevelEditor(Component):
         self.surface.fill((255, 255, 255, 64))
 
         self.surface.blit(
-            self.tool_bar.get(),
+            self.toolbar.get(),
             (
-                resize(self.tool_bar_position[0], "x"),
-                resize(self.tool_bar_position[1], "y"),
+                resize(self.toolbar_position[0], "x"),
+                resize(self.toolbar_position[1], "y"),
             ),
         )
 

@@ -10,8 +10,8 @@ from ..Component import Component
 from .EditorState import EditorState
 
 
-class ToolBar(Component):
-    """Level editor tool bar component"""
+class Toolbar(Component):
+    """Level editor toolbar component"""
 
     def __init__(
         self,
