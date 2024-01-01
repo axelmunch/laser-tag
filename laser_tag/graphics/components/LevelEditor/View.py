@@ -3,6 +3,7 @@ from math import ceil
 import pygame
 
 from ....configuration import DEFAULT_FONT
+from ....entities.Player import Player
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
 from ....math.Line import Line
@@ -12,6 +13,8 @@ from ....utils.DeltaTime import DeltaTime
 from ...resize import resize
 from ...Text import Text
 from ..Component import Component
+from .EditorState import EditorState
+from .Item import Item
 
 
 class View(Component):
@@ -36,7 +39,7 @@ class View(Component):
 
         self.cell_size = 50
         self.max_cell_size = 150
-        self.min_cell_size = 30
+        self.min_cell_size = 25
 
         self.center_transition_speed = 0.2
         self.center_x_transition = 0
@@ -50,14 +53,35 @@ class View(Component):
             Line(Point(3, 3), Point(5, 0)),
         ]
 
-        self.scroll_step = 2
+        self.scroll_step = 4
         self.move_speed = 0.2
 
-        self.show_grid = True
+        self.preview_radius = Player.entity_radius()
+
         self.snap_to_grid = True
+        self.show_grid = True
+        self.preview_player = False
+
+        self.editor_state = EditorState.PLACE
+        self.selected_item = None
+
+        self.position_aimed = Point(0, 0)
 
         self.reset_center()
         self.update(data)
+
+    def set_editor_state(self, editor_state: EditorState):
+        self.editor_state = editor_state
+
+    def set_selected_item(self, item: Item):
+        self.selected_item = item
+
+    def set_view_variables(
+        self, snap_to_grid: bool, show_grid: bool, preview_player: bool
+    ):
+        self.snap_to_grid = snap_to_grid
+        self.show_grid = show_grid
+        self.preview_player = preview_player
 
     def get_lines(self) -> list[Line]:
         return self.lines
@@ -96,6 +120,13 @@ class View(Component):
             and point.x <= self.center_x + self.original_width / 2 / self.cell_size
             and point.y >= self.center_y - self.original_height / 2 / self.cell_size
             and point.y <= self.center_y + self.original_height / 2 / self.cell_size
+        )
+
+    def snap_coordinates(self, point: Point) -> Point:
+        # Only allow 0, 0.5 and 1 coordinates in the cell
+        return Point(
+            round(point.x * 2) / 2,
+            round(point.y * 2) / 2,
         )
 
     def draw_line(self, line: Line, color=(255, 255, 255)):
@@ -165,6 +196,10 @@ class View(Component):
         self.mouse_x = relative_mouse_position[0]
         self.mouse_y = relative_mouse_position[1]
 
+        self.position_aimed = self.screen_position_to_point(self.mouse_x, self.mouse_y)
+        if self.snap_to_grid:
+            self.position_aimed = self.snap_coordinates(self.position_aimed)
+
         # Movement transition
         self.center_x += (
             (self.center_x_transition - self.center_x)
@@ -179,13 +214,15 @@ class View(Component):
 
         for event in self.data:
             if event.id == Event.MOUSE_SCROLL_UP:
-                self.cell_size = min(
-                    self.max_cell_size, self.cell_size + self.scroll_step
-                )
+                if self.in_view_screen(Point(self.mouse_x, self.mouse_y)):
+                    self.cell_size = min(
+                        self.max_cell_size, self.cell_size + self.scroll_step
+                    )
             elif event.id == Event.MOUSE_SCROLL_DOWN:
-                self.cell_size = max(
-                    self.min_cell_size, self.cell_size - self.scroll_step
-                )
+                if self.in_view_screen(Point(self.mouse_x, self.mouse_y)):
+                    self.cell_size = max(
+                        self.min_cell_size, self.cell_size - self.scroll_step
+                    )
             elif event.id == Event.MOUSE_LEFT_CLICK_PRESS:
                 pass
             elif event.id == Event.MOUSE_MIDDLE_CLICK_PRESS:
@@ -204,8 +241,41 @@ class View(Component):
     def render(self):
         self.surface.fill((42, 42, 42))
 
+        if self.preview_player:
+            pygame.draw.circle(
+                self.surface,
+                (64, 64, 128),
+                (
+                    resize(self.mouse_x, "x"),
+                    resize(self.mouse_y, "y"),
+                ),
+                resize(self.preview_radius * self.cell_size, "x"),
+            )
+
         if self.show_grid:
             self.display_grid()
+
+        if self.editor_state == EditorState.PLACE:
+            point = self.get_point_position(self.position_aimed)
+            pygame.draw.circle(
+                self.surface,
+                (128, 128, 128),
+                (
+                    resize(point[0], "x"),
+                    resize(point[1], "y"),
+                ),
+                resize(0.2 * self.cell_size, "x"),
+                max(1, int(resize(2, "x"))),
+            )
+            pygame.draw.circle(
+                self.surface,
+                (128, 128, 128),
+                (
+                    resize(point[0], "x"),
+                    resize(point[1], "y"),
+                ),
+                max(1, int(resize(2, "x"))),
+            )
 
         for line in self.lines:
             self.draw_line(line, (192, 192, 192))

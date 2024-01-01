@@ -1,11 +1,13 @@
 import pygame
 
-from ....configuration import DEFAULT_FONT
+from ....configuration import DEFAULT_FONT, VARIABLES
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
 from ...resize import resize
 from ...Text import Text
+from ..Button import Button, ButtonState
 from ..Component import Component
+from .EditorState import EditorState
 
 
 class ToolBar(Component):
@@ -28,7 +30,107 @@ class ToolBar(Component):
         self.mouse_x = 0
         self.mouse_y = 0
 
+        # Create buttons
+        margin = 20
+        button_size = self.original_height - 2 * margin
+        self.buttons = [
+            # Help
+            Button(
+                margin,
+                margin,
+                button_size,
+                button_size,
+            ),
+            # Export
+            Button(
+                button_size + 2 * margin,
+                margin,
+                button_size,
+                button_size,
+            ),
+            # Place
+            Button(
+                640 - button_size / 2 - self.original_height + margin,
+                margin,
+                button_size,
+                button_size,
+                action=self.set_editor_state_place,
+            ),
+            # Move
+            Button(
+                640 - button_size / 2,
+                margin,
+                button_size,
+                button_size,
+                action=self.set_editor_state_move,
+            ),
+            # Remove
+            Button(
+                640 - button_size / 2 + self.original_height - margin,
+                margin,
+                button_size,
+                button_size,
+                action=self.set_editor_state_remove,
+            ),
+            # Snap
+            Button(
+                1280 - button_size / 2 - self.original_height + margin,
+                margin,
+                button_size,
+                button_size,
+                action=lambda: setattr(self, "snap_to_grid", not self.snap_to_grid),
+            ),
+            # Grid
+            Button(
+                1280 - button_size / 2,
+                margin,
+                button_size,
+                button_size,
+                action=lambda: setattr(self, "show_grid", not self.show_grid),
+            ),
+            # Preview
+            Button(
+                1280 - button_size / 2 + self.original_height - margin,
+                margin,
+                button_size,
+                button_size,
+                action=lambda: setattr(self, "preview_player", not self.preview_player),
+            ),
+            # Quit
+            Button(
+                1920 - (self.original_height - margin),
+                margin,
+                button_size,
+                button_size,
+                action=self.quit,
+            ),
+        ]
+
+        self.snap_to_grid = True
+        self.show_grid = True
+        self.preview_player = False
+
+        self.editor_state = EditorState.PLACE
+
         self.update(data)
+
+    def get_editor_state(self) -> EditorState:
+        return self.editor_state
+
+    def set_editor_state_place(self):
+        self.editor_state = EditorState.PLACE
+
+    def set_editor_state_move(self):
+        self.editor_state = EditorState.MOVE
+
+    def set_editor_state_remove(self):
+        self.editor_state = EditorState.REMOVE
+
+    def get_view_variables(self) -> tuple[bool, bool, bool]:
+        return self.snap_to_grid, self.show_grid, self.preview_player
+
+    def quit(self):
+        VARIABLES.level_editor = False
 
     def update(
         self,
@@ -47,9 +149,46 @@ class ToolBar(Component):
         self.mouse_x = relative_mouse_position[0]
         self.mouse_y = relative_mouse_position[1]
 
+        mouse_press = False
+        mouse_release = False
+
+        for event in events:
+            if event.id == Event.MOUSE_LEFT_CLICK_PRESS:
+                mouse_press = True
+            elif event.id == Event.MOUSE_LEFT_CLICK_RELEASE:
+                mouse_release = True
+
+        for button in self.buttons:
+            button.update(self.mouse_x, self.mouse_y)
+            if mouse_press:
+                button.click_press()
+            elif mouse_release:
+                button.click_release()
+
         super().update()
 
     def render(self):
         self.surface.fill((0, 0, 0))
+
+        for button in self.buttons:
+            button_pos = button.get_pos()
+            button_state = button.get_state()
+
+            color = (64, 64, 64)
+            if button_state == ButtonState.HOVERED:
+                color = (128, 128, 128)
+            elif button_state == ButtonState.PRESSED:
+                color = (255, 255, 255)
+
+            pygame.draw.rect(
+                self.surface,
+                color,
+                (
+                    resize(button_pos[0], "x"),
+                    resize(button_pos[1], "y"),
+                    resize(button_pos[2], "x"),
+                    resize(button_pos[3], "y"),
+                ),
+            )
 
         super().render()

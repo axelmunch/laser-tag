@@ -108,3 +108,5 @@ class Game:
 
         if VARIABLES.level_editor:
             self.lock_cursor = False
+        else:
+            self.lock_cursor = True
