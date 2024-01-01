@@ -30,9 +30,50 @@ class ToolBar(Component):
         self.mouse_x = 0
         self.mouse_y = 0
 
+        self.editor_state = EditorState.PLACE
+
+        self.snap_to_grid = True
+        self.show_grid = True
+        self.preview_player = False
+
         # Create buttons
         margin = 20
         button_size = self.original_height - 2 * margin
+        self.place_button = Button(
+            960 - button_size / 2 - 2 * self.original_height + 2 * margin,
+            margin,
+            button_size,
+            button_size,
+            action=lambda: setattr(self, "editor_state", EditorState.PLACE),
+        )
+        self.move_button = Button(
+            960 - button_size / 2 - self.original_height + margin,
+            margin,
+            button_size,
+            button_size,
+            action=lambda: setattr(self, "editor_state", EditorState.MOVE),
+        )
+        self.snap_to_grid_button = Button(
+            960 + button_size / 2 + margin,
+            margin,
+            button_size,
+            button_size,
+            action=lambda: setattr(self, "snap_to_grid", not self.snap_to_grid),
+        )
+        self.show_grid_button = Button(
+            960 + button_size / 2 + self.original_height,
+            margin,
+            button_size,
+            button_size,
+            action=lambda: setattr(self, "show_grid", not self.show_grid),
+        )
+        self.preview_player_button = Button(
+            960 + button_size / 2 + 2 * self.original_height - margin,
+            margin,
+            button_size,
+            button_size,
+            action=lambda: setattr(self, "preview_player", not self.preview_player),
+        )
         self.buttons = [
             # Quit
             Button(
@@ -57,45 +98,15 @@ class ToolBar(Component):
                 button_size,
             ),
             # Place
-            Button(
-                960 - button_size / 2 - 2 * self.original_height + 2 * margin,
-                margin,
-                button_size,
-                button_size,
-                action=self.set_editor_state_place,
-            ),
+            self.place_button,
             # Move
-            Button(
-                960 - button_size / 2 - self.original_height + margin,
-                margin,
-                button_size,
-                button_size,
-                action=self.set_editor_state_move,
-            ),
+            self.move_button,
             # Snap to grid
-            Button(
-                960 + button_size / 2 + margin,
-                margin,
-                button_size,
-                button_size,
-                action=lambda: setattr(self, "snap_to_grid", not self.snap_to_grid),
-            ),
+            self.snap_to_grid_button,
             # Show grid
-            Button(
-                960 + button_size / 2 + self.original_height,
-                margin,
-                button_size,
-                button_size,
-                action=lambda: setattr(self, "show_grid", not self.show_grid),
-            ),
-            # Preview
-            Button(
-                960 + button_size / 2 + 2 * self.original_height - margin,
-                margin,
-                button_size,
-                button_size,
-                action=lambda: setattr(self, "preview_player", not self.preview_player),
-            ),
+            self.show_grid_button,
+            # Preview player
+            self.preview_player_button,
             # Help
             Button(
                 1920 - (self.original_height - margin),
@@ -105,22 +116,10 @@ class ToolBar(Component):
             ),
         ]
 
-        self.snap_to_grid = True
-        self.show_grid = True
-        self.preview_player = False
-
-        self.editor_state = EditorState.PLACE
-
         self.update(data)
 
     def get_editor_state(self) -> EditorState:
         return self.editor_state
-
-    def set_editor_state_place(self):
-        self.editor_state = EditorState.PLACE
-
-    def set_editor_state_move(self):
-        self.editor_state = EditorState.MOVE
 
     def get_view_variables(self) -> tuple[bool, bool, bool]:
         return self.snap_to_grid, self.show_grid, self.preview_player
@@ -165,6 +164,34 @@ class ToolBar(Component):
 
     def render(self):
         self.surface.fill((0, 0, 0))
+
+        # Border on selected elements
+        selected_buttons = []
+        if self.editor_state == EditorState.PLACE:
+            selected_buttons.append(self.place_button)
+        else:
+            selected_buttons.append(self.move_button)
+        if self.snap_to_grid:
+            selected_buttons.append(self.snap_to_grid_button)
+        if self.show_grid:
+            selected_buttons.append(self.show_grid_button)
+        if self.preview_player:
+            selected_buttons.append(self.preview_player_button)
+
+        for button in selected_buttons:
+            button_pos = button.get_pos()
+
+            border_size = 6
+            pygame.draw.rect(
+                self.surface,
+                (192, 192, 192),
+                (
+                    resize(button_pos[0] - border_size, "x"),
+                    resize(button_pos[1] - border_size, "y"),
+                    resize(button_pos[2] + border_size * 2, "x"),
+                    resize(button_pos[3] + border_size * 2, "y"),
+                ),
+            )
 
         for button in self.buttons:
             button_pos = button.get_pos()
