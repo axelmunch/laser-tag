@@ -34,23 +34,31 @@ class ToolBar(Component):
         margin = 20
         button_size = self.original_height - 2 * margin
         self.buttons = [
-            # Help
+            # Quit
             Button(
                 margin,
                 margin,
                 button_size,
                 button_size,
+                action=self.quit,
             ),
-            # Export
+            # Load
             Button(
                 button_size + 2 * margin,
                 margin,
                 button_size,
                 button_size,
             ),
+            # Save
+            Button(
+                2 * button_size + 3 * margin,
+                margin,
+                button_size,
+                button_size,
+            ),
             # Place
             Button(
-                640 - button_size / 2 - self.original_height + margin,
+                960 - button_size / 2 - 2 * self.original_height + 2 * margin,
                 margin,
                 button_size,
                 button_size,
@@ -58,31 +66,23 @@ class ToolBar(Component):
             ),
             # Move
             Button(
-                640 - button_size / 2,
+                960 - button_size / 2 - self.original_height + margin,
                 margin,
                 button_size,
                 button_size,
                 action=self.set_editor_state_move,
             ),
-            # Remove
+            # Snap to grid
             Button(
-                640 - button_size / 2 + self.original_height - margin,
-                margin,
-                button_size,
-                button_size,
-                action=self.set_editor_state_remove,
-            ),
-            # Snap
-            Button(
-                1280 - button_size / 2 - self.original_height + margin,
+                960 + button_size / 2 + margin,
                 margin,
                 button_size,
                 button_size,
                 action=lambda: setattr(self, "snap_to_grid", not self.snap_to_grid),
             ),
-            # Grid
+            # Show grid
             Button(
-                1280 - button_size / 2,
+                960 + button_size / 2 + self.original_height,
                 margin,
                 button_size,
                 button_size,
@@ -90,19 +90,18 @@ class ToolBar(Component):
             ),
             # Preview
             Button(
-                1280 - button_size / 2 + self.original_height - margin,
+                960 + button_size / 2 + 2 * self.original_height - margin,
                 margin,
                 button_size,
                 button_size,
                 action=lambda: setattr(self, "preview_player", not self.preview_player),
             ),
-            # Quit
+            # Help
             Button(
                 1920 - (self.original_height - margin),
                 margin,
                 button_size,
                 button_size,
-                action=self.quit,
             ),
         ]
 
@@ -122,9 +121,6 @@ class ToolBar(Component):
 
     def set_editor_state_move(self):
         self.editor_state = EditorState.MOVE
-
-    def set_editor_state_remove(self):
-        self.editor_state = EditorState.REMOVE
 
     def get_view_variables(self) -> tuple[bool, bool, bool]:
         return self.snap_to_grid, self.show_grid, self.preview_player

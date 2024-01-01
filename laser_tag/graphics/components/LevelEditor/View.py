@@ -6,6 +6,7 @@ from ....configuration import DEFAULT_FONT
 from ....entities.Player import Player
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
+from ....math.distance import distance_points
 from ....math.Line import Line
 from ....math.Point import Point
 from ....math.rotations import rotate
@@ -67,13 +68,21 @@ class View(Component):
 
         self.position_aimed = Point(0, 0)
 
+        self.min_selection_distance = 0.25
+        self.placing_or_moving = False
+        self.selected_elements = []
+
         self.reset_center()
         self.update(data)
 
     def set_editor_state(self, editor_state: EditorState):
+        if editor_state != self.editor_state:
+            self.cancel_placing_or_moving()
         self.editor_state = editor_state
 
     def set_selected_item(self, item: Item):
+        if item != self.selected_item:
+            self.cancel_placing_or_moving()
         self.selected_item = item
 
     def set_view_variables(
@@ -143,7 +152,7 @@ class View(Component):
                 resize(pos_point2[0], "x"),
                 resize(pos_point2[1], "y"),
             ),
-            max(1, int(resize(2, "x"))),
+            max(1, int(resize(3, "x"))),
         )
 
     def display_grid(self):
@@ -179,6 +188,120 @@ class View(Component):
                 max(1, int(resize(2, "x"))),
             )
 
+    def manage_click(
+        self,
+        mouse_left_click_press: bool,
+        mouse_left_click_release: bool,
+        mouse_right_click_press: bool,
+    ):
+        # Place or move an element
+
+        if not self.in_view_screen(Point(self.mouse_x, self.mouse_y)):
+            return
+
+        if mouse_right_click_press and not self.placing_or_moving:
+            # Remove
+            nearest_element_position = self.find_nearest_object_position(
+                self.screen_position_to_point(self.mouse_x, self.mouse_y)
+            )
+            if nearest_element_position is not None:
+                self.delete_element_containing_point(nearest_element_position)
+
+        match self.editor_state:
+            case EditorState.PLACE:
+                if mouse_left_click_press and not self.placing_or_moving:
+                    self.placing_or_moving = True
+                    self.selected_elements.append(self.position_aimed)
+                elif mouse_left_click_release and self.placing_or_moving:
+                    if len(self.selected_elements) > 0:
+                        if (
+                            type(self.selected_elements[-1]) == Point
+                            and self.selected_elements[-1] != self.position_aimed
+                        ):
+                            self.lines.append(
+                                Line(self.selected_elements[-1], self.position_aimed)
+                            )
+                        self.selected_elements = []
+                    self.placing_or_moving = False
+                if mouse_right_click_press and self.placing_or_moving:
+                    # Cancel place
+                    self.cancel_placing_or_moving()
+            case EditorState.MOVE:
+                if mouse_left_click_press and not self.placing_or_moving:
+                    # Find nearest element
+                    nearest_element_position = self.find_nearest_object_position(
+                        self.screen_position_to_point(self.mouse_x, self.mouse_y)
+                    )
+                    if nearest_element_position is not None:
+                        self.placing_or_moving = True
+                        # Add to selected
+                        # Copy of original at [0], reference to current at [1]
+                        self.selected_elements.append(
+                            Point(
+                                nearest_element_position.x, nearest_element_position.y
+                            )
+                        )
+                        self.selected_elements.append(nearest_element_position)
+
+                elif mouse_left_click_release and self.placing_or_moving:
+                    # Complete move
+                    self.placing_or_moving = False
+                    self.selected_elements = []
+
+                if mouse_right_click_press and self.placing_or_moving:
+                    # Cancel move
+                    self.cancel_placing_or_moving()
+
+                if self.placing_or_moving:
+                    # Move point
+                    if (
+                        len(self.selected_elements) > 0
+                        and type(self.selected_elements[-1]) == Point
+                    ):
+                        self.selected_elements[-1].x = self.position_aimed.x
+                        self.selected_elements[-1].y = self.position_aimed.y
+
+    def find_nearest_object_position(self, point: Point) -> Point | None:
+        # [(point, distance)]
+        objects_distance = []
+
+        for line in self.lines:
+            for line_point in [line.point1, line.point2]:
+                distance = distance_points(point, line_point)
+                if distance <= self.min_selection_distance:
+                    objects_distance.append((line_point, distance))
+
+        # Sort by distance
+        objects_distance.sort(key=lambda element: element[1])
+
+        if len(objects_distance) > 0:
+            return objects_distance[0][0]
+
+        return None
+
+    def delete_element_containing_point(self, point: Point):
+        for line in self.lines:
+            if line.point1 == point or line.point2 == point:
+                self.lines.remove(line)
+                return
+
+    def cancel_placing_or_moving(self):
+        match self.editor_state:
+            case EditorState.PLACE:
+                pass
+            case EditorState.MOVE:
+                if (
+                    len(self.selected_elements) > 1
+                    and type(self.selected_elements[-1]) == Point
+                    and type(self.selected_elements[-2]) == Point
+                ):
+                    # Reset coordinates
+                    self.selected_elements[-1].x = self.selected_elements[-2].x
+                    self.selected_elements[-1].y = self.selected_elements[-2].y
+
+        self.placing_or_moving = False
+        self.selected_elements = []
+
     def update(
         self,
         events: list[EventInstance],
@@ -212,8 +335,21 @@ class View(Component):
             * self.delta_time.get_dt_target()
         )
 
+        mouse_left_click_press = False
+        mouse_left_click_release = False
+        mouse_right_click_press = False
+
         for event in self.data:
-            if event.id == Event.MOUSE_SCROLL_UP:
+            if event.id == Event.MOUSE_LEFT_CLICK_PRESS:
+                mouse_left_click_press = True
+            elif event.id == Event.MOUSE_LEFT_CLICK_RELEASE:
+                mouse_left_click_release = True
+            elif event.id == Event.MOUSE_RIGHT_CLICK_PRESS:
+                mouse_right_click_press = True
+            elif event.id == Event.MOUSE_MIDDLE_CLICK_PRESS:
+                # Reset center
+                self.reset_center()
+            elif event.id == Event.MOUSE_SCROLL_UP:
                 if self.in_view_screen(Point(self.mouse_x, self.mouse_y)):
                     self.cell_size = min(
                         self.max_cell_size, self.cell_size + self.scroll_step
@@ -223,11 +359,6 @@ class View(Component):
                     self.cell_size = max(
                         self.min_cell_size, self.cell_size - self.scroll_step
                     )
-            elif event.id == Event.MOUSE_LEFT_CLICK_PRESS:
-                pass
-            elif event.id == Event.MOUSE_MIDDLE_CLICK_PRESS:
-                # Reset center
-                self.reset_center()
             elif event.id == Event.GAME_MOVE:
                 move_vector = rotate(
                     self.move_speed * self.delta_time.get_dt_target(),
@@ -235,6 +366,10 @@ class View(Component):
                 )
                 self.center_x_transition += move_vector.x
                 self.center_y_transition += move_vector.y
+
+        self.manage_click(
+            mouse_left_click_press, mouse_left_click_release, mouse_right_click_press
+        )
 
         super().update()
 
@@ -255,40 +390,84 @@ class View(Component):
         if self.show_grid:
             self.display_grid()
 
-        if self.editor_state == EditorState.PLACE:
-            point = self.get_point_position(self.position_aimed)
-            pygame.draw.circle(
-                self.surface,
-                (128, 128, 128),
-                (
-                    resize(point[0], "x"),
-                    resize(point[1], "y"),
-                ),
-                resize(0.2 * self.cell_size, "x"),
-                max(1, int(resize(2, "x"))),
-            )
-            pygame.draw.circle(
-                self.surface,
-                (128, 128, 128),
-                (
-                    resize(point[0], "x"),
-                    resize(point[1], "y"),
-                ),
-                max(1, int(resize(2, "x"))),
-            )
+        # Aimed point indicator
+        point = self.get_point_position(self.position_aimed)
+        pygame.draw.circle(
+            self.surface,
+            (128, 128, 128),
+            (
+                resize(point[0], "x"),
+                resize(point[1], "y"),
+            ),
+            resize(0.2 * self.cell_size, "x"),
+            max(1, int(resize(2, "x"))),
+        )
+        pygame.draw.circle(
+            self.surface,
+            (128, 128, 128),
+            (
+                resize(point[0], "x"),
+                resize(point[1], "y"),
+            ),
+            max(1, int(resize(2, "x"))),
+        )
 
+        # Draw all lines
         for line in self.lines:
             self.draw_line(line, (192, 192, 192))
             for point in [line.point1, line.point2]:
                 if self.in_view_world(point):
+                    point_position = self.get_point_position(point)
                     pygame.draw.circle(
                         self.surface,
                         (255, 255, 255),
                         (
-                            resize(self.get_point_position(point)[0], "x"),
-                            resize(self.get_point_position(point)[1], "y"),
+                            resize(point_position[0], "x"),
+                            resize(point_position[1], "y"),
                         ),
                         resize(0.1 * self.cell_size, "x"),
                     )
+
+        # Preview line creation
+        if self.editor_state == EditorState.PLACE:
+            if (
+                len(self.selected_elements) > 0
+                and type(self.selected_elements[-1]) == Point
+            ):
+                color = (128, 128, 128)
+
+                self.draw_line(
+                    Line(self.selected_elements[-1], self.position_aimed),
+                    color,
+                )
+
+                point_position = self.get_point_position(self.position_aimed)
+                pygame.draw.circle(
+                    self.surface,
+                    color,
+                    (
+                        resize(point_position[0], "x"),
+                        resize(point_position[1], "y"),
+                    ),
+                    resize(0.1 * self.cell_size, "x"),
+                )
+
+        # Proximity indicator
+        if not self.placing_or_moving:
+            nearest_element_position = self.find_nearest_object_position(
+                self.screen_position_to_point(self.mouse_x, self.mouse_y)
+            )
+            if nearest_element_position is not None:
+                point_position = self.get_point_position(nearest_element_position)
+                pygame.draw.circle(
+                    self.surface,
+                    (192, 128, 192),
+                    (
+                        resize(point_position[0], "x"),
+                        resize(point_position[1], "y"),
+                    ),
+                    resize(0.2 * self.cell_size, "x"),
+                    max(1, int(resize(2, "x"))),
+                )
 
         super().render()
