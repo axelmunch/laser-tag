@@ -59,6 +59,18 @@ class Renderer:
     def render(self, game: Game):
         # Update display
 
+        if VARIABLES.level_editor:
+            display.screen.blit(self.level_editor.get(), (0, 0))
+
+            if VARIABLES.show_fps:
+                self.fps.update(self.clock.get_fps())
+                fps_surface = self.fps.get()
+                display.screen.blit(
+                    fps_surface,
+                    (resize(10, "x"), resize(1070, "y") - fps_surface.get_height()),
+                )
+            return
+
         rays = game.world.cast_rays()
 
         self.world.update(
@@ -128,9 +140,6 @@ class Renderer:
                 resize(10, "y"),
             ),
         )
-
-        if VARIABLES.level_editor:
-            display.screen.blit(self.level_editor.get(), (0, 0))
 
         if VARIABLES.show_fps:
             self.fps.update(self.clock.get_fps())

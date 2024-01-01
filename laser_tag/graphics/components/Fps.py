@@ -31,5 +31,6 @@ class Fps(Component):
         self.surface = self.text.get_surface(
             "FPS: " + str(round(self.data, 2)), 40, (255, 255, 255)
         )
+        self.width, self.height = self.surface.get_size()
 
         super().render()
