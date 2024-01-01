@@ -10,7 +10,7 @@ class Projectile(GameEntity):
     """Projectile entity"""
 
     def __init__(self, position: Point, parent_id=None):
-        super().__init__(position, 0.05)
+        super().__init__(position, Projectile.entity_radius())
 
         self.move_speed = 0.2
         self.attack_speed = 0
@@ -39,6 +39,10 @@ class Projectile(GameEntity):
             return entity
         except:
             return None
+
+    @staticmethod
+    def entity_radius() -> float:
+        return 0.05
 
     def on_hit(self, entity: GameEntity):
         super().on_hit(entity)

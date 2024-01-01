@@ -8,7 +8,7 @@ class Player(GameEntity):
     """Player entity"""
 
     def __init__(self, position: Point):
-        super().__init__(position, 0.2)
+        super().__init__(position, Player.entity_radius())
 
         self.move_speed = 0.05
 
@@ -43,6 +43,10 @@ class Player(GameEntity):
             return entity
         except:
             return None
+
+    @staticmethod
+    def entity_radius() -> float:
+        return 0.2
 
     def death(self):
         super().death(no_deletion=True)

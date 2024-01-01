@@ -63,6 +63,10 @@ class GameEntity(Entity):
         except:
             return None
 
+    @staticmethod
+    def entity_radius() -> float:
+        return 0
+
     def reset(self):
         self.hp = self.max_hp
         self.next_attack_timestamps = time()
