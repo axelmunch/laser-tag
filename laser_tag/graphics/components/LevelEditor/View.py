@@ -103,24 +103,21 @@ class View(Component):
             self.center_x_transition = 0
             self.center_y_transition = 0
 
-    def get_point_position(self, point: Point) -> tuple[float, float]:
-        return (
-            self.original_width / 2 + (point.x - self.center_x) * self.cell_size,
-            self.original_height / 2 + (point.y - self.center_y) * self.cell_size,
-        )
-
-    def screen_position_to_point(self, x, y) -> Point:
+    def screen_position_to_world_point(self, x: float, y: float) -> Point:
         return Point(
             self.center_x + (x - self.original_width / 2) / self.cell_size,
             self.center_y + (y - self.original_height / 2) / self.cell_size,
         )
 
-    def in_view_screen(self, point: Point) -> bool:
+    def world_point_to_screen_position(self, point: Point) -> tuple[float, float]:
         return (
-            point.x >= 0
-            and point.x <= self.original_width
-            and point.y >= 0
-            and point.y <= self.original_height
+            self.original_width / 2 + (point.x - self.center_x) * self.cell_size,
+            self.original_height / 2 + (point.y - self.center_y) * self.cell_size,
+        )
+
+    def in_view_screen(self, x: float, y: float) -> bool:
+        return (
+            x >= 0 and x <= self.original_width and y >= 0 and y <= self.original_height
         )
 
     def in_view_world(self, point: Point) -> bool:
@@ -132,15 +129,15 @@ class View(Component):
         )
 
     def snap_coordinates(self, point: Point) -> Point:
-        # Only allow 0, 0.5 and 1 coordinates in the cell
+        # Only allow 0 and 0.5 coordinates in each cell
         return Point(
             round(point.x * 2) / 2,
             round(point.y * 2) / 2,
         )
 
     def draw_line(self, line: Line, color=(255, 255, 255)):
-        pos_point1 = self.get_point_position(line.point1)
-        pos_point2 = self.get_point_position(line.point2)
+        pos_point1 = self.world_point_to_screen_position(line.point1)
+        pos_point2 = self.world_point_to_screen_position(line.point2)
         pygame.draw.line(
             self.surface,
             color,
@@ -196,13 +193,13 @@ class View(Component):
     ):
         # Place or move an element
 
-        if not self.in_view_screen(Point(self.mouse_x, self.mouse_y)):
+        if not self.in_view_screen(self.mouse_x, self.mouse_y):
             return
 
         if mouse_right_click_press and not self.placing_or_moving:
             # Remove
             nearest_element_position = self.find_nearest_object_position(
-                self.screen_position_to_point(self.mouse_x, self.mouse_y)
+                self.screen_position_to_world_point(self.mouse_x, self.mouse_y)
             )
             if nearest_element_position is not None:
                 self.delete_element_containing_point(nearest_element_position)
@@ -230,7 +227,7 @@ class View(Component):
                 if mouse_left_click_press and not self.placing_or_moving:
                     # Find nearest element
                     nearest_element_position = self.find_nearest_object_position(
-                        self.screen_position_to_point(self.mouse_x, self.mouse_y)
+                        self.screen_position_to_world_point(self.mouse_x, self.mouse_y)
                     )
                     if nearest_element_position is not None:
                         self.placing_or_moving = True
@@ -319,7 +316,9 @@ class View(Component):
         self.mouse_x = relative_mouse_position[0]
         self.mouse_y = relative_mouse_position[1]
 
-        self.position_aimed = self.screen_position_to_point(self.mouse_x, self.mouse_y)
+        self.position_aimed = self.screen_position_to_world_point(
+            self.mouse_x, self.mouse_y
+        )
         if self.snap_to_grid:
             self.position_aimed = self.snap_coordinates(self.position_aimed)
 
@@ -350,12 +349,12 @@ class View(Component):
                 # Reset center
                 self.reset_center()
             elif event.id == Event.MOUSE_SCROLL_UP:
-                if self.in_view_screen(Point(self.mouse_x, self.mouse_y)):
+                if self.in_view_screen(self.mouse_x, self.mouse_y):
                     self.cell_size = min(
                         self.max_cell_size, self.cell_size + self.scroll_step
                     )
             elif event.id == Event.MOUSE_SCROLL_DOWN:
-                if self.in_view_screen(Point(self.mouse_x, self.mouse_y)):
+                if self.in_view_screen(self.mouse_x, self.mouse_y):
                     self.cell_size = max(
                         self.min_cell_size, self.cell_size - self.scroll_step
                     )
@@ -391,7 +390,7 @@ class View(Component):
             self.display_grid()
 
         # Aimed point indicator
-        point = self.get_point_position(self.position_aimed)
+        point = self.world_point_to_screen_position(self.position_aimed)
         pygame.draw.circle(
             self.surface,
             (128, 128, 128),
@@ -412,12 +411,31 @@ class View(Component):
             max(1, int(resize(2, "x"))),
         )
 
+        start = self.screen_position_to_world_point(0, 0)
+        end = self.screen_position_to_world_point(
+            self.original_width, self.original_height
+        )
+        editor_visibility_zone = (start.x, start.y, end.x - start.x, end.y - start.y)
+
         # Draw all lines
         for line in self.lines:
-            self.draw_line(line, (192, 192, 192))
-            for point in [line.point1, line.point2]:
-                if self.in_view_world(point):
-                    point_position = self.get_point_position(point)
+            line_rect = (
+                min(line.point1.x, line.point2.x),
+                min(line.point1.y, line.point2.y),
+                abs(line.point2.x - line.point1.x),
+                abs(line.point2.y - line.point1.y),
+            )
+
+            if (
+                line_rect[0] <= editor_visibility_zone[0] + editor_visibility_zone[2]
+                and line_rect[0] + line_rect[2] >= editor_visibility_zone[0]
+                and line_rect[1]
+                <= editor_visibility_zone[1] + editor_visibility_zone[3]
+                and line_rect[1] + line_rect[3] >= editor_visibility_zone[1]
+            ):
+                self.draw_line(line, (192, 192, 192))
+                for point in [line.point1, line.point2]:
+                    point_position = self.world_point_to_screen_position(point)
                     pygame.draw.circle(
                         self.surface,
                         (255, 255, 255),
@@ -440,25 +458,27 @@ class View(Component):
                     Line(self.selected_elements[-1], self.position_aimed),
                     color,
                 )
-
-                point_position = self.get_point_position(self.position_aimed)
-                pygame.draw.circle(
-                    self.surface,
-                    color,
-                    (
-                        resize(point_position[0], "x"),
-                        resize(point_position[1], "y"),
-                    ),
-                    resize(0.1 * self.cell_size, "x"),
-                )
+                for point in [self.selected_elements[-1], self.position_aimed]:
+                    point_position = self.world_point_to_screen_position(point)
+                    pygame.draw.circle(
+                        self.surface,
+                        color,
+                        (
+                            resize(point_position[0], "x"),
+                            resize(point_position[1], "y"),
+                        ),
+                        resize(0.1 * self.cell_size, "x"),
+                    )
 
         # Proximity indicator
         if not self.placing_or_moving:
             nearest_element_position = self.find_nearest_object_position(
-                self.screen_position_to_point(self.mouse_x, self.mouse_y)
+                self.screen_position_to_world_point(self.mouse_x, self.mouse_y)
             )
             if nearest_element_position is not None:
-                point_position = self.get_point_position(nearest_element_position)
+                point_position = self.world_point_to_screen_position(
+                    nearest_element_position
+                )
                 pygame.draw.circle(
                     self.surface,
                     (192, 128, 192),
