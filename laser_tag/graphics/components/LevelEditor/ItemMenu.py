@@ -56,6 +56,7 @@ class ItemMenu(Component):
                     / buttons_quantity_line,
                     (self.original_width - (buttons_quantity_line + 1) * margin)
                     / buttons_quantity_line,
+                    content=list(Item)[i].name,
                 )
             )
 
@@ -163,6 +164,7 @@ class ItemMenu(Component):
 
             button_pos = button.get_pos()
             button_state = button.get_state()
+            button_content = button.get_content()
 
             color = (64, 64, 64)
             if button_state == ButtonState.HOVERED:
@@ -191,6 +193,27 @@ class ItemMenu(Component):
                     resize(button_pos[1], "y"),
                     resize(button_pos[2], "x"),
                     resize(button_pos[3], "y"),
+                ),
+            )
+
+            text_surface = self.text.get_surface(
+                button_content,
+                25,
+                (255, 255, 255),
+            )
+            self.surface.blit(
+                text_surface,
+                (
+                    resize(
+                        button_pos[0] + button_pos[2] / 2,
+                        "x",
+                    )
+                    - text_surface.get_width() / 2,
+                    resize(
+                        button_pos[1] + button_pos[3] / 2,
+                        "y",
+                    )
+                    - text_surface.get_height() / 2,
                 ),
             )
 

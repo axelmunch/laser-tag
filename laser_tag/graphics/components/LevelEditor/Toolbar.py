@@ -44,6 +44,7 @@ class Toolbar(Component):
             margin,
             button_size,
             button_size,
+            content="Place",
             action=lambda: setattr(self, "editor_state", EditorState.PLACE),
         )
         self.move_button = Button(
@@ -51,6 +52,7 @@ class Toolbar(Component):
             margin,
             button_size,
             button_size,
+            content="Move",
             action=lambda: setattr(self, "editor_state", EditorState.MOVE),
         )
         self.snap_to_grid_button = Button(
@@ -58,6 +60,7 @@ class Toolbar(Component):
             margin,
             button_size,
             button_size,
+            content="Snap",
             action=lambda: setattr(self, "snap_to_grid", not self.snap_to_grid),
         )
         self.show_grid_button = Button(
@@ -65,6 +68,7 @@ class Toolbar(Component):
             margin,
             button_size,
             button_size,
+            content="Grid",
             action=lambda: setattr(self, "show_grid", not self.show_grid),
         )
         self.preview_player_button = Button(
@@ -72,6 +76,7 @@ class Toolbar(Component):
             margin,
             button_size,
             button_size,
+            content="Preview",
             action=lambda: setattr(self, "preview_player", not self.preview_player),
         )
         self.buttons = [
@@ -81,6 +86,7 @@ class Toolbar(Component):
                 margin,
                 button_size,
                 button_size,
+                content="Quit",
                 action=self.quit,
             ),
             # Load
@@ -89,6 +95,7 @@ class Toolbar(Component):
                 margin,
                 button_size,
                 button_size,
+                content="Load",
             ),
             # Save
             Button(
@@ -96,6 +103,7 @@ class Toolbar(Component):
                 margin,
                 button_size,
                 button_size,
+                content="Save",
             ),
             # Place
             self.place_button,
@@ -113,6 +121,7 @@ class Toolbar(Component):
                 margin,
                 button_size,
                 button_size,
+                content="Help",
             ),
         ]
 
@@ -196,6 +205,7 @@ class Toolbar(Component):
         for button in self.buttons:
             button_pos = button.get_pos()
             button_state = button.get_state()
+            button_content = button.get_content()
 
             color = (64, 64, 64)
             if button_state == ButtonState.HOVERED:
@@ -211,6 +221,27 @@ class Toolbar(Component):
                     resize(button_pos[1], "y"),
                     resize(button_pos[2], "x"),
                     resize(button_pos[3], "y"),
+                ),
+            )
+
+            text_surface = self.text.get_surface(
+                button_content,
+                30,
+                (255, 255, 255),
+            )
+            self.surface.blit(
+                text_surface,
+                (
+                    resize(
+                        button_pos[0] + button_pos[2] / 2,
+                        "x",
+                    )
+                    - text_surface.get_width() / 2,
+                    resize(
+                        button_pos[1] + button_pos[3] / 2,
+                        "y",
+                    )
+                    - text_surface.get_height() / 2,
                 ),
             )
 
