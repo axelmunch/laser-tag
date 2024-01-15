@@ -51,8 +51,8 @@ class Minimap(Component):
     def render(self):
         self.surface.fill((0, 0, 0, 0))
 
-        map_width = ceil(self.data["map_bounds"][2] - self.data["map_bounds"][0])
-        map_height = ceil(self.data["map_bounds"][3] - self.data["map_bounds"][1])
+        map_width = ceil(self.data["map_bounds"][2] - self.data["map_bounds"][0]) + 1
+        map_height = ceil(self.data["map_bounds"][3] - self.data["map_bounds"][1]) + 1
         for wall in self.data["map"]:
             line: Line = wall.get_line()
 
