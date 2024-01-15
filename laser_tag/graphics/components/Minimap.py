@@ -5,6 +5,7 @@ import pygame
 from ...configuration import VARIABLES
 from ...entities.GameEntity import GameEntity
 from ...game.Ray import Ray
+from ...game.Wall import Wall
 from ...math.Line import Line
 from ...math.rotations import rotate
 from ..resize import resize
@@ -25,7 +26,7 @@ class Minimap(Component):
 
     def update(
         self,
-        map: list[Line],
+        map: list[Wall],
         map_bounds: tuple[int, int, int, int],
         entities: list[GameEntity],
         rays: list[tuple[int, Ray]] = [],
@@ -52,7 +53,9 @@ class Minimap(Component):
 
         map_width = ceil(self.data["map_bounds"][2] - self.data["map_bounds"][0])
         map_height = ceil(self.data["map_bounds"][3] - self.data["map_bounds"][1])
-        for line in self.data["map"]:
+        for wall in self.data["map"]:
+            line: Line = wall.get_line()
+
             pygame.draw.line(
                 self.surface,
                 (0, 255, 255),

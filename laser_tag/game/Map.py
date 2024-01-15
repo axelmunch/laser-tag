@@ -5,6 +5,7 @@ from ..math.Line import Line
 from ..math.Point import Point
 from ..math.rotations import rotate
 from .Ray import Ray
+from .Wall import Wall
 
 
 class Map:
@@ -12,9 +13,9 @@ class Map:
 
     def __init__(self):
         self.map = [
-            Line(Point(7.5, 5.5), Point(10, 10)),
-            Line(Point(1.5, 0), Point(1.5, 10)),
-            Line(Point(0, 1.5), Point(10, 1.5)),
+            Wall(Line(Point(7.5, 5.5), Point(10, 10))),
+            Wall(Line(Point(1.5, 0), Point(1.5, 10))),
+            Wall(Line(Point(0, 1.5), Point(10, 1.5))),
         ]
 
         # Spatial grid partitioning, stores wall index in each cell
@@ -39,7 +40,7 @@ class Map:
         self.map_min_x = self.map_min_y = self.map_max_x = self.map_max_y = None
 
         for i in range(len(self.map)):
-            line = self.map[i]
+            line: Line = self.map[i].get_line()
 
             # Min and max
             if self.map_min_x is None:
@@ -58,8 +59,8 @@ class Map:
                 self.spatial_partitioning[(x, y)].append(i)
 
     def collides_with(self, collider: Circle) -> bool:
-        for line in self.map:
-            if collider.collides_with(line):
+        for wall in self.map:
+            if collider.collides_with(wall.get_line()):
                 return True
 
         return False
@@ -77,8 +78,8 @@ class Map:
             if coordinate not in self.spatial_partitioning:
                 continue
 
-            for line_index in self.spatial_partitioning[coordinate]:
-                line = self.map[line_index]
+            for wall_index in self.spatial_partitioning[coordinate]:
+                line = self.map[wall_index].get_line()
 
                 intersection_point = ray_line.get_intersection_segment(line)
                 if intersection_point is not None:
