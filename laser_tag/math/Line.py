@@ -12,7 +12,10 @@ class Line:
     def __init__(self, point1: Point, point2: Point):
         self.point1 = point1
         self.point2 = point2
-        self.distance = distance_points(self.point1, self.point2)
+        self.distance = None
+
+        rounding_precision = 10
+        self.margin = 10**-rounding_precision
 
     def __repr__(self):
         return f"[{self.point1},{self.point2}]"
@@ -60,29 +63,26 @@ class Line:
         if intersection is None:
             return None
 
-        rounding_precision = 10
-        margin = 10**-rounding_precision
-
         if (
             (
-                min(line.point1.x, line.point2.x) - margin
+                min(line.point1.x, line.point2.x) - self.margin
                 <= intersection.x
-                <= max(line.point1.x, line.point2.x) + margin
+                <= max(line.point1.x, line.point2.x) + self.margin
             )
             and (
-                min(line.point1.y, line.point2.y) - margin
+                min(line.point1.y, line.point2.y) - self.margin
                 <= intersection.y
-                <= max(line.point1.y, line.point2.y) + margin
+                <= max(line.point1.y, line.point2.y) + self.margin
             )
             and (
-                min(self.point1.x, self.point2.x) - margin
+                min(self.point1.x, self.point2.x) - self.margin
                 <= intersection.x
-                <= max(self.point1.x, self.point2.x) + margin
+                <= max(self.point1.x, self.point2.x) + self.margin
             )
             and (
-                min(self.point1.y, self.point2.y) - margin
+                min(self.point1.y, self.point2.y) - self.margin
                 <= intersection.y
-                <= max(self.point1.y, self.point2.y) + margin
+                <= max(self.point1.y, self.point2.y) + self.margin
             )
         ):
             return intersection
@@ -105,7 +105,7 @@ class Line:
 
         cell = Point(int(origin.x), int(origin.y))
 
-        max_distance = distance_points(self.point1, self.point2)
+        max_distance = self.get_distance()
 
         dx = self.point2.x - origin.x
         dy = self.point2.y - origin.y
@@ -163,7 +163,13 @@ class Line:
         return grid_cells
 
     def get_point_ratio_on_line(self, intersection_point: Point):
-        if intersection_point == self.point1:
+        if intersection_point == self.point1 or self.get_distance() == 0:
             return 0
 
-        return distance_points(self.point1, intersection_point) / self.distance
+        return distance_points(self.point1, intersection_point) / self.get_distance()
+
+    def get_distance(self) -> float:
+        if self.distance is None:
+            self.distance = distance_points(self.point1, self.point2)
+
+        return self.distance
