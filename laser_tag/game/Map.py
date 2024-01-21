@@ -1,3 +1,5 @@
+from math import ceil
+
 from ..configuration import MAX_RAY_DISTANCE
 from ..math.Circle import Circle
 from ..math.distance import distance_points
@@ -16,6 +18,9 @@ class Map:
             Wall(Line(Point(7.5, 5.5), Point(10, 10))),
             Wall(Line(Point(1.5, 0), Point(1.5, 10))),
             Wall(Line(Point(0, 1.5), Point(10, 1.5))),
+            Wall(Line(Point(9, 8), Point(9, 11))),
+            Wall(Line(Point(3, 12), Point(5, 14))),
+            Wall(Line(Point(5, 12), Point(3, 14))),
         ]
 
         # Spatial grid partitioning, stores wall index in each cell
@@ -56,7 +61,9 @@ class Map:
             for x, y in line.get_coordinates():
                 if (x, y) not in self.spatial_partitioning:
                     self.spatial_partitioning[(x, y)] = []
-                self.spatial_partitioning[(x, y)].append(i)
+
+                if i not in self.spatial_partitioning[(x, y)]:
+                    self.spatial_partitioning[(x, y)].append(i)
 
     def collides_with(self, collider: Circle) -> bool:
         for wall in self.map:
@@ -71,37 +78,43 @@ class Map:
         end_point = rotate(MAX_RAY_DISTANCE, direction, center=origin)
         ray_line = Line(origin, end_point)
 
-        # Line intersecting, intersection point, distance between origin and intersection point
-        intersections: list[tuple(Point, Line, float)] = []
+        # Intersection point, line intersecting, distance between origin and intersection point
+        intersection: tuple[Point, Line, float] = None
+
+        rounding_precision = 10
+        margin = 10**-rounding_precision
 
         for coordinate in ray_line.get_coordinates(map_bounds=self.get_map_bounds()):
             if coordinate not in self.spatial_partitioning:
                 continue
 
             for wall_index in self.spatial_partitioning[coordinate]:
-                line = self.map[wall_index].get_line()
+                line: Line = self.map[wall_index].get_line()
 
                 intersection_point = ray_line.get_intersection_segment(line)
                 if intersection_point is not None:
-                    intersections.append(
-                        (
-                            intersection_point,
-                            line,
-                            distance_points(origin, intersection_point),
-                        )
-                    )
+                    # Check intersection point in current cell
+                    if (
+                        coordinate[0] == int(intersection_point.x - margin)
+                        or coordinate[0] + 1 == ceil(intersection_point.x + margin)
+                    ) and (
+                        coordinate[1] == int(intersection_point.y - margin)
+                        or coordinate[1] + 1 == ceil(intersection_point.y + margin)
+                    ):
+                        distance = distance_points(origin, intersection_point)
 
-        if len(intersections) > 0:
-            # Sort by distance
-            intersections.sort(key=lambda intersection: intersection[2])
+                        if intersection is None or distance < intersection[2]:
+                            # Nearest intersection
+                            intersection = (intersection_point, line, distance)
 
-            # Nearest intersection
+            if intersection is not None:
+                break
+
+        if intersection is not None:
             ray.set_hit(
-                intersections[0][0],
-                hit_infos=intersections[0][1].get_point_ratio_on_line(
-                    intersections[0][0]
-                ),
-                distance=intersections[0][2],
+                intersection[0],
+                hit_infos=intersection[1].get_point_ratio_on_line(intersection[0]),
+                distance=intersection[2],
             )
 
         return ray
