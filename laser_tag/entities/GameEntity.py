@@ -13,8 +13,8 @@ class GameEntity(Entity):
         super().__init__(position, radius)
 
         self.move_speed = 0.05
-        self.run_speed_multiplier = 1.4
-        self.crouch_speed_multiplier = 0.8
+        self.run_speed_multiplier = 1.5
+        self.crouch_speed_multiplier = 0.5
 
         # Attack cooldown (seconds)
         self.attack_speed = 1
