@@ -36,7 +36,7 @@ This game is a multiplayer laser tag game that uses raycasting to simulate a 3D 
 #### Create
 
 ```shell
-python3 -m venv .venv
+python -m venv .venv
 ```
 
 #### Activate
