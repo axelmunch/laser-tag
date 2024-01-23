@@ -1,3 +1,5 @@
+from .BarrelShort import BarrelShort
+from .BarrelTall import BarrelTall
 from .Entity import Entity
 from .GameEntity import GameEntity
 from .Player import Player
@@ -16,6 +18,10 @@ def create_entity(parsed_object: list):
                 return Player.create(entity_object)
             case "Projectile":
                 return Projectile.create(entity_object)
+            case "BarrelShort":
+                return BarrelShort.create(entity_object)
+            case "BarrelTall":
+                return BarrelTall.create(entity_object)
     except:
         pass
 

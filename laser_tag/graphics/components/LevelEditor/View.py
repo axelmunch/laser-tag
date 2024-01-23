@@ -3,6 +3,9 @@ from math import ceil
 import pygame
 
 from ....configuration import DEFAULT_FONT
+from ....entities.BarrelShort import BarrelShort
+from ....entities.BarrelTall import BarrelTall
+from ....entities.GameEntity import GameEntity
 from ....entities.Player import Player
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
@@ -15,7 +18,7 @@ from ...resize import resize
 from ...Text import Text
 from ..Component import Component
 from .EditorState import EditorState
-from .Item import Item
+from .Item import Item, wall_items
 
 
 class View(Component):
@@ -53,6 +56,8 @@ class View(Component):
         self.lines = [
             Line(Point(3, 3), Point(5, 0)),
         ]
+        self.entities: list[GameEntity] = []
+        self.spawn_points: list[Point] = []
 
         self.scroll_step = 4
         self.move_speed = 0.2
@@ -70,7 +75,7 @@ class View(Component):
 
         self.min_selection_distance = 0.25
         self.placing_or_moving = False
-        self.selected_elements = []
+        self.selected_elements: list[Point] = []
 
         self.reset_center()
         self.update(data)
@@ -99,6 +104,12 @@ class View(Component):
         if len(self.lines) > 0:
             self.center_x_transition = self.lines[0].point1.x
             self.center_y_transition = self.lines[0].point1.y
+        elif len(self.entities) > 0:
+            self.center_x_transition = self.entities[0].position.x
+            self.center_y_transition = self.entities[0].position.y
+        elif len(self.spawn_points) > 0:
+            self.center_x_transition = self.spawn_points[0].x
+            self.center_y_transition = self.spawn_points[0].y
         else:
             self.center_x_transition = 0
             self.center_y_transition = 0
@@ -126,6 +137,21 @@ class View(Component):
             and point.x <= self.center_x + self.original_width / 2 / self.cell_size
             and point.y >= self.center_y - self.original_height / 2 / self.cell_size
             and point.y <= self.center_y + self.original_height / 2 / self.cell_size
+        )
+
+    def in_view_world_rect(self, rect: tuple[float, float, float, float]) -> bool:
+        start = self.screen_position_to_world_point(0, 0)
+        end = self.screen_position_to_world_point(
+            self.original_width, self.original_height
+        )
+
+        editor_visibility_zone = (start.x, start.y, end.x - start.x, end.y - start.y)
+
+        return (
+            rect[0] <= editor_visibility_zone[0] + editor_visibility_zone[2]
+            and rect[0] + rect[2] >= editor_visibility_zone[0]
+            and rect[1] <= editor_visibility_zone[1] + editor_visibility_zone[3]
+            and rect[1] + rect[3] >= editor_visibility_zone[1]
         )
 
     def snap_coordinates(self, point: Point) -> Point:
@@ -203,21 +229,37 @@ class View(Component):
             )
             if nearest_element_position is not None:
                 self.delete_element_containing_point(nearest_element_position)
+            return
 
         match self.editor_state:
             case EditorState.PLACE:
                 if mouse_left_click_press and not self.placing_or_moving:
+                    # Place element
                     self.placing_or_moving = True
                     self.selected_elements.append(self.position_aimed)
                 elif mouse_left_click_release and self.placing_or_moving:
+                    # Complete place
                     if len(self.selected_elements) > 0:
-                        if (
-                            type(self.selected_elements[-1]) == Point
-                            and self.selected_elements[-1] != self.position_aimed
-                        ):
-                            self.lines.append(
-                                Line(self.selected_elements[-1], self.position_aimed)
-                            )
+                        if self.selected_item in wall_items:
+                            if self.selected_elements[-1] != self.position_aimed:
+                                self.lines.append(
+                                    Line(
+                                        self.selected_elements[-1], self.position_aimed
+                                    )
+                                )
+                        else:
+                            match self.selected_item:
+                                case Item.BARREL_SHORT:
+                                    self.entities.append(
+                                        BarrelShort(self.position_aimed)
+                                    )
+                                case Item.BARREL_TALL:
+                                    self.entities.append(
+                                        BarrelTall(self.position_aimed)
+                                    )
+                                case Item.SPAWN_POINT:
+                                    self.spawn_points.append(self.position_aimed)
+
                         self.selected_elements = []
                     self.placing_or_moving = False
                 if mouse_right_click_press and self.placing_or_moving:
@@ -251,10 +293,7 @@ class View(Component):
 
                 if self.placing_or_moving:
                     # Move point
-                    if (
-                        len(self.selected_elements) > 0
-                        and type(self.selected_elements[-1]) == Point
-                    ):
+                    if len(self.selected_elements) > 0:
                         self.selected_elements[-1].x = self.position_aimed.x
                         self.selected_elements[-1].y = self.position_aimed.y
 
@@ -262,11 +301,21 @@ class View(Component):
         # [(point, distance)]
         objects_distance = []
 
+        for entity in self.entities:
+            distance = distance_points(point, entity.position)
+            if distance <= self.min_selection_distance:
+                objects_distance.append((entity.position, distance))
+
         for line in self.lines:
             for line_point in [line.point1, line.point2]:
                 distance = distance_points(point, line_point)
                 if distance <= self.min_selection_distance:
                     objects_distance.append((line_point, distance))
+
+        for spawn_point in self.spawn_points:
+            distance = distance_points(point, spawn_point)
+            if distance <= self.min_selection_distance:
+                objects_distance.append((spawn_point, distance))
 
         # Sort by distance
         objects_distance.sort(key=lambda element: element[1])
@@ -277,9 +326,19 @@ class View(Component):
         return None
 
     def delete_element_containing_point(self, point: Point):
+        for entity in self.entities:
+            if entity.position == point:
+                self.entities.remove(entity)
+                return
+
         for line in self.lines:
             if line.point1 == point or line.point2 == point:
                 self.lines.remove(line)
+                return
+
+        for spawn_point in self.spawn_points:
+            if spawn_point == point:
+                self.spawn_points.remove(spawn_point)
                 return
 
     def cancel_placing_or_moving(self):
@@ -287,11 +346,7 @@ class View(Component):
             case EditorState.PLACE:
                 pass
             case EditorState.MOVE:
-                if (
-                    len(self.selected_elements) > 1
-                    and type(self.selected_elements[-1]) == Point
-                    and type(self.selected_elements[-2]) == Point
-                ):
+                if len(self.selected_elements) > 1:
                     # Reset coordinates
                     self.selected_elements[-1].x = self.selected_elements[-2].x
                     self.selected_elements[-1].y = self.selected_elements[-2].y
@@ -411,12 +466,6 @@ class View(Component):
             max(1, int(resize(2, "x"))),
         )
 
-        start = self.screen_position_to_world_point(0, 0)
-        end = self.screen_position_to_world_point(
-            self.original_width, self.original_height
-        )
-        editor_visibility_zone = (start.x, start.y, end.x - start.x, end.y - start.y)
-
         # Draw all lines
         for line in self.lines:
             line_rect = (
@@ -426,13 +475,7 @@ class View(Component):
                 abs(line.point2.y - line.point1.y),
             )
 
-            if (
-                line_rect[0] <= editor_visibility_zone[0] + editor_visibility_zone[2]
-                and line_rect[0] + line_rect[2] >= editor_visibility_zone[0]
-                and line_rect[1]
-                <= editor_visibility_zone[1] + editor_visibility_zone[3]
-                and line_rect[1] + line_rect[3] >= editor_visibility_zone[1]
-            ):
+            if self.in_view_world_rect(line_rect):
                 self.draw_line(line, (192, 192, 192))
                 for point in [line.point1, line.point2]:
                     point_position = self.world_point_to_screen_position(point)
@@ -446,28 +489,110 @@ class View(Component):
                         resize(0.1 * self.cell_size, "x"),
                     )
 
-        # Preview line creation
-        if self.editor_state == EditorState.PLACE:
-            if (
-                len(self.selected_elements) > 0
-                and type(self.selected_elements[-1]) == Point
-            ):
-                color = (128, 128, 128)
+        for entity in self.entities:
+            entity_radius = type(entity).entity_radius()
+            entity_rect = (
+                entity.position.x - entity_radius,
+                entity.position.y - entity_radius,
+                entity_radius * 2,
+                entity_radius * 2,
+            )
 
-                self.draw_line(
-                    Line(self.selected_elements[-1], self.position_aimed),
-                    color,
-                )
-                for point in [self.selected_elements[-1], self.position_aimed]:
-                    point_position = self.world_point_to_screen_position(point)
-                    pygame.draw.circle(
-                        self.surface,
-                        color,
-                        (
-                            resize(point_position[0], "x"),
-                            resize(point_position[1], "y"),
+            if self.in_view_world_rect(entity_rect):
+                entity_position = self.world_point_to_screen_position(entity.position)
+                pygame.draw.circle(
+                    self.surface,
+                    (255, 255, 255),
+                    (
+                        resize(
+                            entity_position[0],
+                            "x",
                         ),
-                        resize(0.1 * self.cell_size, "x"),
+                        resize(
+                            entity_position[1],
+                            "y",
+                        ),
+                    ),
+                    resize(entity_radius * self.cell_size, "x"),
+                )
+
+        for spawn_point in self.spawn_points:
+            spawn_point_radius = 0.25
+            spawn_point_rect = (
+                spawn_point.x - spawn_point_radius,
+                spawn_point.y - spawn_point_radius,
+                spawn_point_radius * 2,
+                spawn_point_radius * 2,
+            )
+
+            if self.in_view_world_rect(spawn_point_rect):
+                spawn_point_position = self.world_point_to_screen_position(spawn_point)
+                pygame.draw.circle(
+                    self.surface,
+                    (128, 255, 128),
+                    (
+                        resize(
+                            spawn_point_position[0],
+                            "x",
+                        ),
+                        resize(
+                            spawn_point_position[1],
+                            "y",
+                        ),
+                    ),
+                    resize(0.25 * self.cell_size, "x"),
+                )
+
+        # Preview element creation
+        if self.editor_state == EditorState.PLACE:
+            if self.selected_item in wall_items:
+                if len(self.selected_elements) > 0:
+                    color = (128, 128, 128)
+
+                    self.draw_line(
+                        Line(self.selected_elements[-1], self.position_aimed),
+                        color,
+                    )
+                    for point in [self.selected_elements[-1], self.position_aimed]:
+                        point_position = self.world_point_to_screen_position(point)
+                        pygame.draw.circle(
+                            self.surface,
+                            color,
+                            (
+                                resize(point_position[0], "x"),
+                                resize(point_position[1], "y"),
+                            ),
+                            resize(0.1 * self.cell_size, "x"),
+                        )
+            else:
+                if self.placing_or_moving:
+                    # Display cross
+                    cross_radius = 0.2
+                    self.draw_line(
+                        Line(
+                            Point(
+                                self.position_aimed.x - cross_radius,
+                                self.position_aimed.y - cross_radius,
+                            ),
+                            Point(
+                                self.position_aimed.x + cross_radius,
+                                self.position_aimed.y + cross_radius,
+                            ),
+                        ),
+                        (128, 128, 128),
+                    )
+                    self.draw_line(
+                        Line(
+                            Point(
+                                self.position_aimed.x + cross_radius,
+                                self.position_aimed.y - cross_radius,
+                            ),
+                            Point(
+                                self.position_aimed.x - cross_radius,
+                                self.position_aimed.y + cross_radius,
+                            ),
+                        ),
+                        (128, 128, 128),
                     )
 
         # Proximity indicator
