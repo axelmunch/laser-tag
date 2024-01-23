@@ -50,7 +50,7 @@ source .venv/bin/activate
 Windows
 
 ```shell
-.\.venv\Scripts\activate
+.venv\Scripts\activate
 ```
 
 ### Install the dependencies
