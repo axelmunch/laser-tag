@@ -3,9 +3,9 @@ import pygame
 from ....configuration import DEFAULT_FONT, VARIABLES
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
+from ...Button import Button, ButtonState
 from ...resize import resize
 from ...Text import Text
-from ..Button import Button, ButtonState
 from ..Component import Component
 from .EditorState import EditorState
 

@@ -52,7 +52,7 @@ class Button:
     def get_content(self):
         return self.content
 
-    def update(self, mouse_x, mouse_y) -> bool:
+    def update(self, mouse_x, mouse_y):
         self.mouse_x = mouse_x
         self.mouse_y = mouse_y
 

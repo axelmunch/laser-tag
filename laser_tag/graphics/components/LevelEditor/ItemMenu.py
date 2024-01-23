@@ -6,9 +6,9 @@ from ....configuration import DEFAULT_FONT
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
 from ....math.Point import Point
+from ...Button import Button, ButtonState
 from ...resize import resize
 from ...Text import Text
-from ..Button import Button, ButtonState
 from ..Component import Component
 from .Item import Item
 
