@@ -62,6 +62,10 @@ class World(Component):
 
     def render(self):
         self.surface.fill((42, 42, 42))
+        # Sky
+        pygame.draw.rect(
+            self.surface, (64, 64, 64), (0, 0, resize(1920, "x"), resize(540, "y")), 0
+        )
 
         render_list = RenderList()
 
@@ -154,6 +158,28 @@ class World(Component):
                         resize(entity_world_size, "y"),
                     ),
                     0,
+                )
+
+        # Test display line
+        if self.data["current_entity"] is not None:
+            point_a = Point(3, 3)
+            point_b = Point(6, 1)
+            if (
+                0 < self.position_to_screen(point_a) < 1
+                or 0 < self.position_to_screen(point_b) < 1
+            ):
+                pygame.draw.line(
+                    self.surface,
+                    (0, 255, 0),
+                    (
+                        resize(self.position_to_screen(point_a) * 1920, "x"),
+                        resize(540, "y"),
+                    ),
+                    (
+                        resize(self.position_to_screen(point_b) * 1920, "x"),
+                        resize(540, "y"),
+                    ),
+                    max(1, int(resize(3, "x"))),
                 )
 
         super().render()
