@@ -1,4 +1,4 @@
-@startuml "Diagram Laser Tag"
+@startuml "Laser Tag Diagram"
 
 skinparam classFontStyle Bold
 
@@ -78,11 +78,13 @@ package laser_tag {
             point1: Point
             point2: Point
             distance
+            margin
 
             create(parsed_object): Line
             get_intersection_line(line: Line): Point
             get_intersection_segment(line: Line): Point
             get_coordinates(map_bounds)
+            get_distance()
         }
 
         class Point {
@@ -214,6 +216,7 @@ package laser_tag {
             hp
 
             create(parsed_object): GameEntity
+            entity_radius()
             reset()
             move(x, y)
             set_max_hp(max_hp)
@@ -225,8 +228,21 @@ package laser_tag {
             on_kill(entity: GameEntity)
         }
 
+        class BarrelShort extends GameEntity {
+            create(parsed_object): BarrelShort
+            entity_radius()
+            death()
+        }
+
+        class BarrelTall extends GameEntity {
+            create(parsed_object): BarrelTall
+            entity_radius()
+            death()
+        }
+
         class Player extends GameEntity {
             create(parsed_object): Player
+            entity_radius()
             death()
         }
 
@@ -235,6 +251,7 @@ package laser_tag {
             get_entity_fct
 
             create(parsed_object): Projectile
+            entity_radius()
             on_hit(entity: GameEntity)
             on_kill(entity: GameEntity)
             death()
@@ -252,6 +269,7 @@ package laser_tag {
             mouse_x
             mouse_y
             show_scoreboard: Boolean
+            lock_cursor: Boolean
 
             set_state(parsed_object)
             reset()
@@ -282,6 +300,28 @@ package laser_tag {
             update(entities: GameEntity[])
         }
 
+        class Wall {
+            line: Line
+
+            get_line(): Line
+        }
+
+        class Map {
+            map: Wall[]
+            spatial_partitioning
+            map_min_x
+            map_min_y
+            map_max_x
+            map_max_y
+            margin
+
+            get_spawn_point(): Point
+            get_map_bounds()
+            generate_partitioning_cache()
+            collides_with(collider: Circle): Boolean
+            cast_ray(origin: Point, direction): Ray
+        }
+
         class World {
             map: Map
             entities
@@ -298,21 +338,6 @@ package laser_tag {
             update(events: EventInstance[], controlled_entity_id, delta_time: DeltaTime, player_delta_time: DeltaTime)
             move_entity(entity: GameEntity, movement_vector: Point)
             cast_rays()
-        }
-
-        class Map {
-            map
-            spatial_partitioning
-            map_min_x
-            map_min_y
-            map_max_x
-            map_max_y
-
-            get_spawn_point(): Point
-            get_map_bounds()
-            generate_partitioning_cache()
-            collides_with(collider: Circle): Boolean
-            cast_ray(origin: Point, direction): Ray
         }
 
         class Ray {
@@ -415,6 +440,36 @@ package laser_tag {
     }
 
     package graphics {
+        enum ButtonState {
+            NONE
+            HOVERED
+            PRESSED
+            RELEASED
+        }
+
+        class Button {
+            x
+            y
+            width
+            height
+            content
+            action
+            disabled: Boolean
+            state: ButtonState
+
+            disable()
+            enable()
+            is_disabled(): Boolean
+            get_state(): ButtonState
+            get_pos()
+            get_content()
+            update(mouse_x, mouse_y)
+            is_hovered(): Boolean
+            click_press()
+            click_release()
+            run_action()
+        }
+
         package components {
             class Component {
                 data
@@ -459,6 +514,132 @@ package laser_tag {
                 update(rays: Ray[], entities: GameEntity[], current_entity: GameEntity)
                 position_to_screen(point: Point)
             }
+
+            package LevelEditor {
+                enum EditorState {
+                    PLACE
+                    MOVE
+                }
+
+                enum Item {
+                    WALL_1
+                    WALL_2
+                    WALL_3
+                    WALL_4
+                    BARREL_SHORT
+                    BARREL_TALL
+                    SPAWN_POINT
+                }
+
+                class ItemMenu extends Component {
+                    text: Text
+                    mouse_x
+                    mouse_y
+                    selected_item_index
+                    buttons: Button[]
+                    scroll
+                    scroll_max
+                    scroll_step
+
+                    get_selected_item(): Item
+                    move_buttons(y_value)
+                    in_view_screen(point: Point)
+                    update(events: EventInstance[], relative_mouse_position)
+                }
+
+                class Toolbar extends Component {
+                    text: Text
+                    mouse_x
+                    mouse_y
+                    editor_state: EditorState
+                    snap_to_grid: Boolean
+                    show_grid: Boolean
+                    preview_player: Boolean
+                    place_button: Button
+                    move_button: Button
+                    snap_to_grid_button: Button
+                    show_grid_button: Button
+                    preview_player_button: Button
+                    buttons: Button[]
+
+                    get_editor_state(): EditorState
+                    get_view_variables()
+                    quit()
+                    update(events: EventInstance[], relative_mouse_position)
+                }
+
+                class View extends Component {
+                    text: Text
+                    mouse_x
+                    mouse_y
+                    cell_size
+                    max_cell_size
+                    min_cell_size
+                    center_transition_speed
+                    center_x_transition
+                    center_y_transition
+                    center_x
+                    center_y
+                    delta_time
+                    lines: Line[]
+                    entities: GameEntity[]
+                    spawn_points: Point[]
+                    scroll_step
+                    move_speed
+                    preview_radius
+                    snap_to_grid: Boolean
+                    show_grid: Boolean
+                    preview_player: Boolean
+                    editor_state: EditorState
+                    selected_item: Item
+                    position_aimed: Point
+                    min_selection_distance
+                    placing_or_moving: Boolean
+                    selected_elements: Point[]
+
+                    set_editor_state(editor_state: EditorState)
+                    set_selected_item(item: Item)
+                    set_view_variables(snap_to_grid: Boolean, show_grid: Boolean, preview_player: Boolean)
+                    get_lines(): Line[]
+                    reset_center()
+                    screen_position_to_world_point(x, y): Point
+                    world_point_to_screen_position(point: Point)
+                    in_view_screen(): Boolean
+                    in_view_world(): Boolean
+                    in_view_world_rect(): Boolean
+                    snap_coordinates(point: Point): Point
+                    draw_line(line: Line, color)
+                    display_grid()
+                    manage_click(mouse_left_click_press: Boolean, mouse_left_click_release: Boolean, mouse_right_click_press: Boolean)
+                    find_nearest_object_position(point: Point): Point
+                    delete_element_containing_point(point: Point)
+                    cancel_placing_or_moving()
+                    update(events: EventInstance[], relative_mouse_position)
+                }
+
+                class "LevelEditor" as LevelEditorComponent extends Component {
+                    toolbar: Toolbar
+                    item_menu: ItemMenu
+                    view: View
+                    components
+                    text: Text
+                    mouse_x
+                    mouse_y
+                    toolbar_position
+                    item_menu_position
+                    view_position
+
+                    update(events: EventInstance[])
+                }
+
+                ItemMenu --> Item
+                Toolbar --> EditorState
+                View --> Item
+                View --> EditorState
+                LevelEditorComponent --> Toolbar
+                LevelEditorComponent --> ItemMenu
+                LevelEditorComponent --> View
+            }
         }
 
         class Display {
@@ -471,6 +652,7 @@ package laser_tag {
             clock
             components: Component[]
             set_network_stats(pings, connected: Boolean, bytes_sent, bytes_received)
+            set_events(events: EventInstance[])
             resize()
             render(game: Game)
         }
@@ -497,6 +679,7 @@ package laser_tag {
             text(text, x, y, size, color, align_x, align_y)
         }
 
+        Button --> ButtonState
         Renderer --> Component
     }
 
