@@ -1,9 +1,8 @@
 {
-    "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Module",
-            "type": "python",
+            "name": "Python Module: Laser Tag",
+            "type": "debugpy",
             "request": "launch",
             "module": "laser_tag",
             "justMyCode": true
