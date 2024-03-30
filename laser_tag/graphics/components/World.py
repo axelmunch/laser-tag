@@ -1,8 +1,8 @@
-from math import ceil, cos
+from math import cos
 
 import pygame
 
-from ...configuration import VARIABLES
+from ...configuration import MAX_WALL_HEIGHT, VARIABLES
 from ...entities.GameEntity import GameEntity
 from ...entities.Projectile import Projectile
 from ...game.Ray import Ray
@@ -10,8 +10,12 @@ from ...math.degrees_radians import degrees_to_radians
 from ...math.distance import distance_points
 from ...math.Point import Point
 from ...math.rotations import get_angle
+from ..AssetsLoader import TextureNames
 from ..resize import resize
+from ..Textures import Textures
 from .Component import Component
+
+textures = Textures()
 
 
 class World(Component):
@@ -71,10 +75,9 @@ class World(Component):
 
         # List rays
         if len(self.data["rays"]) > 0:
-            step = 1920 / VARIABLES.rays_quantity
             for i, ray in self.data["rays"]:
                 if ray.hit_point is not None:
-                    render_list.add(i * step, ray.distance, ray)
+                    render_list.add(i * VARIABLES.ray_width, ray.distance, ray)
 
         # List entities
         for entity in self.data["entities"]:
@@ -119,45 +122,92 @@ class World(Component):
                         )
                     else:
                         ray_world_size = VARIABLES.world_scale / ray.distance
-                ray_world_size = min(ray_world_size, 1080)
 
-                color_intensity = max(0, (1 - (ray.distance / 8))) * 127 + 64
+                # Limit wall height (for performance)
+                ray_world_size = min(ray_world_size, MAX_WALL_HEIGHT)
 
-                # Draw the ray
-                pygame.draw.rect(
-                    self.surface,
-                    (color_intensity, color_intensity, color_intensity + 64),
+                approximate_display_size = (
+                    ray_world_size
+                    // VARIABLES.wall_height_approximation
+                    * VARIABLES.wall_height_approximation
+                )
+
+                height_cropping_offset = 0
+                if approximate_display_size > 1080:
+                    height_cropping_offset = resize(
+                        (approximate_display_size - 1080) / 2, "y"
+                    )
+
+                texture_surface_full = textures.resize_texture(
+                    TextureNames.BLUE,
+                    (approximate_display_size, approximate_display_size),
+                )
+
+                ratio = ray.hit_infos
+
+                subsurface_start = texture_surface_full.get_width() * ratio
+                if (
+                    subsurface_start + VARIABLES.ray_width
+                    > texture_surface_full.get_width()
+                ):
+                    subsurface_start = (
+                        texture_surface_full.get_width() - VARIABLES.ray_width
+                    )
+
+                texture_subsurface = texture_surface_full.subsurface(
+                    (
+                        subsurface_start,
+                        height_cropping_offset,
+                        VARIABLES.ray_width,
+                        texture_surface_full.get_height() - height_cropping_offset * 2,
+                    )
+                )
+
+                self.surface.blit(
+                    texture_subsurface,
                     (
                         resize(x_position, "x"),
-                        resize(540 - ray_world_size / 2, "y"),
-                        ceil(resize(step, "x")),
-                        resize(ray_world_size, "y"),
+                        resize(540, "y") - texture_subsurface.get_height() / 2,
                     ),
-                    0,
                 )
+
+                # Darkening effect
+                darkness_value = min(255, ray.distance * 20)
+                dark_mask = pygame.Surface(
+                    texture_subsurface.get_size(), pygame.SRCALPHA
+                )
+                dark_mask.fill((0, 0, 0, darkness_value))
+
+                self.surface.blit(
+                    dark_mask,
+                    (
+                        resize(x_position, "x"),
+                        resize(540, "y") - dark_mask.get_height() / 2,
+                    ),
+                )
+
             elif isinstance(object, GameEntity):
+                texture = TextureNames.GREEN
+
                 # Temporary scale
-                entity_world_size = min(VARIABLES.world_scale / distance / 4, 1080)
+                entity_world_size = min(VARIABLES.world_scale / distance / 2, 1080)
 
-                color = (255, 255, 255)
                 if isinstance(object, Projectile):
-                    entity_world_size /= 4
-                    color = (0, 192, 0)
+                    texture = TextureNames.RED
+                    entity_world_size *= 0.5
 
-                # Draw the entity
-                pygame.draw.rect(
-                    self.surface,
-                    color,
+                # Display the entity
+                self.surface.blit(
+                    textures.resize_texture(
+                        texture, (entity_world_size, entity_world_size)
+                    ),
                     (
                         resize(
                             x_position * 1920 - entity_world_size / 2,
                             "x",
                         ),
                         resize(540 - entity_world_size / 2, "y"),
-                        resize(entity_world_size, "x"),
-                        resize(entity_world_size, "y"),
                     ),
-                    0,
                 )
 
         # Test display line

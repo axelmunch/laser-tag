@@ -29,6 +29,7 @@ class Variables:
         self.fov = 80
         self.ray_width = 15
         self.rays_quantity = 1920 // self.ray_width
+        self.wall_height_approximation = 1920 // self.rays_quantity
         self.world_scale = 1200
 
         self.assets_folder = "default"

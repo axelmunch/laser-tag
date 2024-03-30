@@ -6,6 +6,7 @@ from laser_tag.events.Event import Event
 from laser_tag.events.get_events import *
 from laser_tag.game.Game import Game
 from laser_tag.graphics import display
+from laser_tag.graphics.AssetsLoader import load_assets
 from laser_tag.graphics.Renderer import Renderer
 from laser_tag.graphics.resize import resize
 from laser_tag.network.Client import Client
@@ -14,9 +15,11 @@ from laser_tag.network.Server import Server
 if __name__ == "__main__":
     pygame.init()
 
-    game = Game()
+    load_assets()
 
     clock = pygame.time.Clock()
+
+    game = Game()
 
     renderer = Renderer(clock)
 

@@ -17,6 +17,8 @@ package laser_tag {
             SERVER_SOCKET_TIMEOUT
             CLIENT_TIMEOUT
             CLIENT_MINIMUM_TICK
+            DEFAULT_TEXTURE_CACHE_LIMIT
+            MAX_WALL_HEIGHT
             MAX_RAY_DISTANCE
             DEFAULT_FONT
             SCREENSHOTS_PATH
@@ -39,8 +41,11 @@ package laser_tag {
             rotate_sensitivity
             pseudo
             fov
+            ray_width
             rays_quantity
+            wall_height_approximation
             world_scale
+            assets_folder
 
             load()
             set_full_screen_size(width, height)
@@ -677,6 +682,31 @@ package laser_tag {
             get_size(generated_text)
             blit(generated_text, x, y, align_x, align_y)
             text(text, x, y, size, color, align_x, align_y)
+        }
+
+        class Texture {
+            texture_cache
+            cache_limit
+            original_width
+            original_height
+            texture_original
+            resize(size)
+            get_surface()
+            get_original_size()
+            reduce_cache()
+            clear_cache()
+            set_cache_limit(limit)
+        }
+
+        class Textures {
+            textures
+            load_texture(id, path, alpha: Boolean, custom_size, keep: Boolean)
+            resize_texture(id, size)
+            get_surface(id)
+            get_original_size(id)
+            remove_texture(id)
+            clear_cache()
+            set_cache_limit(id, limit)
         }
 
         Button --> ButtonState
