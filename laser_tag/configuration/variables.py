@@ -31,6 +31,8 @@ class Variables:
         self.rays_quantity = 1920 // self.ray_width
         self.world_scale = 1200
 
+        self.assets_folder = "default"
+
         # Load from file
         self.load()
 

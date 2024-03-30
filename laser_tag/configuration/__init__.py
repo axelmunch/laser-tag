@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from .variables import *
 
 VARIABLES = Variables()
@@ -8,6 +10,9 @@ GAME_NAME = "Laser Tag"
 WINDOW_WINDOWED_SIZE_RATIO = 0.5
 
 TARGET_FPS = 60
+
+DATA_PATH = Path("data")
+ASSETS_PATH = DATA_PATH.joinpath("assets")
 
 NETWORK_BUFFER_SIZE = 32768
 SERVER_DEFAULT_MAX_CLIENTS = None
