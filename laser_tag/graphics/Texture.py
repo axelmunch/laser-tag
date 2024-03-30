@@ -7,12 +7,7 @@ from .resize import resize
 class Texture:
     """Texture class that manages surfaces and caching"""
 
-    def __init__(
-        self,
-        path,
-        alpha: bool = False,
-        custom_size: tuple[int, int] = None,
-    ):
+    def __init__(self, path, alpha: bool = False, custom_size: tuple[int, int] = None):
         self.texture_cache = {}
 
         self.cache_limit = DEFAULT_TEXTURE_CACHE_LIMIT
@@ -55,8 +50,10 @@ class Texture:
         return self.original_width, self.original_height
 
     def reduce_cache(self):
-        limit = max(self.cache_limit, 1)
-        self.texture_cache = dict(list(self.texture_cache.items())[-limit:])
+        if len(self.texture_cache) > self.cache_limit:
+            self.texture_cache = dict(
+                list(self.texture_cache.items())[-self.cache_limit :]
+            )
 
     def clear_cache(self):
         self.texture_cache.clear()

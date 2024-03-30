@@ -27,8 +27,9 @@ class Variables:
         self.pseudo = "Player"
 
         self.fov = 80
-        self.rays_quantity = 1920 // 15
-        self.world_scale = 750
+        self.ray_width = 15
+        self.rays_quantity = 1920 // self.ray_width
+        self.world_scale = 1200
 
         # Load from file
         self.load()

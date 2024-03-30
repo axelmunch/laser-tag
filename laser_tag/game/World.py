@@ -172,9 +172,11 @@ class World:
                                 Point(
                                     current_entity.position.x, current_entity.position.y
                                 ),
-                                self.controlled_entity
-                                if self.controlled_entity is not None
-                                else controlled_entity_id,
+                                (
+                                    self.controlled_entity
+                                    if self.controlled_entity is not None
+                                    else controlled_entity_id
+                                ),
                             )
                             projectile.rotation = current_entity.rotation
                             projectile.team = current_entity.team
@@ -278,7 +280,7 @@ class World:
         if entity is not None:
             for i in range(VARIABLES.rays_quantity):
                 # Even ray distribution
-                normalized_distance = (i / VARIABLES.rays_quantity - 0.5) * 2  # -1 to 1
+                normalized_distance = i / VARIABLES.rays_quantity * 2 - 1  # -1 to 1
                 ray_rotation = radians_to_degrees(atan(normalized_distance))
                 ray_rotation = ray_rotation / 90 * VARIABLES.fov
 

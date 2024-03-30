@@ -9,7 +9,9 @@ class Ray:
         self.origin = origin
         self.direction = direction
 
-        self.set_hit(origin, hit_infos=None, distance=0)
+        self.hit_point = None
+        self.hit_infos = None
+        self.distance = 0
 
     def __repr__(self):
         return f"[{self.origin},{self.direction},{self.hit_point},{self.hit_infos},{self.distance}]"

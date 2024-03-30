@@ -21,10 +21,10 @@ if __name__ == "__main__":
     renderer = Renderer(clock)
 
     # Local server
-    server = Server(0, debug=True)
+    server = Server(0, debug=False)
     server.start()
 
-    client = Client("localhost", server.get_port())
+    client = Client("localhost", server.get_port(), debug=False)
 
     running = True
 

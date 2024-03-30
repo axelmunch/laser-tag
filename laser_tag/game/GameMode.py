@@ -102,9 +102,9 @@ class GameMode:
                 for entity in entities.values():
                     entity.can_attack = True
         elif self.game_time_end > 0 and time() > self.game_time_end:
+            # End of game
             self.game_started = False
             self.game_time_end = 0
-            # End of game
 
         # Leaderboard
         self.update_leaderboard(entities)
