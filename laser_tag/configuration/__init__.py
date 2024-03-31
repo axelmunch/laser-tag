@@ -2,8 +2,6 @@ from pathlib import Path
 
 from .variables import *
 
-VARIABLES = Variables()
-
 VERSION = "v0.0.8"
 GAME_NAME = "Laser Tag"
 
@@ -16,6 +14,7 @@ DEFAULT_FONT = {"font": "calibri", "font_is_file": False, "size_multiplier": 1}
 # Paths
 DATA_PATH = Path("data")
 ASSETS_PATH = DATA_PATH.joinpath("assets")
+SETTINGS_FILE = DATA_PATH.joinpath("settings.json")
 
 SCREENSHOTS_PATH = Path("screenshots")
 
@@ -32,3 +31,6 @@ CLIENT_MINIMUM_TICK = 30
 DEFAULT_TEXTURE_CACHE_LIMIT = 200
 MAX_WALL_HEIGHT = 2500
 MAX_RAY_DISTANCE = 50
+
+
+VARIABLES = Variables(SETTINGS_FILE)

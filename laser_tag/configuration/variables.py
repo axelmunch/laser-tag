@@ -1,5 +1,18 @@
+import json
+
+
 class Variables:
-    def __init__(self):
+    def __init__(self, settings_file):
+        self.settings_file = settings_file
+        self.variables_save_exclusion = [
+            "settings_file",
+            "variables_save_exclusion",
+            "full_screen_width",
+            "full_screen_height",
+            "screen_width",
+            "screen_height",
+        ]
+
         # Default values
         self.full_screen_width = 0
         self.full_screen_height = 0
@@ -38,7 +51,23 @@ class Variables:
         self.load()
 
     def load(self):
-        pass
+        try:
+            with open(self.settings_file, "r") as file:
+                variables = json.load(file)
+                self.__dict__.update(variables)
+        except FileNotFoundError:
+            self.save()
+
+    def save(self):
+        variables = {
+            key: value
+            for key, value in self.__dict__.items()
+            if key not in self.variables_save_exclusion
+        }
+
+        with open(self.settings_file, "w") as file:
+            json.dump(variables, file, indent=4)
+            file.write("\n")
 
     def set_full_screen_size(self, width, height):
         self.full_screen_width = width

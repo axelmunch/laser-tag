@@ -5,7 +5,6 @@ skinparam classFontStyle Bold
 package laser_tag {
     package configuration {
         class configuration {
-            VARIABLES: Variables
             VERSION
             GAME_NAME
             WINDOW_WINDOWED_SIZE_RATIO
@@ -13,6 +12,7 @@ package laser_tag {
             DEFAULT_FONT
             DATA_PATH
             ASSETS_PATH
+            SETTINGS_FILE
             SCREENSHOTS_PATH
             NETWORK_BUFFER_SIZE
             SERVER_DEFAULT_MAX_CLIENTS
@@ -24,9 +24,12 @@ package laser_tag {
             DEFAULT_TEXTURE_CACHE_LIMIT
             MAX_WALL_HEIGHT
             MAX_RAY_DISTANCE
+            VARIABLES: Variables
         }
 
         class Variables {
+            settings_file
+            variables_save_exclusion
             full_screen_width
             full_screen_height
             screen_width
@@ -50,6 +53,7 @@ package laser_tag {
             assets_folder
 
             load()
+            save()
             set_full_screen_size(width, height)
             set_screen_size(width, height)
         }
