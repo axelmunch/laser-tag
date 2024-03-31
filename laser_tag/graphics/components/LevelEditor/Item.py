@@ -1,11 +1,21 @@
 from enum import Enum, auto
 
+from ....game.Wall import WallType
+
 
 class Item(Enum):
-    WALL_1 = auto()
-    WALL_2 = auto()
-    WALL_3 = auto()
-    WALL_4 = auto()
+    """Items"""
+
+    def _generate_next_value_(name, start, count, last_values):
+        return start + count
+
+    def __str__(self):
+        return str(self.value)
+
+    WALL_1 = WallType.WALL_1
+    WALL_2 = WallType.WALL_2
+    WALL_3 = WallType.WALL_3
+    WALL_4 = WallType.WALL_4
     BARREL_SHORT = auto()
     BARREL_TALL = auto()
     SPAWN_POINT = auto()

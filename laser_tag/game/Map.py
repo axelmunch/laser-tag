@@ -8,7 +8,7 @@ from ..math.Line import Line
 from ..math.Point import Point
 from ..math.rotations import rotate
 from .Ray import Ray
-from .Wall import Wall
+from .Wall import Wall, WallType
 
 
 class IntersectionData(TypedDict):
@@ -22,12 +22,12 @@ class Map:
 
     def __init__(self):
         self.map = [
-            Wall(Line(Point(7.5, 5.5), Point(10, 10))),
-            Wall(Line(Point(1.5, 0), Point(1.5, 10))),
-            Wall(Line(Point(0, 1.5), Point(10, 1.5))),
-            Wall(Line(Point(9, 8), Point(9, 11))),
-            Wall(Line(Point(3, 12), Point(5, 14))),
-            Wall(Line(Point(5, 12), Point(3, 14))),
+            Wall(WallType.WALL_1, Line(Point(7.5, 5.5), Point(10, 10))),
+            Wall(WallType.WALL_1, Line(Point(1.5, 0), Point(1.5, 10))),
+            Wall(WallType.WALL_1, Line(Point(0, 1.5), Point(10, 1.5))),
+            Wall(WallType.WALL_1, Line(Point(9, 8), Point(9, 11))),
+            Wall(WallType.WALL_1, Line(Point(3, 12), Point(5, 14))),
+            Wall(WallType.WALL_1, Line(Point(5, 12), Point(3, 14))),
         ]
 
         # Spatial grid partitioning, stores wall index in each cell

@@ -316,9 +316,18 @@ package laser_tag {
             update(entities: GameEntity[])
         }
 
+        enum WallType {
+            WALL_1
+            WALL_2
+            WALL_3
+            WALL_4
+        }
+
         class Wall {
+            type: WallType
             line: Line
 
+            create(parsed_object): Wall
             get_line(): Line
         }
 
