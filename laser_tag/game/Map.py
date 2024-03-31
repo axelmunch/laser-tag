@@ -123,9 +123,12 @@ class Map:
         if intersection is not None:
             ray.set_hit(
                 intersection["intersection_point"],
-                hit_infos=intersection["line_intersecting"].get_point_ratio_on_line(
-                    intersection["intersection_point"]
-                ),
+                hit_infos=[
+                    intersection["line_intersecting"].get_point_ratio_on_line(
+                        intersection["intersection_point"]
+                    ),
+                    intersection["line_intersecting"].get_rotation(),
+                ],
                 distance=intersection["distance"],
             )
 

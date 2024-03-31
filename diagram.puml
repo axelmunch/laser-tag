@@ -83,6 +83,7 @@ package laser_tag {
             point1: Point
             point2: Point
             distance
+            rotation
             margin
 
             create(parsed_object): Line
@@ -90,6 +91,7 @@ package laser_tag {
             get_intersection_segment(line: Line): Point
             get_coordinates(map_bounds)
             get_distance()
+            get_rotation()
         }
 
         class Point {

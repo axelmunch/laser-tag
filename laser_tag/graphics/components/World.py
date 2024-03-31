@@ -143,7 +143,17 @@ class World(Component):
                     (approximate_display_size, approximate_display_size),
                 )
 
-                ratio = ray.hit_infos
+                ratio = ray.hit_infos[0]
+                line_rotation = ray.hit_infos[1]
+
+                reversed_texture = False
+
+                if self.data["current_entity"] is not None:
+                    rot = self.data["current_entity"].rotation
+
+                    diff = abs(line_rotation - rot + 90)
+                    if diff <= 90 or diff >= 270:
+                        reversed_texture = True
 
                 subsurface_start = texture_surface_full.get_width() * ratio
                 if (
@@ -162,6 +172,10 @@ class World(Component):
                         texture_surface_full.get_height() - height_cropping_offset * 2,
                     )
                 )
+                if reversed_texture:
+                    texture_subsurface = pygame.transform.flip(
+                        texture_subsurface, True, False
+                    )
 
                 self.surface.blit(
                     texture_subsurface,

@@ -3,6 +3,7 @@ from __future__ import annotations
 from math import sqrt
 
 from ..math.distance import distance_points
+from ..math.rotations import get_angle
 from .Point import Point
 
 
@@ -13,6 +14,7 @@ class Line:
         self.point1 = point1
         self.point2 = point2
         self.distance = None
+        self.rotation = None
 
         rounding_precision = 10
         self.margin = 10**-rounding_precision
@@ -173,3 +175,9 @@ class Line:
             self.distance = distance_points(self.point1, self.point2)
 
         return self.distance
+
+    def get_rotation(self) -> float:
+        if self.rotation is None:
+            self.rotation = get_angle(self.point2, center=self.point1)
+
+        return self.rotation
