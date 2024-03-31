@@ -73,6 +73,22 @@ if __name__ == "__main__":
                     if game.lock_cursor:
                         pygame.mouse.set_pos(resize(960, "x"), resize(540, "y"))
 
+        # Hide or show cursor
+        if game.lock_cursor:
+            if not pygame.event.get_grab():
+                pygame.event.set_grab(True)
+                pygame.mouse.set_cursor(
+                    pygame.cursors.Cursor(
+                        (0, 0), pygame.Surface((1, 1), pygame.SRCALPHA)
+                    )
+                )
+        else:
+            if pygame.event.get_grab():
+                pygame.event.set_grab(False)
+                pygame.mouse.set_cursor(
+                    pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_ARROW)
+                )
+
         # Predict
         game.update(events)
 
