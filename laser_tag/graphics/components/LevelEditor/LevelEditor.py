@@ -4,7 +4,7 @@ from ....configuration import DEFAULT_FONT, LEVEL_EDITOR_MAP_FILE
 from ....entities.create_entity import create_entity
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
-from ....math.Line import Line
+from ....game.Wall import Wall
 from ....math.Point import Point
 from ....network.safe_eval import safe_eval
 from ...resize import resize
@@ -57,18 +57,18 @@ class LevelEditor(Component):
             component.resize()
 
     def load(self):
-        map_data = {"lines": [], "entities": [], "spawn_points": []}
+        map_data = {"walls": [], "entities": [], "spawn_points": []}
         read_data = {}
         try:
             with open(LEVEL_EDITOR_MAP_FILE, "r") as file:
                 read_data = json.load(file)
         except FileNotFoundError:
-            read_data = {"lines": [], "entities": [], "spawn_points": []}
+            read_data = {"walls": [], "entities": [], "spawn_points": []}
 
-        for line in read_data["lines"]:
-            element = Line.create(safe_eval(line))
+        for wall in read_data["walls"]:
+            element = Wall.create(safe_eval(wall))
             if element is not None:
-                map_data["lines"].append(element)
+                map_data["walls"].append(element)
         for entity in read_data["entities"]:
             element = create_entity(safe_eval(entity))
             if element is not None:
@@ -85,7 +85,8 @@ class LevelEditor(Component):
 
         minimum_x = self.minimum_y = None
 
-        for line in data["lines"]:
+        for wall in data["walls"]:
+            line = wall.get_line()
             if minimum_x is None:
                 minimum_x = line.point1.x
                 minimum_y = line.point1.y
@@ -108,7 +109,8 @@ class LevelEditor(Component):
 
         # Shift all values to positive
         if minimum_x is not None:
-            for line in data["lines"]:
+            for wall in data["walls"]:
+                line = wall.get_line()
                 line.point1.x -= minimum_x
                 line.point1.y -= minimum_y
                 line.point2.x -= minimum_x

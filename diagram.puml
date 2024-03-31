@@ -606,7 +606,7 @@ package laser_tag {
                     center_x
                     center_y
                     delta_time
-                    lines: Line[]
+                    walls: Wall[]
                     entities: GameEntity[]
                     spawn_points: Point[]
                     scroll_step
@@ -627,7 +627,7 @@ package laser_tag {
                     set_editor_state(editor_state: EditorState)
                     set_selected_item(item: Item)
                     set_view_variables(snap_to_grid: Boolean, show_grid: Boolean, preview_player: Boolean)
-                    get_lines(): Line[]
+                    get_walls(): Wall[]
                     reset_center()
                     screen_position_to_world_point(x, y): Point
                     world_point_to_screen_position(point: Point)

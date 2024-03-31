@@ -9,6 +9,7 @@ from ....entities.GameEntity import GameEntity
 from ....entities.Player import Player
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
+from ....game.Wall import Wall
 from ....math.distance import distance_points
 from ....math.Line import Line
 from ....math.Point import Point
@@ -53,9 +54,7 @@ class View(Component):
 
         self.delta_time = DeltaTime()
 
-        self.lines = [
-            Line(Point(3, 3), Point(5, 0)),
-        ]
+        self.walls = []
         self.entities: list[GameEntity] = []
         self.spawn_points: list[Point] = []
 
@@ -82,13 +81,13 @@ class View(Component):
 
     def get_map_data(self):
         return {
-            "lines": self.lines,
+            "walls": self.get_walls(),
             "entities": self.entities,
             "spawn_points": self.spawn_points,
         }
 
     def set_map_data(self, map_data: dict):
-        self.lines = map_data["lines"]
+        self.walls = map_data["walls"]
         self.entities = map_data["entities"]
         self.spawn_points = map_data["spawn_points"]
 
@@ -111,13 +110,13 @@ class View(Component):
         self.show_grid = show_grid
         self.preview_player = preview_player
 
-    def get_lines(self) -> list[Line]:
-        return self.lines
+    def get_walls(self) -> list[Wall]:
+        return self.walls
 
     def reset_center(self):
-        if len(self.lines) > 0:
-            self.center_x_transition = self.lines[0].point1.x
-            self.center_y_transition = self.lines[0].point1.y
+        if len(self.walls) > 0:
+            self.center_x_transition = self.walls[0].get_line().point1.x
+            self.center_y_transition = self.walls[0].get_line().point1.y
         elif len(self.entities) > 0:
             self.center_x_transition = self.entities[0].position.x
             self.center_y_transition = self.entities[0].position.y
@@ -256,9 +255,13 @@ class View(Component):
                     if len(self.selected_elements) > 0:
                         if self.selected_item in wall_items:
                             if self.selected_elements[-1] != self.position_aimed:
-                                self.lines.append(
-                                    Line(
-                                        self.selected_elements[-1], self.position_aimed
+                                self.walls.append(
+                                    Wall(
+                                        self.selected_item,
+                                        Line(
+                                            self.selected_elements[-1],
+                                            self.position_aimed,
+                                        ),
                                     )
                                 )
                         else:
@@ -320,7 +323,8 @@ class View(Component):
             if distance <= self.min_selection_distance:
                 objects_distance.append((entity.position, distance))
 
-        for line in self.lines:
+        for wall in self.walls:
+            line = wall.get_line()
             for line_point in [line.point1, line.point2]:
                 distance = distance_points(point, line_point)
                 if distance <= self.min_selection_distance:
@@ -345,9 +349,10 @@ class View(Component):
                 self.entities.remove(entity)
                 return
 
-        for line in self.lines:
+        for wall in self.walls:
+            line = wall.get_line()
             if line.point1 == point or line.point2 == point:
-                self.lines.remove(line)
+                self.walls.remove(wall)
                 return
 
         for spawn_point in self.spawn_points:
@@ -481,7 +486,8 @@ class View(Component):
         )
 
         # Draw all lines
-        for line in self.lines:
+        for wall in self.walls:
+            line = wall.get_line()
             line_rect = (
                 min(line.point1.x, line.point2.x),
                 min(line.point1.y, line.point2.y),
