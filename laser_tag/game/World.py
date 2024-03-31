@@ -1,7 +1,7 @@
 from math import atan
 from threading import Lock
 
-from ..configuration import VARIABLES
+from ..configuration import GAME_WORLD_FILE, VARIABLES
 from ..entities.create_entity import create_entity
 from ..entities.GameEntity import GameEntity
 from ..entities.Projectile import Projectile
@@ -13,6 +13,7 @@ from ..math.degrees_radians import radians_to_degrees
 from ..math.Point import Point
 from ..math.rotations import get_angle, rotate
 from ..utils.DeltaTime import DeltaTime
+from .load_world import load_world
 from .Map import Map
 from .Team import Team
 
@@ -29,6 +30,8 @@ class World:
         self.current_uid = 0
         self.uid_mutex = Lock()
 
+        self.load_world(GAME_WORLD_FILE)
+
     def __repr__(self):
         return f"{self.entities}"
 
@@ -42,6 +45,16 @@ class World:
         except Exception as e:
             if VARIABLES.debug:
                 print("Error setting world state", e)
+
+    def load_world(self, world_file):
+        world_data = load_world(world_file)
+
+        self.map.set_walls(world_data["walls"])
+        self.entities = {}
+        for entity in world_data["entities"]:
+            self.spawn_entity(entity)
+
+        self.map.spawn_points = world_data["spawn_points"]
 
     def get_uid(self):
         self.uid_mutex.acquire()

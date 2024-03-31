@@ -13,9 +13,9 @@ package laser_tag {
             DATA_PATH
             ASSETS_PATH
             SETTINGS_FILE
-            MAPS_PATH
-            GAME_MAP_FILE
-            LEVEL_EDITOR_MAP_FILE
+            WORLDS_PATH
+            GAME_WORLD_FILE
+            LEVEL_EDITOR_WORLD_FILE
             SCREENSHOTS_PATH
             NETWORK_BUFFER_SIZE
             SERVER_DEFAULT_MAX_CLIENTS
@@ -332,7 +332,8 @@ package laser_tag {
         }
 
         class Map {
-            map: Wall[]
+            walls: Wall[]
+            spawn_points: Point[]
             spatial_partitioning
             map_min_x
             map_min_y
@@ -340,6 +341,7 @@ package laser_tag {
             map_max_y
             margin
 
+            set_walls(walls: Wall[])
             get_spawn_point(): Point
             get_map_bounds()
             generate_partitioning_cache()
@@ -354,6 +356,7 @@ package laser_tag {
             current_uid
 
             set_state(parsed_object)
+            load_world(world_file)
             get_uid()
             spawn_entity(entity: GameEntity)
             get_entity(uid): GameEntity

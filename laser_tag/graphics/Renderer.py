@@ -81,7 +81,7 @@ class Renderer:
         display.screen.blit(self.world.get(), (0, 0))
 
         self.minimap.update(
-            game.world.map.map,
+            game.world.map.walls,
             game.world.map.get_map_bounds(),
             game.world.entities.values(),
             rays=rays,

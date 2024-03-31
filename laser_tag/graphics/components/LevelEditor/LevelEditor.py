@@ -1,12 +1,9 @@
 import json
 
-from ....configuration import DEFAULT_FONT, LEVEL_EDITOR_MAP_FILE
-from ....entities.create_entity import create_entity
+from ....configuration import DEFAULT_FONT, LEVEL_EDITOR_WORLD_FILE
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
-from ....game.Wall import Wall
-from ....math.Point import Point
-from ....network.safe_eval import safe_eval
+from ....game.load_world import load_world
 from ...resize import resize
 from ...Text import Text
 from ..Component import Component
@@ -57,26 +54,7 @@ class LevelEditor(Component):
             component.resize()
 
     def load(self):
-        map_data = {"walls": [], "entities": [], "spawn_points": []}
-        read_data = {}
-        try:
-            with open(LEVEL_EDITOR_MAP_FILE, "r") as file:
-                read_data = json.load(file)
-        except FileNotFoundError:
-            read_data = {"walls": [], "entities": [], "spawn_points": []}
-
-        for wall in read_data["walls"]:
-            element = Wall.create(safe_eval(wall))
-            if element is not None:
-                map_data["walls"].append(element)
-        for entity in read_data["entities"]:
-            element = create_entity(safe_eval(entity))
-            if element is not None:
-                map_data["entities"].append(element)
-        for spawn_point in read_data["spawn_points"]:
-            element = Point.create(safe_eval(spawn_point))
-            if element is not None:
-                map_data["spawn_points"].append(element)
+        map_data = load_world(LEVEL_EDITOR_WORLD_FILE)
 
         self.view.set_map_data(map_data)
 
@@ -124,8 +102,8 @@ class LevelEditor(Component):
                 spawn_point.x -= minimum_x
                 spawn_point.y -= minimum_y
 
-        LEVEL_EDITOR_MAP_FILE.parent.mkdir(parents=True, exist_ok=True)
-        with open(LEVEL_EDITOR_MAP_FILE, "w") as file:
+        LEVEL_EDITOR_WORLD_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with open(LEVEL_EDITOR_WORLD_FILE, "w") as file:
             json.dump(data, file, indent=4, default=repr)
             file.write("\n")
 

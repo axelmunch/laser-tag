@@ -224,28 +224,6 @@ class World(Component):
                     ),
                 )
 
-        # Test display line
-        if self.data["current_entity"] is not None:
-            point_a = Point(3, 3)
-            point_b = Point(6, 1)
-            if (
-                0 < self.position_to_screen(point_a) < 1
-                or 0 < self.position_to_screen(point_b) < 1
-            ):
-                pygame.draw.line(
-                    self.surface,
-                    (0, 255, 0),
-                    (
-                        resize(self.position_to_screen(point_a) * 1920, "x"),
-                        resize(540, "y"),
-                    ),
-                    (
-                        resize(self.position_to_screen(point_b) * 1920, "x"),
-                        resize(540, "y"),
-                    ),
-                    max(1, int(resize(3, "x"))),
-                )
-
         super().render()
 
 

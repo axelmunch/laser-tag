@@ -8,7 +8,7 @@ from ..math.Line import Line
 from ..math.Point import Point
 from ..math.rotations import rotate
 from .Ray import Ray
-from .Wall import Wall, WallType
+from .Wall import Wall
 
 
 class IntersectionData(TypedDict):
@@ -21,26 +21,27 @@ class Map:
     """Represents a map in the game and checks collisions"""
 
     def __init__(self):
-        self.map = [
-            Wall(WallType.WALL_1, Line(Point(7.5, 5.5), Point(10, 10))),
-            Wall(WallType.WALL_1, Line(Point(1.5, 0), Point(1.5, 10))),
-            Wall(WallType.WALL_1, Line(Point(0, 1.5), Point(10, 1.5))),
-            Wall(WallType.WALL_1, Line(Point(9, 8), Point(9, 11))),
-            Wall(WallType.WALL_1, Line(Point(3, 12), Point(5, 14))),
-            Wall(WallType.WALL_1, Line(Point(5, 12), Point(3, 14))),
-        ]
+        self.walls: list[Wall] = []
+
+        self.spawn_points: list[Point] = []
 
         # Spatial grid partitioning, stores wall index in each cell
         self.spatial_partitioning = {}
         self.map_min_x = self.map_min_y = self.map_max_x = self.map_max_y = None
 
+        self.set_walls([])
+
         rounding_precision = 10
         self.margin = 10**-rounding_precision
 
+    def set_walls(self, walls: list[Wall]):
+        self.walls = walls
         self.generate_partitioning_cache()
 
     def get_spawn_point(self) -> Point:
-        return Point(4, 4)
+        if len(self.spawn_points) == 0:
+            return Point(0, 0)
+        return Point(self.spawn_points[0].x, self.spawn_points[0].y)
 
     def get_map_bounds(self) -> tuple[int, int, int, int]:
         return (
@@ -54,8 +55,8 @@ class Map:
         self.spatial_partitioning = {}
         self.map_min_x = self.map_min_y = self.map_max_x = self.map_max_y = None
 
-        for i in range(len(self.map)):
-            line: Line = self.map[i].get_line()
+        for i in range(len(self.walls)):
+            line: Line = self.walls[i].get_line()
 
             # Min and max
             if self.map_min_x is None:
@@ -75,8 +76,11 @@ class Map:
                 if i not in self.spatial_partitioning[(x, y)]:
                     self.spatial_partitioning[(x, y)].append(i)
 
+        if self.map_min_x is None:
+            self.map_min_x = self.map_min_y = self.map_max_x = self.map_max_y = 0
+
     def collides_with(self, collider: Circle) -> bool:
-        for wall in self.map:
+        for wall in self.walls:
             if collider.collides_with(wall.get_line()):
                 return True
 
@@ -95,7 +99,7 @@ class Map:
                 continue
 
             for wall_index in self.spatial_partitioning[coordinate]:
-                line: Line = self.map[wall_index].get_line()
+                line: Line = self.walls[wall_index].get_line()
 
                 intersection_point = ray_line.get_intersection_segment(line)
                 if intersection_point is not None:
