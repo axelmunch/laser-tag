@@ -81,6 +81,9 @@ class World(Component):
 
         # List entities
         for entity in self.data["entities"]:
+            if self.data["current_entity"] is None:
+                break
+
             distance = distance_points(
                 self.data["current_entity"].position, entity.position
             )
@@ -149,10 +152,10 @@ class World(Component):
                 reversed_texture = False
 
                 if self.data["current_entity"] is not None:
-                    rot = self.data["current_entity"].rotation
+                    rotation = self.data["current_entity"].rotation
 
-                    diff = abs(line_rotation - rot + 90)
-                    if diff <= 90 or diff >= 270:
+                    rotation_difference = abs(line_rotation - rotation + 90)
+                    if rotation_difference <= 90 or rotation_difference >= 270:
                         reversed_texture = True
 
                 subsurface_start = texture_surface_full.get_width() * ratio
