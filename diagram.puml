@@ -13,6 +13,9 @@ package laser_tag {
             DATA_PATH
             ASSETS_PATH
             SETTINGS_FILE
+            MAPS_PATH
+            GAME_MAP_FILE
+            LEVEL_EDITOR_MAP_FILE
             SCREENSHOTS_PATH
             NETWORK_BUFFER_SIZE
             SERVER_DEFAULT_MAX_CLIENTS
@@ -610,6 +613,8 @@ package laser_tag {
                     placing_or_moving: Boolean
                     selected_elements: Point[]
 
+                    get_map_data()
+                    set_map_data(map_data)
                     set_editor_state(editor_state: EditorState)
                     set_selected_item(item: Item)
                     set_view_variables(snap_to_grid: Boolean, show_grid: Boolean, preview_player: Boolean)
@@ -642,6 +647,8 @@ package laser_tag {
                     item_menu_position
                     view_position
 
+                    load()
+                    save()
                     update(events: EventInstance[])
                 }
 

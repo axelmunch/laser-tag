@@ -16,6 +16,8 @@ class Toolbar(Component):
     def __init__(
         self,
         data=[],
+        load_action=None,
+        save_action=None,
     ):
         super().__init__()
 
@@ -96,6 +98,7 @@ class Toolbar(Component):
                 button_size,
                 button_size,
                 content="Load",
+                action=load_action,
             ),
             # Save
             Button(
@@ -104,6 +107,7 @@ class Toolbar(Component):
                 button_size,
                 button_size,
                 content="Save",
+                action=save_action,
             ),
             # Place
             self.place_button,

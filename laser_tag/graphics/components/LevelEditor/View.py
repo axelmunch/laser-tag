@@ -80,6 +80,20 @@ class View(Component):
         self.reset_center()
         self.update(data)
 
+    def get_map_data(self):
+        return {
+            "lines": self.lines,
+            "entities": self.entities,
+            "spawn_points": self.spawn_points,
+        }
+
+    def set_map_data(self, map_data: dict):
+        self.lines = map_data["lines"]
+        self.entities = map_data["entities"]
+        self.spawn_points = map_data["spawn_points"]
+
+        self.reset_center()
+
     def set_editor_state(self, editor_state: EditorState):
         if editor_state != self.editor_state:
             self.cancel_placing_or_moving()

@@ -1,6 +1,12 @@
-from ....configuration import DEFAULT_FONT
+import json
+
+from ....configuration import DEFAULT_FONT, LEVEL_EDITOR_MAP_FILE
+from ....entities.create_entity import create_entity
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
+from ....math.Line import Line
+from ....math.Point import Point
+from ....network.safe_eval import safe_eval
 from ...resize import resize
 from ...Text import Text
 from ..Component import Component
@@ -16,7 +22,7 @@ class LevelEditor(Component):
         self,
         data=[],
     ):
-        self.toolbar = Toolbar()
+        self.toolbar = Toolbar(load_action=self.load, save_action=self.save)
         self.item_menu = ItemMenu()
         self.view = View()
         self.components = [
@@ -49,6 +55,77 @@ class LevelEditor(Component):
 
         for component in self.components:
             component.resize()
+
+    def load(self):
+        map_data = {"lines": [], "entities": [], "spawn_points": []}
+        read_data = {}
+        try:
+            with open(LEVEL_EDITOR_MAP_FILE, "r") as file:
+                read_data = json.load(file)
+        except FileNotFoundError:
+            read_data = {"lines": [], "entities": [], "spawn_points": []}
+
+        for line in read_data["lines"]:
+            element = Line.create(safe_eval(line))
+            if element is not None:
+                map_data["lines"].append(element)
+        for entity in read_data["entities"]:
+            element = create_entity(safe_eval(entity))
+            if element is not None:
+                map_data["entities"].append(element)
+        for spawn_point in read_data["spawn_points"]:
+            element = Point.create(safe_eval(spawn_point))
+            if element is not None:
+                map_data["spawn_points"].append(element)
+
+        self.view.set_map_data(map_data)
+
+    def save(self):
+        data = self.view.get_map_data()
+
+        minimum_x = self.minimum_y = None
+
+        for line in data["lines"]:
+            if minimum_x is None:
+                minimum_x = line.point1.x
+                minimum_y = line.point1.y
+            minimum_x = min(minimum_x, line.point1.x, line.point2.x)
+            minimum_y = min(minimum_y, line.point1.y, line.point2.y)
+
+        for entity in data["entities"]:
+            if minimum_x is None:
+                minimum_x = entity.position.x
+                minimum_y = entity.position.y
+            minimum_x = min(minimum_x, entity.position.x)
+            minimum_y = min(minimum_y, entity.position.y)
+
+        for spawn_point in data["spawn_points"]:
+            if minimum_x is None:
+                minimum_x = spawn_point.x
+                minimum_y = spawn_point.y
+            minimum_x = min(minimum_x, spawn_point.x)
+            minimum_y = min(minimum_y, spawn_point.y)
+
+        # Shift all values to positive
+        if minimum_x is not None:
+            for line in data["lines"]:
+                line.point1.x -= minimum_x
+                line.point1.y -= minimum_y
+                line.point2.x -= minimum_x
+                line.point2.y -= minimum_y
+
+            for entity in data["entities"]:
+                entity.position.x -= minimum_x
+                entity.position.y -= minimum_y
+
+            for spawn_point in data["spawn_points"]:
+                spawn_point.x -= minimum_x
+                spawn_point.y -= minimum_y
+
+        LEVEL_EDITOR_MAP_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with open(LEVEL_EDITOR_MAP_FILE, "w") as file:
+            json.dump(data, file, indent=4, default=repr)
+            file.write("\n")
 
     def update(self, events: list[EventInstance]):
         """

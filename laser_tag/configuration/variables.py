@@ -65,6 +65,7 @@ class Variables:
             if key not in self.variables_save_exclusion
         }
 
+        self.settings_file.parent.mkdir(parents=True, exist_ok=True)
         with open(self.settings_file, "w") as file:
             json.dump(variables, file, indent=4)
             file.write("\n")
