@@ -10,6 +10,10 @@ package laser_tag {
             GAME_NAME
             WINDOW_WINDOWED_SIZE_RATIO
             TARGET_FPS
+            DEFAULT_FONT
+            DATA_PATH
+            ASSETS_PATH
+            SCREENSHOTS_PATH
             NETWORK_BUFFER_SIZE
             SERVER_DEFAULT_MAX_CLIENTS
             SERVER_DELTA_TIME_NAME
@@ -20,8 +24,6 @@ package laser_tag {
             DEFAULT_TEXTURE_CACHE_LIMIT
             MAX_WALL_HEIGHT
             MAX_RAY_DISTANCE
-            DEFAULT_FONT
-            SCREENSHOTS_PATH
         }
 
         class Variables {

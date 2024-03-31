@@ -24,9 +24,9 @@ class Display:
 
         time_string = strftime(f"%Y-%m-%d_%H.%M.%S.{int(round(time() * 1000) % 1000)}")
 
-        screenshot_file_name = f"{SCREENSHOTS_PATH}/screenshot_{time_string}.png"
+        screenshot_file = SCREENSHOTS_PATH.joinpath(f"screenshot_{time_string}.png")
 
-        pygame.image.save(self.screen, screenshot_file_name)
+        pygame.image.save(self.screen, screenshot_file)
 
         if VARIABLES.debug:
-            print(f"Screenshot saved: {screenshot_file_name}")
+            print(f"Screenshot saved: {screenshot_file}")
