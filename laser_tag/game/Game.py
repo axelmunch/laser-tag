@@ -26,8 +26,22 @@ class Game:
     def set_state(self, parsed_object):
         try:
             self.game_mode.set_state(parsed_object["game"][0])
-            self.world.set_state(parsed_object["game"][1])
+
+            controlled_entity_rotation = None
+            if self.world.controlled_entity is not None:
+                controlled_entity_rotation = self.world.entities[
+                    self.world.controlled_entity
+                ].rotation
+
             self.world.set_controlled_entity(int(parsed_object["controlled_entity_id"]))
+            self.world.set_state(parsed_object["game"][1])
+
+            # Ignore rotation from the server
+            if controlled_entity_rotation is not None:
+                self.world.entities[self.world.controlled_entity].rotation = (
+                    controlled_entity_rotation
+                )
+
         except Exception as e:
             if VARIABLES.debug:
                 print("Error setting game state", e)
