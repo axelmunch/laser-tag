@@ -88,6 +88,10 @@ class Client:
     def send(self, data):
         encoded_data = str(data).encode("utf-8")
         bytes_sent = len(encoded_data)
+        if bytes_sent > NETWORK_BUFFER_SIZE:
+            if self.debug:
+                print(f"CLIENT too much data {bytes_sent} > {NETWORK_BUFFER_SIZE}")
+            return 0
         try:
             self.socket.send(encoded_data)
         except Exception as e:
