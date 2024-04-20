@@ -84,9 +84,11 @@ class NetworkStats(Component):
         connection_text = (
             "Connected"
             if self.data["connected"]
-            else "Disconnected"
-            if self.data["connected"] is not None
-            else "Connecting..."
+            else (
+                "Disconnected"
+                if self.data["connected"] is not None
+                else "Connecting..."
+            )
         )
         self.surface.blit(
             self.text.get_surface(
