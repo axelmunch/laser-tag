@@ -206,24 +206,27 @@ class World(Component):
             elif isinstance(object, GameEntity):
                 texture = TextureNames.GREEN
 
-                # Temporary scale
-                entity_world_size = min(VARIABLES.world_scale / distance / 2, 1080)
+                entity_world_size = min(VARIABLES.world_scale / distance, 1080)
 
                 if isinstance(object, Projectile):
                     texture = TextureNames.RED
                     entity_world_size *= 0.5
 
+                texture_original_size = textures.get_original_size(texture)
+                texture_scale_ratio = entity_world_size / texture_original_size[1] * 0.7
+                texture_new_size = (
+                    texture_original_size[0] * texture_scale_ratio,
+                    texture_original_size[1] * texture_scale_ratio,
+                )
+
                 # Display the entity
                 self.surface.blit(
                     textures.resize_texture(
-                        texture, (entity_world_size, entity_world_size)
+                        texture, (texture_new_size[0], texture_new_size[1])
                     ),
                     (
-                        resize(
-                            x_position * 1920 - entity_world_size / 2,
-                            "x",
-                        ),
-                        resize(540 - entity_world_size / 2, "y"),
+                        resize(x_position * 1920 - texture_new_size[0] / 2, "x"),
+                        resize(540 + entity_world_size / 2 - texture_new_size[1], "y"),
                     ),
                 )
 
