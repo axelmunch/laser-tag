@@ -33,7 +33,7 @@ class Variables:
 
         self.anti_aliased_text = True
 
-        self.debug = True
+        self.debug = False
 
         self.rotate_sensitivity = 5 / 100
 
