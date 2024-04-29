@@ -163,15 +163,18 @@ class World(Component):
                     subsurface_start + VARIABLES.ray_width
                     > texture_surface_full.get_width()
                 ):
-                    subsurface_start = (
-                        texture_surface_full.get_width() - VARIABLES.ray_width
+                    subsurface_start = max(
+                        0, texture_surface_full.get_width() - VARIABLES.ray_width
                     )
 
                 texture_subsurface = texture_surface_full.subsurface(
                     (
                         subsurface_start,
                         height_cropping_offset,
-                        VARIABLES.ray_width,
+                        min(
+                            VARIABLES.ray_width,
+                            texture_surface_full.get_width() - subsurface_start,
+                        ),
                         texture_surface_full.get_height() - height_cropping_offset * 2,
                     )
                 )
