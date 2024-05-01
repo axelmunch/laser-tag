@@ -262,16 +262,18 @@ package laser_tag {
             death()
         }
 
-        class Projectile extends Entity {
+        class LaserRay extends Entity {
+            end_position
             parent_id
             get_entity_fct
 
-            create(parsed_object): Projectile
+            create(parsed_object): LaserRay
             entity_radius()
             on_hit(entity: GameEntity)
             on_kill(entity: GameEntity)
             death()
             give_stats_to_parent()
+            collides_with(other: Entity): Boolean
         }
 
         Entity --> Point

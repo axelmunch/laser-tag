@@ -4,7 +4,7 @@ import pygame
 
 from ...configuration import MAX_WALL_HEIGHT, VARIABLES
 from ...entities.GameEntity import GameEntity
-from ...entities.Projectile import Projectile
+from ...entities.LaserRay import LaserRay
 from ...game.Ray import Ray
 from ...math.degrees_radians import degrees_to_radians
 from ...math.distance import distance_points
@@ -211,7 +211,7 @@ class World(Component):
 
                 entity_world_size = min(VARIABLES.world_scale / distance, 1080)
 
-                if isinstance(object, Projectile):
+                if isinstance(object, LaserRay):
                     texture = TextureNames.RED
                     entity_world_size *= 0.5
 

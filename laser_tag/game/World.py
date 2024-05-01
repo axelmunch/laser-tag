@@ -4,7 +4,7 @@ from threading import Lock
 from ..configuration import GAME_WORLD_FILE, VARIABLES
 from ..entities.create_entity import create_entity
 from ..entities.GameEntity import GameEntity
-from ..entities.Projectile import Projectile
+from ..entities.LaserRay import LaserRay
 from ..events.Event import Event
 from ..events.EventInstance import EventInstance
 from ..game.Ray import Ray
@@ -41,6 +41,10 @@ class World:
             for key in parsed_object:
                 new_entity = create_entity(parsed_object[key])
                 if new_entity is not None:
+                    # Specific case for LaserRay
+                    if isinstance(new_entity, LaserRay):
+                        new_entity.get_entity_fct = self.get_entity
+
                     self.entities[key] = new_entity
         except Exception as e:
             if VARIABLES.debug:
@@ -181,21 +185,30 @@ class World:
                             )
                     case Event.GAME_SHOOT:
                         if current_entity.attack():
-                            projectile = Projectile(
+                            ray = self.map.cast_ray(
+                                current_entity.position,
+                                (current_entity.rotation) % 360,
+                            )
+                            end_position = current_entity.position
+                            if ray.hit_point is not None:
+                                end_position = ray.hit_point
+
+                            laser_ray = LaserRay(
                                 Point(
                                     current_entity.position.x, current_entity.position.y
                                 ),
+                                end_position,
                                 (
                                     self.controlled_entity
                                     if self.controlled_entity is not None
                                     else controlled_entity_id
                                 ),
                             )
-                            projectile.rotation = current_entity.rotation
-                            projectile.team = current_entity.team
-                            projectile.damages = current_entity.damages
-                            projectile.get_entity_fct = self.get_entity
-                            self.spawn_entity(projectile)
+                            laser_ray.rotation = current_entity.rotation
+                            laser_ray.team = current_entity.team
+                            laser_ray.damages = current_entity.damages
+                            laser_ray.get_entity_fct = self.get_entity
+                            self.spawn_entity(laser_ray)
                     case Event.GAME_SELECT_TEAM:
                         if event.data in [t.value for t in Team]:
                             current_entity.team = event.data
@@ -210,13 +223,13 @@ class World:
                     self.remove_entity(key)
                     continue
 
-                # Projectile
-                if isinstance(entity, Projectile):
+                # Laser ray
+                if isinstance(entity, LaserRay):
                     # Collision with entities
                     if entity.can_attack:
                         for key_target in list(self.entities.keys()):
                             entity_target = self.get_entity(key_target)
-                            # Target is not the projectile nor its parent
+                            # Target is not the laser ray nor its parent
                             if (
                                 entity_target is None
                                 or key == key_target
@@ -240,19 +253,6 @@ class World:
                                         entity.on_hit(entity_target)
                                         if killed:
                                             entity.on_kill(entity_target)
-
-                    # Collision with map
-                    if entity.can_move:
-                        collision = self.move_entity(
-                            entity,
-                            rotate(
-                                entity.move_speed * delta_time.get_dt_target(),
-                                entity.rotation,
-                            ),
-                        )
-                        if collision:
-                            entity.can_move = False
-                            entity.death()
 
     def move_entity(self, entity: GameEntity, movement_vector: Point):
         collision = False
