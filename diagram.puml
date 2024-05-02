@@ -266,12 +266,14 @@ package laser_tag {
             end_position
             parent_id
             get_entity_fct
+            time_to_live
 
             create(parsed_object): LaserRay
             entity_radius()
             on_hit(entity: GameEntity)
             on_kill(entity: GameEntity)
             death()
+            attack(): Boolean
             give_stats_to_parent()
             collides_with(other: Entity): Boolean
         }

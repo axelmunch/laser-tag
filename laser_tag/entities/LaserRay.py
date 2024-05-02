@@ -18,11 +18,12 @@ class LaserRay(GameEntity):
         self.end_position = end_position
         self.parent_id = parent_id
         self.get_entity_fct = None
+        self.time_to_live = 0.15
 
         self.ray = Line(self.position, self.end_position)
 
     def __repr__(self):
-        return f"['{self.__class__.__name__}',{self.position},{self.end_position},{self.parent_id},{self.rotation},{self.team},{self.damages},{self.score},{self.eliminations}]"
+        return f"['{self.__class__.__name__}',{self.position},{self.end_position},{self.parent_id},{self.rotation},{self.team},{self.damages},{self.score},{self.eliminations},{self.time_to_live},{self.can_attack}]"
 
     @staticmethod
     def create(parsed_object) -> LaserRay:
@@ -38,6 +39,8 @@ class LaserRay(GameEntity):
             entity.damages = int(parsed_object[5])
             entity.score = float(parsed_object[6])
             entity.eliminations = int(parsed_object[7])
+            entity.time_to_live = float(parsed_object[8])
+            entity.can_attack = bool(parsed_object[9])
             return entity
         except:
             return None
@@ -57,6 +60,9 @@ class LaserRay(GameEntity):
     def death(self):
         super().death()
         self.give_stats_to_parent()
+
+    def attack(self) -> bool:
+        return True
 
     def give_stats_to_parent(self):
         if self.get_entity_fct is not None and (

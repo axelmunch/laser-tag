@@ -87,7 +87,7 @@ class GameEntity(Entity):
             self.alive = False
         self.deaths += 1
 
-    def attack(self):
+    def attack(self) -> bool:
         if (
             self.can_attack
             and time() >= self.next_attack_timestamps

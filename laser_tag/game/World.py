@@ -246,6 +246,7 @@ class World:
                                     entity.collides_with(entity_target)
                                     and entity.attack()
                                 ):
+                                    entity.can_attack = False
                                     # Damage the target
                                     killed = entity_target.damage(entity.damages)
                                     # The target was hit
@@ -253,6 +254,10 @@ class World:
                                         entity.on_hit(entity_target)
                                         if killed:
                                             entity.on_kill(entity_target)
+
+                    entity.time_to_live -= delta_time.get_dt()
+                    if entity.time_to_live <= 0:
+                        entity.death()
 
     def move_entity(self, entity: GameEntity, movement_vector: Point):
         collision = False
