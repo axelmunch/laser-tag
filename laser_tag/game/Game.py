@@ -28,17 +28,17 @@ class Game:
             self.game_mode.set_state(parsed_object["game"][0])
 
             controlled_entity_rotation = None
-            if self.world.controlled_entity is not None:
-                controlled_entity_rotation = self.world.entities[
+            if self.world.get_entity(self.world.controlled_entity) is not None:
+                controlled_entity_rotation = self.world.get_entity(
                     self.world.controlled_entity
-                ].rotation
+                ).rotation
 
             self.world.set_controlled_entity(int(parsed_object["controlled_entity_id"]))
             self.world.set_state(parsed_object["game"][1])
 
             # Ignore rotation from the server
             if controlled_entity_rotation is not None:
-                self.world.entities[self.world.controlled_entity].rotation = (
+                self.world.get_entity(self.world.controlled_entity).rotation = (
                     controlled_entity_rotation
                 )
 
@@ -58,6 +58,8 @@ class Game:
         while i < len(events):
             event = events[i]
 
+            current_entity = self.world.get_entity(self.world.controlled_entity)
+
             if event.id == Event.MOUSE_MOVE:
                 self.mouse_x = event.data[0] / VARIABLES.screen_width * 1920
                 self.mouse_y = event.data[1] / VARIABLES.screen_height * 1080
@@ -76,10 +78,15 @@ class Game:
                         EventInstance(
                             Event.GAME_ROTATE,
                             [
-                                -(middle_x - self.mouse_x)
-                                * VARIABLES.rotate_sensitivity
-                                * VARIABLES.screen_width
-                                / 1920,
+                                (
+                                    0
+                                    if current_entity is None
+                                    else current_entity.rotation
+                                    - (middle_x - self.mouse_x)
+                                    * VARIABLES.rotate_sensitivity
+                                    * VARIABLES.screen_width
+                                    / 1920
+                                ),
                                 -(middle_y - self.mouse_y)
                                 * VARIABLES.rotate_sensitivity
                                 * VARIABLES.screen_height

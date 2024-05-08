@@ -159,12 +159,11 @@ class World:
                         if (
                             isinstance(event.data, list)
                             and len(event.data) == 2
-                            and isinstance(event.data[0], (int, float))
+                            and isinstance(event.data[0], (float, int))
                         ):
-                            current_entity.rotation += event.data[0]
-                            current_entity.rotation %= 360
+                            current_entity.rotation = event.data[0] % 360
                     case Event.GAME_MOVE:
-                        if isinstance(event.data, (int, float)):
+                        if isinstance(event.data, (float, int)):
                             self.move_entity(
                                 current_entity,
                                 rotate(
