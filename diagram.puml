@@ -68,17 +68,6 @@ package laser_tag {
     }
 
     package math {
-        class Box {
-            origin: Point
-            length
-            width
-
-            create(parsed_object): Box
-            collides_with(other): Boolean
-            collides_with_box(other: Box): Boolean
-            collides_with_point(other: Point): Boolean
-        }
-
         class Circle
         {
             origin: Point
