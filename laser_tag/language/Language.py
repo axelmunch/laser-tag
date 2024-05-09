@@ -21,7 +21,7 @@ class Language:
 
     def load(self):
         try:
-            with open(LANGUAGE_FILE, "r") as file:
+            with open(LANGUAGE_FILE, "r", encoding="utf-8") as file:
                 self.language_content = json.load(file)
         except FileNotFoundError:
             if VARIABLES.debug:
@@ -29,6 +29,12 @@ class Language:
 
     def set_language(self, language):
         self.language = language
+
+    def get_language_list(self):
+        try:
+            return self.language_content["index"]
+        except KeyError:
+            return {}
 
     def get(self, key: LanguageKey) -> str:
         try:

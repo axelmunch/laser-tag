@@ -1,4 +1,7 @@
 {
+    "index": {
+        "EN": "English"
+    },
     "EN": {
         "NETWORK_STATS_CONNECTED": "Connected",
         "NETWORK_STATS_DISCONNECTED": "Disconnected",

@@ -510,6 +510,7 @@ package laser_tag {
 
             load()
             set_language(language)
+            get_language_list()
             get(key: LanguageKey)
         }
     }

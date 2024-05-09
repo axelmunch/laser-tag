@@ -53,7 +53,7 @@ class Variables:
 
     def load(self):
         try:
-            with open(self.settings_file, "r") as file:
+            with open(self.settings_file, "r", encoding="utf-8") as file:
                 variables = json.load(file)
                 self.__dict__.update(variables)
         except FileNotFoundError:
