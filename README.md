@@ -18,16 +18,16 @@ This game is a multiplayer laser tag game that uses raycasting to simulate a 3D 
 - [X] Playable laser tag
 - [X] Raycasting
 - [X] Vectorial map
-- [ ] Textures
-- [ ] Controller support
+- [X] Textures
 - [ ] Menu and settings screen
+- [ ] Controller support
 - [ ] Audio
 - [ ] More laser tag game modes
 
 ## Prerequisites
 
-- [Python](https://www.python.org/) (>= 3.10)
-- [Pip](https://pypi.org/project/pip/)
+- [Python](https://www.python.org) (>= 3.10)
+- [Pip](https://pypi.org/project/pip)
 
 ## Installation
 
