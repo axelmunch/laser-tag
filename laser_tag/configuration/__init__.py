@@ -15,6 +15,7 @@ DEFAULT_FONT = {"font": "calibri", "font_is_file": False, "size_multiplier": 1}
 DATA_PATH = Path("data")
 ASSETS_PATH = DATA_PATH.joinpath("assets")
 SETTINGS_FILE = DATA_PATH.joinpath("settings.json")
+LANGUAGE_FILE = DATA_PATH.joinpath("language.json")
 WORLDS_PATH = DATA_PATH.joinpath("worlds")
 GAME_WORLD_FILE = WORLDS_PATH.joinpath("game_world.json")
 LEVEL_EDITOR_WORLD_FILE = WORLDS_PATH.joinpath("level_editor_world.json")

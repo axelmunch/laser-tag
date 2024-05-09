@@ -13,6 +13,7 @@ package laser_tag {
             DATA_PATH
             ASSETS_PATH
             SETTINGS_FILE
+            LANGUAGE_FILE
             WORLDS_PATH
             GAME_WORLD_FILE
             LEVEL_EDITOR_WORLD_FILE
@@ -54,6 +55,7 @@ package laser_tag {
             wall_height_approximation
             world_scale
             assets_folder
+            language
 
             load()
             save()
@@ -471,6 +473,47 @@ package laser_tag {
         Server --> ClientInstance
     }
 
+    package language {
+        enum LanguageKey {
+            NETWORK_STATS_CONNECTED
+            NETWORK_STATS_DISCONNECTED
+            NETWORK_STATS_CONNECTING
+            NETWORK_STATS_PING
+            NETWORK_STATS_AVG_SEND_TICK
+            NETWORK_STATS_SEND_SECOND
+            NETWORK_STATS_AVG_SEND
+            NETWORK_STATS_MAX_SEND
+            NETWORK_STATS_AVG_RECV
+            NETWORK_STATS_MAX_RECV
+            NETWORK_STATS_KBITS_UNIT
+            LEVEL_EDITOR_QUIT
+            LEVEL_EDITOR_SAVE
+            LEVEL_EDITOR_LOAD
+            LEVEL_EDITOR_PLACE
+            LEVEL_EDITOR_MOVE
+            LEVEL_EDITOR_SNAP
+            LEVEL_EDITOR_GRID
+            LEVEL_EDITOR_PREVIEW
+            LEVEL_EDITOR_HELP
+            GAME_FPS
+            GAME_SCOREBOARD_TITLE
+            GAME_SCOREBOARD_TEAM
+            GAME_SCOREBOARD_NAME
+            GAME_SCOREBOARD_SCORE
+            GAME_SCOREBOARD_ELIMINATIONS
+            GAME_SCOREBOARD_DEATHS
+        }
+
+        class Language {
+            language_content
+            language
+
+            load()
+            set_language(language)
+            get(key: LanguageKey)
+        }
+    }
+
     package graphics {
         enum ButtonState {
             NONE
@@ -504,6 +547,7 @@ package laser_tag {
 
         package components {
             class Component {
+                language: Language
                 data
                 surface
                 width
@@ -676,6 +720,8 @@ package laser_tag {
                 LevelEditorComponent --> ItemMenu
                 LevelEditorComponent --> View
             }
+
+            Component --> Language
         }
 
         class Display {

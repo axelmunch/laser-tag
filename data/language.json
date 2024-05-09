@@ -1,0 +1,31 @@
+{
+    "EN": {
+        "NETWORK_STATS_CONNECTED": "Connected",
+        "NETWORK_STATS_DISCONNECTED": "Disconnected",
+        "NETWORK_STATS_CONNECTING": "Connecting...",
+        "NETWORK_STATS_PING": "Ping:",
+        "NETWORK_STATS_AVG_SEND_TICK": "Avg send/tick:",
+        "NETWORK_STATS_SEND_SECOND": "Send/s:",
+        "NETWORK_STATS_AVG_SEND": "Avg send:",
+        "NETWORK_STATS_MAX_SEND": "Max send:",
+        "NETWORK_STATS_AVG_RECV": "Avg recv:",
+        "NETWORK_STATS_MAX_RECV": "Max recv:",
+        "NETWORK_STATS_KBITS_UNIT": "kbits",
+        "LEVEL_EDITOR_QUIT": "Quit",
+        "LEVEL_EDITOR_SAVE": "Save",
+        "LEVEL_EDITOR_LOAD": "Load",
+        "LEVEL_EDITOR_PLACE": "Place",
+        "LEVEL_EDITOR_MOVE": "Move",
+        "LEVEL_EDITOR_SNAP": "Snap",
+        "LEVEL_EDITOR_GRID": "Grid",
+        "LEVEL_EDITOR_PREVIEW": "Preview",
+        "LEVEL_EDITOR_HELP": "Help",
+        "GAME_FPS": "FPS:",
+        "GAME_SCOREBOARD_TITLE": "Scoreboard",
+        "GAME_SCOREBOARD_TEAM": "Team",
+        "GAME_SCOREBOARD_NAME": "Name",
+        "GAME_SCOREBOARD_SCORE": "Score",
+        "GAME_SCOREBOARD_ELIMINATIONS": "Eliminations",
+        "GAME_SCOREBOARD_DEATHS": "Deaths"
+    }
+}

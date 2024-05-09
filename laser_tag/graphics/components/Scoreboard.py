@@ -4,6 +4,7 @@ from ...configuration import DEFAULT_FONT
 from ...entities.GameEntity import GameEntity
 from ...entities.Player import Player
 from ...game.Team import get_color
+from ...language.LanguageKey import LanguageKey
 from ..resize import resize
 from ..Text import Text
 from .Component import Component
@@ -48,7 +49,7 @@ class Scoreboard(Component):
         # Title
         self.surface.blit(
             self.text.get_surface(
-                "Scoreboard",
+                self.language.get(LanguageKey.GAME_SCOREBOARD_TITLE),
                 75,
                 (255, 255, 255),
             ),
@@ -57,7 +58,7 @@ class Scoreboard(Component):
 
         self.surface.blit(
             self.text.get_surface(
-                "Team",
+                self.language.get(LanguageKey.GAME_SCOREBOARD_TEAM),
                 50,
                 (255, 255, 255),
             ),
@@ -66,7 +67,7 @@ class Scoreboard(Component):
 
         self.surface.blit(
             self.text.get_surface(
-                "Name",
+                self.language.get(LanguageKey.GAME_SCOREBOARD_NAME),
                 50,
                 (255, 255, 255),
             ),
@@ -75,7 +76,7 @@ class Scoreboard(Component):
 
         self.surface.blit(
             self.text.get_surface(
-                "Score",
+                self.language.get(LanguageKey.GAME_SCOREBOARD_SCORE),
                 50,
                 (255, 255, 255),
             ),
@@ -84,7 +85,7 @@ class Scoreboard(Component):
 
         self.surface.blit(
             self.text.get_surface(
-                "Eliminations",
+                self.language.get(LanguageKey.GAME_SCOREBOARD_ELIMINATIONS),
                 50,
                 (255, 255, 255),
             ),
@@ -93,7 +94,7 @@ class Scoreboard(Component):
 
         self.surface.blit(
             self.text.get_surface(
-                "Deaths",
+                self.language.get(LanguageKey.GAME_SCOREBOARD_DEATHS),
                 50,
                 (255, 255, 255),
             ),

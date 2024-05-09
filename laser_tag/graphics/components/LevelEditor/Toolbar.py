@@ -3,6 +3,7 @@ import pygame
 from ....configuration import DEFAULT_FONT, VARIABLES
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
+from ....language.LanguageKey import LanguageKey
 from ...Button import Button, ButtonState
 from ...resize import resize
 from ...Text import Text
@@ -46,7 +47,7 @@ class Toolbar(Component):
             margin,
             button_size,
             button_size,
-            content="Place",
+            content=self.language.get(LanguageKey.LEVEL_EDITOR_PLACE),
             action=lambda: setattr(self, "editor_state", EditorState.PLACE),
         )
         self.move_button = Button(
@@ -54,7 +55,7 @@ class Toolbar(Component):
             margin,
             button_size,
             button_size,
-            content="Move",
+            content=self.language.get(LanguageKey.LEVEL_EDITOR_MOVE),
             action=lambda: setattr(self, "editor_state", EditorState.MOVE),
         )
         self.snap_to_grid_button = Button(
@@ -62,7 +63,7 @@ class Toolbar(Component):
             margin,
             button_size,
             button_size,
-            content="Snap",
+            content=self.language.get(LanguageKey.LEVEL_EDITOR_SNAP),
             action=lambda: setattr(self, "snap_to_grid", not self.snap_to_grid),
         )
         self.show_grid_button = Button(
@@ -70,7 +71,7 @@ class Toolbar(Component):
             margin,
             button_size,
             button_size,
-            content="Grid",
+            content=self.language.get(LanguageKey.LEVEL_EDITOR_GRID),
             action=lambda: setattr(self, "show_grid", not self.show_grid),
         )
         self.preview_player_button = Button(
@@ -78,7 +79,7 @@ class Toolbar(Component):
             margin,
             button_size,
             button_size,
-            content="Preview",
+            content=self.language.get(LanguageKey.LEVEL_EDITOR_PREVIEW),
             action=lambda: setattr(self, "preview_player", not self.preview_player),
         )
         self.buttons = [
@@ -88,7 +89,7 @@ class Toolbar(Component):
                 margin,
                 button_size,
                 button_size,
-                content="Quit",
+                content=self.language.get(LanguageKey.LEVEL_EDITOR_QUIT),
                 action=self.quit,
             ),
             # Load
@@ -97,7 +98,7 @@ class Toolbar(Component):
                 margin,
                 button_size,
                 button_size,
-                content="Load",
+                content=self.language.get(LanguageKey.LEVEL_EDITOR_LOAD),
                 action=load_action,
             ),
             # Save
@@ -106,7 +107,7 @@ class Toolbar(Component):
                 margin,
                 button_size,
                 button_size,
-                content="Save",
+                content=self.language.get(LanguageKey.LEVEL_EDITOR_SAVE),
                 action=save_action,
             ),
             # Place
@@ -125,7 +126,8 @@ class Toolbar(Component):
                 margin,
                 button_size,
                 button_size,
-                content="Help",
+                content=self.language.get(LanguageKey.LEVEL_EDITOR_HELP),
+                disabled=True,
             ),
         ]
 

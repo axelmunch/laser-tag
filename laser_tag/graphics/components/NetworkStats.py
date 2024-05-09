@@ -1,6 +1,7 @@
 from time import time
 
 from ...configuration import DEFAULT_FONT
+from ...language.LanguageKey import LanguageKey
 from ..resize import resize
 from ..Text import Text
 from .Component import Component
@@ -82,12 +83,12 @@ class NetworkStats(Component):
         self.surface.fill((0, 0, 0, 0))
 
         connection_text = (
-            "Connected"
+            self.language.get(LanguageKey.NETWORK_STATS_CONNECTED)
             if self.data["connected"]
             else (
-                "Disconnected"
+                self.language.get(LanguageKey.NETWORK_STATS_DISCONNECTED)
                 if self.data["connected"] is not None
-                else "Connecting..."
+                else self.language.get(LanguageKey.NETWORK_STATS_CONNECTING)
             )
         )
         self.surface.blit(
@@ -101,7 +102,7 @@ class NetworkStats(Component):
 
         self.surface.blit(
             self.text.get_surface(
-                f"Ping: {round((sum(self.data['pings']) / max(1, len(self.data['pings'])) * 1000), 2)}ms",
+                f"{self.language.get(LanguageKey.NETWORK_STATS_PING)} {round((sum(self.data['pings']) / max(1, len(self.data['pings'])) * 1000), 2)}ms",
                 30,
                 (255, 255, 255),
             ),
@@ -110,7 +111,7 @@ class NetworkStats(Component):
 
         self.surface.blit(
             self.text.get_surface(
-                f"Avg send/tick: {round((sum(self.data['average_send_per_tick']) / max(1, len(self.data['average_send_per_tick']))), 2)}",
+                f"{self.language.get(LanguageKey.NETWORK_STATS_AVG_SEND_TICK)} {round((sum(self.data['average_send_per_tick']) / max(1, len(self.data['average_send_per_tick']))), 2)}",
                 30,
                 (255, 255, 255),
             ),
@@ -119,7 +120,7 @@ class NetworkStats(Component):
 
         self.surface.blit(
             self.text.get_surface(
-                f"Send/s: {self.data['send_per_second']}",
+                f"{self.language.get(LanguageKey.NETWORK_STATS_SEND_SECOND)} {self.data['send_per_second']}",
                 30,
                 (255, 255, 255),
             ),
@@ -128,7 +129,7 @@ class NetworkStats(Component):
 
         self.surface.blit(
             self.text.get_surface(
-                f"Avg send: {round(sum(self.data['bytes_sent']) / max(1, len(self.data['bytes_sent']))/1000, 2)}kbits",
+                f"{self.language.get(LanguageKey.NETWORK_STATS_AVG_SEND)} {round(sum(self.data['bytes_sent']) / max(1, len(self.data['bytes_sent']))/1000, 2)}kbits",
                 30,
                 (255, 255, 255),
             ),
@@ -137,7 +138,7 @@ class NetworkStats(Component):
 
         self.surface.blit(
             self.text.get_surface(
-                f"Max send: {round(0 if len(self.data['bytes_sent']) == 0 else max(self.data['bytes_sent']) / 1000, 2)}kbits",
+                f"{self.language.get(LanguageKey.NETWORK_STATS_MAX_SEND)} {round(0 if len(self.data['bytes_sent']) == 0 else max(self.data['bytes_sent']) / 1000, 2)}kbits",
                 30,
                 (255, 255, 255),
             ),
@@ -146,7 +147,7 @@ class NetworkStats(Component):
 
         self.surface.blit(
             self.text.get_surface(
-                f"Avg recv: {round(sum(self.data['bytes_received']) / max(1, len(self.data['bytes_received']))/1000, 2)}kbits",
+                f"{self.language.get(LanguageKey.NETWORK_STATS_AVG_RECV)} {round(sum(self.data['bytes_received']) / max(1, len(self.data['bytes_received']))/1000, 2)}kbits",
                 30,
                 (255, 255, 255),
             ),
@@ -155,7 +156,7 @@ class NetworkStats(Component):
 
         self.surface.blit(
             self.text.get_surface(
-                f"Max recv: {round(0 if len(self.data['bytes_received']) == 0 else max(self.data['bytes_received']) / 1000, 2)}kbits",
+                f"{self.language.get(LanguageKey.NETWORK_STATS_MAX_RECV)} {round(0 if len(self.data['bytes_received']) == 0 else max(self.data['bytes_received']) / 1000, 2)}kbits",
                 30,
                 (255, 255, 255),
             ),

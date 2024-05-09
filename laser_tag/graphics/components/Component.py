@@ -3,6 +3,7 @@ from math import ceil
 import pygame
 
 from ...configuration import VARIABLES
+from ...language.Language import Language
 from ..resize import resize
 
 
@@ -10,6 +11,8 @@ class Component:
     """Graphical component"""
 
     def __init__(self, data=None):
+        self.language = Language()
+
         self.data = data
         self.surface: pygame.Surface
         self.set_original_size(0, 0)

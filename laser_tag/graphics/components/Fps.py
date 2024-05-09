@@ -1,4 +1,5 @@
 from ...configuration import DEFAULT_FONT
+from ...language.LanguageKey import LanguageKey
 from ..Text import Text
 from .Component import Component
 
@@ -29,7 +30,9 @@ class Fps(Component):
 
     def render(self):
         self.surface = self.text.get_surface(
-            "FPS: " + str(round(self.data, 2)), 40, (255, 255, 255)
+            self.language.get(LanguageKey.GAME_FPS) + " " + str(round(self.data, 2)),
+            40,
+            (255, 255, 255),
         )
         self.width, self.height = self.surface.get_size()
 

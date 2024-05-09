@@ -46,6 +46,7 @@ class Variables:
         self.world_scale = 1200
 
         self.assets_folder = "default"
+        self.language = "EN"
 
         # Load from file
         self.load()
