@@ -29,6 +29,10 @@
         "GAME_SCOREBOARD_NAME": "Name",
         "GAME_SCOREBOARD_SCORE": "Score",
         "GAME_SCOREBOARD_ELIMINATIONS": "Eliminations",
-        "GAME_SCOREBOARD_DEATHS": "Deaths"
+        "GAME_SCOREBOARD_DEATHS": "Deaths",
+        "MENU_PAUSE_PAUSE": "Pause",
+        "MENU_PAUSE_INFORMATION": "The game is still ongoing",
+        "MENU_PAUSE_RESUME": "Resume",
+        "MENU_PAUSE_QUIT": "Quit"
     }
 }

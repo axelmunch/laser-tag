@@ -19,6 +19,7 @@ class Game:
         self.show_scoreboard = False
 
         self.lock_cursor = True
+        self.game_paused = False
 
     def __repr__(self):
         return f"[{self.game_mode}, {self.world}]"
@@ -112,6 +113,9 @@ class Game:
 
         for event in events:
             match event.id:
+                case Event.KEY_ESCAPE_PRESS:
+                    if not VARIABLES.level_editor:
+                        self.game_paused = not self.game_paused
                 case Event.START_GAME:
                     if self.game_mode.start():
                         # Reset
@@ -127,7 +131,4 @@ class Game:
 
         self.game_mode.update(self.world.entities)
 
-        if VARIABLES.level_editor:
-            self.lock_cursor = False
-        else:
-            self.lock_cursor = True
+        self.lock_cursor = not (self.game_paused or VARIABLES.level_editor)

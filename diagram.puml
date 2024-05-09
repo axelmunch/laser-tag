@@ -282,6 +282,7 @@ package laser_tag {
             mouse_y
             show_scoreboard: Boolean
             lock_cursor: Boolean
+            game_paused: Boolean
 
             set_state(parsed_object)
             reset()
@@ -492,6 +493,10 @@ package laser_tag {
             GAME_SCOREBOARD_SCORE
             GAME_SCOREBOARD_ELIMINATIONS
             GAME_SCOREBOARD_DEATHS
+            MENU_PAUSE_PAUSE
+            MENU_PAUSE_INFORMATION
+            MENU_PAUSE_RESUME
+            MENU_PAUSE_QUIT
         }
 
         class Language {
@@ -712,6 +717,20 @@ package laser_tag {
                 LevelEditorComponent --> View
             }
 
+            package menus {
+                class PauseMenu extends Component {
+                    text: Text
+                    mouse_x
+                    mouse_y
+                    resume_clicked: Boolean
+                    quit_clicked: Boolean
+                    buttons: Button[]
+
+                    get_status()
+                    update(events: EventInstance[])
+                }
+            }
+
             Component --> Language
         }
 
@@ -725,7 +744,8 @@ package laser_tag {
             clock
             components: Component[]
             set_network_stats(pings, connected: Boolean, bytes_sent, bytes_received)
-            set_events(events: EventInstance[])
+            set_events(events: EventInstance[], game_paused: Boolean)
+            get_pause_status()
             resize()
             render(game: Game)
         }

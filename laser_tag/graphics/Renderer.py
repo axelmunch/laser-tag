@@ -8,6 +8,7 @@ from .components.Fps import Fps
 from .components.GameTimer import GameTimer
 from .components.Leaderboard import Leaderboard
 from .components.LevelEditor.LevelEditor import LevelEditor
+from .components.menus.PauseMenu import PauseMenu
 from .components.Minimap import Minimap
 from .components.NetworkStats import NetworkStats
 from .components.Scoreboard import Scoreboard
@@ -27,6 +28,7 @@ class Renderer:
         self.game_timer = GameTimer()
         self.world = World()
         self.level_editor = LevelEditor()
+        self.pause_menu = PauseMenu()
         self.components = [
             self.fps,
             self.minimap,
@@ -36,6 +38,7 @@ class Renderer:
             self.game_timer,
             self.world,
             self.level_editor,
+            self.pause_menu,
         ]
 
     def set_network_stats(
@@ -48,9 +51,14 @@ class Renderer:
         if VARIABLES.show_network_stats:
             self.network_stats.update(pings, connected, bytes_sent, bytes_received)
 
-    def set_events(self, events: list[EventInstance]):
+    def set_events(self, events: list[EventInstance], game_paused: bool):
         if VARIABLES.level_editor:
             self.level_editor.update(events)
+        if game_paused:
+            self.pause_menu.update(events)
+
+    def get_pause_status(self):
+        return self.pause_menu.get_status()
 
     def resize(self):
         for component in self.components:
@@ -140,6 +148,9 @@ class Renderer:
                 resize(10, "y"),
             ),
         )
+
+        if game.game_paused:
+            display.screen.blit(self.pause_menu.get(), (0, 0))
 
         if VARIABLES.show_fps:
             self.fps.update(self.clock.get_fps())

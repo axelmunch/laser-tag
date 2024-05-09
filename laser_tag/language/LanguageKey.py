@@ -39,3 +39,8 @@ class LanguageKey(Enum):
     GAME_SCOREBOARD_SCORE = auto()
     GAME_SCOREBOARD_ELIMINATIONS = auto()
     GAME_SCOREBOARD_DEATHS = auto()
+
+    MENU_PAUSE_PAUSE = auto()
+    MENU_PAUSE_INFORMATION = auto()
+    MENU_PAUSE_RESUME = auto()
+    MENU_PAUSE_QUIT = auto()

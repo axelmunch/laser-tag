@@ -46,8 +46,6 @@ if __name__ == "__main__":
                 case Event.WINDOW_QUIT:
                     running = False
                     break
-                case Event.KEY_ESCAPE_PRESS:
-                    running = False
                 case Event.WINDOW_FULLSCREEN:
                     VARIABLES.fullscreen = not VARIABLES.fullscreen
                     if VARIABLES.fullscreen:
@@ -89,6 +87,13 @@ if __name__ == "__main__":
                     pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_ARROW)
                 )
 
+        # Pause menu events
+        pause_menu_status = renderer.get_pause_status()
+        if pause_menu_status[0]:
+            game.game_paused = False
+        if pause_menu_status[1]:
+            running = False
+
         # Predict
         game.update(events)
 
@@ -106,7 +111,7 @@ if __name__ == "__main__":
         renderer.set_network_stats(
             network_stats[0], network_stats[1], network_stats[2], network_stats[3]
         )
-        renderer.set_events(events)
+        renderer.set_events(events, game.game_paused)
         renderer.render(game)
 
         pygame.display.flip()
