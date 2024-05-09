@@ -2,7 +2,8 @@ import json
 
 
 class Variables:
-    def __init__(self, settings_file):
+    def __init__(self, version, settings_file):
+        self.version = version
         self.settings_file = settings_file
         self.variables_save_exclusion = [
             "settings_file",
@@ -55,7 +56,11 @@ class Variables:
         try:
             with open(self.settings_file, "r", encoding="utf-8") as file:
                 variables = json.load(file)
+                current_version = self.version
                 self.__dict__.update(variables)
+                if "version" not in variables or self.version != current_version:
+                    self.version = current_version
+                    self.save()
         except FileNotFoundError:
             self.save()
 

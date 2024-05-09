@@ -32,6 +32,7 @@ package laser_tag {
         }
 
         class Variables {
+            version
             settings_file
             variables_save_exclusion
             full_screen_width

@@ -2,7 +2,7 @@ from pathlib import Path
 
 from .variables import *
 
-VERSION = "v0.0.8"
+VERSION = "v0.0.9"
 GAME_NAME = "Laser Tag"
 
 WINDOW_WINDOWED_SIZE_RATIO = 0.5
@@ -37,4 +37,4 @@ MAX_WALL_HEIGHT = 2500
 MAX_RAY_DISTANCE = 50
 
 
-VARIABLES = Variables(SETTINGS_FILE)
+VARIABLES = Variables(VERSION, SETTINGS_FILE)
