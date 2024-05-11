@@ -20,6 +20,9 @@ class Renderer:
     def __init__(self, clock: pygame.time.Clock):
         self.clock = clock
 
+        self.init_components()
+
+    def init_components(self):
         self.fps = Fps()
         self.minimap = Minimap()
         self.network_stats = NetworkStats()
@@ -48,8 +51,7 @@ class Renderer:
         bytes_sent: list[int],
         bytes_received: list[int],
     ):
-        if VARIABLES.show_network_stats:
-            self.network_stats.update(pings, connected, bytes_sent, bytes_received)
+        self.network_stats.update(pings, connected, bytes_sent, bytes_received)
 
     def get_pause_status(self):
         return self.pause_menu.get_status()
@@ -58,15 +60,51 @@ class Renderer:
         for component in self.components:
             component.resize()
 
-    def render(self, game: Game, events: list[EventInstance]):
-        # Update display
+    def update(self, game: Game, events: list[EventInstance]):
+        # Update components
+
+        if VARIABLES.show_fps:
+            self.fps.update(self.clock.get_fps())
 
         if VARIABLES.level_editor:
             self.level_editor.update(events)
+            return
+
+        rays = game.world.cast_rays()
+        self.world.update(
+            rays,
+            game.world.entities.values(),
+            game.world.get_entity(game.world.controlled_entity),
+        )
+        self.minimap.update(
+            game.world.map.walls,
+            game.world.map.get_map_bounds(),
+            game.world.entities.values(),
+            rays=rays,
+        )
+
+        self.leaderboard.update(game.game_mode.leaderboard)
+
+        if game.show_scoreboard:
+            self.scoreboard.update(list(game.world.entities.values()))
+
+        self.game_timer.update(
+            game.game_mode.grace_period_seconds,
+            game.game_mode.grace_period_end,
+            game.game_mode.game_time_seconds,
+            game.game_mode.game_time_end,
+        )
+
+        if game.game_paused:
+            self.pause_menu.update(events)
+
+    def render(self, game: Game):
+        # Update display
+
+        if VARIABLES.level_editor:
             display.screen.blit(self.level_editor.get(), (0, 0))
 
             if VARIABLES.show_fps:
-                self.fps.update(self.clock.get_fps())
                 fps_surface = self.fps.get()
                 display.screen.blit(
                     fps_surface,
@@ -74,24 +112,10 @@ class Renderer:
                 )
             return
 
-        rays = game.world.cast_rays()
-
-        self.world.update(
-            rays,
-            game.world.entities.values(),
-            game.world.get_entity(game.world.controlled_entity),
-        )
         display.screen.blit(self.world.get(), (0, 0))
 
-        self.minimap.update(
-            game.world.map.walls,
-            game.world.map.get_map_bounds(),
-            game.world.entities.values(),
-            rays=rays,
-        )
         display.screen.blit(self.minimap.get(), (resize(10, "x"), resize(10, "y")))
 
-        self.leaderboard.update(game.game_mode.leaderboard)
         display.screen.blit(
             self.leaderboard.get(),
             (
@@ -113,7 +137,6 @@ class Renderer:
             )
 
         if game.show_scoreboard:
-            self.scoreboard.update(list(game.world.entities.values()))
             scoreboard = self.scoreboard.get()
             display.screen.blit(
                 scoreboard,
@@ -123,12 +146,6 @@ class Renderer:
                 ),
             )
 
-        self.game_timer.update(
-            game.game_mode.grace_period_seconds,
-            game.game_mode.grace_period_end,
-            game.game_mode.game_time_seconds,
-            game.game_mode.game_time_end,
-        )
         game_timer = self.game_timer.get()
         display.screen.blit(
             game_timer,
@@ -145,9 +162,7 @@ class Renderer:
         )
 
         if game.game_paused:
-            self.pause_menu.update(events)
             display.screen.blit(self.pause_menu.get(), (0, 0))
 
         if VARIABLES.show_fps:
-            self.fps.update(self.clock.get_fps())
             display.screen.blit(self.fps.get(), (resize(10, "x"), resize(10, "y")))
