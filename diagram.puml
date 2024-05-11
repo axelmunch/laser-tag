@@ -28,6 +28,7 @@ package laser_tag {
             DEFAULT_TEXTURE_CACHE_LIMIT
             MAX_WALL_HEIGHT
             MAX_RAY_DISTANCE
+            MAX_PLAYER_NAME_LENGTH
             VARIABLES: Variables
         }
 
@@ -49,7 +50,7 @@ package laser_tag {
             anti_aliased_text
             debug
             rotate_sensitivity
-            pseudo
+            player_name
             fov
             ray_width
             rays_quantity
@@ -249,9 +250,12 @@ package laser_tag {
         }
 
         class Player extends GameEntity {
+            name
+
             create(parsed_object): Player
             entity_radius()
             death()
+            set_name(name)
         }
 
         class LaserRay extends Entity {

@@ -63,7 +63,7 @@ class Scoreboard(Component):
                 50,
                 (255, 255, 255),
             ),
-            (resize(1280 / 5 * 1 + 20, "x"), resize(85, "y")),
+            (resize(1280 / 5 * 0.6 + 20, "x"), resize(85, "y")),
         )
 
         self.surface.blit(
@@ -81,7 +81,7 @@ class Scoreboard(Component):
                 50,
                 (255, 255, 255),
             ),
-            (resize(1280 / 5 * 3 + 20, "x"), resize(85, "y")),
+            (resize(1280 / 5 * 2.75 + 20, "x"), resize(85, "y")),
         )
 
         self.surface.blit(
@@ -111,11 +111,11 @@ class Scoreboard(Component):
                 # Name
                 self.surface.blit(
                     self.text.get_surface(
-                        "Name",
+                        entity.name,
                         40,
                         (255, 255, 255),
                     ),
-                    (resize(1280 / 5 * 1 + 20, "x"), y),
+                    (resize(1280 / 5 * 0.6 + 20, "x"), y),
                 )
 
                 # Score
@@ -135,7 +135,7 @@ class Scoreboard(Component):
                         40,
                         (255, 255, 255),
                     ),
-                    (resize(1280 / 5 * 3 + 20, "x"), y),
+                    (resize(1280 / 5 * 2.75 + 20, "x"), y),
                 )
 
                 # Deaths

@@ -66,6 +66,9 @@ class Client:
                 )
             self.disconnect()
 
+        # Send player name
+        self.send(f'"{VARIABLES.player_name}"')
+
         ping_timer = Timer()
         while self.connected:
             ping_timer.start()

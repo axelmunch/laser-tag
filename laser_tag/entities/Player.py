@@ -10,6 +10,8 @@ class Player(GameEntity):
     def __init__(self, position: Point):
         super().__init__(position, Player.entity_radius())
 
+        self.name = ""
+
         self.move_speed = 0.05
 
         self.attack_speed = 0.25
@@ -21,7 +23,7 @@ class Player(GameEntity):
         self.set_max_hp(1)
 
     def __repr__(self):
-        return f"['{self.__class__.__name__}',{self.position},{self.rotation},{self.team},{self.score},{self.eliminations},{self.deaths},{self.hp},{self.next_attack_timestamps},{self.can_move},{self.can_attack}]"
+        return f"['{self.__class__.__name__}',{self.position},{self.rotation},{self.team},{self.score},{self.eliminations},{self.deaths},{self.hp},{self.next_attack_timestamps},{self.can_move},{self.can_attack},'{self.name}']"
 
     @staticmethod
     def create(parsed_object) -> Player:
@@ -40,6 +42,7 @@ class Player(GameEntity):
             entity.next_attack_timestamps = float(parsed_object[7])
             entity.can_move = bool(parsed_object[8])
             entity.can_attack = bool(parsed_object[9])
+            entity.name = str(parsed_object[10])
             return entity
         except:
             return None
@@ -50,3 +53,6 @@ class Player(GameEntity):
 
     def death(self):
         super().death(no_deletion=True)
+
+    def set_name(self, name: str):
+        self.name = name

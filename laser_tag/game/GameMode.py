@@ -64,11 +64,11 @@ class GameMode:
                 if isinstance(entity, Player):
                     if self.game_mode == Mode.SOLO:
                         self.leaderboard.append(
-                            [int(entity.score), entity.team, "Name"]
+                            [int(entity.score), entity.team, entity.name]
                         )
                     else:
                         self.leaderboard.append(
-                            [entity.eliminations, entity.team, "Name"]
+                            [entity.eliminations, entity.team, entity.name]
                         )
         elif self.game_mode in [Mode.TEAM, Mode.TEAM_ELIMINATION]:
             teams = {}

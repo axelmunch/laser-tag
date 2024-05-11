@@ -4,6 +4,7 @@ from sys import exit as sys_exit
 from threading import Thread
 
 from laser_tag.configuration import (
+    MAX_PLAYER_NAME_LENGTH,
     NETWORK_BUFFER_SIZE,
     SERVER_DEFAULT_MAX_CLIENTS,
     SERVER_DELTA_TIME_NAME,
@@ -25,6 +26,8 @@ class ClientInstance:
         self.conn = conn
 
         self.thread = None
+
+        self.player_name = ""
 
         self.data = None
 
@@ -124,9 +127,22 @@ class Server:
         else:
             client.data = True
 
+        # Get player name
+        client.player_name = self.recv(client)
+        if not (
+            client.player_name is not None
+            and isinstance(client.player_name, str)
+            and len(client.player_name) >= 1
+            and len(client.player_name) <= MAX_PLAYER_NAME_LENGTH
+        ):
+            client.player_name = "Player"
+
         # Create player
         spawn_point = self.game.world.map.get_spawn_point()
         client.controlled_entity_id = self.game.world.spawn_entity(Player(spawn_point))
+        self.game.world.get_entity(client.controlled_entity_id).set_name(
+            client.player_name
+        )
 
         client_delta_time = DeltaTime(client.info)
 

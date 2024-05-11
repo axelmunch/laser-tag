@@ -16,7 +16,7 @@ class Leaderboard(Component):
 
         self.max_length = 5
 
-        self.set_original_size(250, 50 * self.max_length)
+        self.set_original_size(275, 50 * self.max_length)
 
         self.update(data)
 
@@ -45,14 +45,24 @@ class Leaderboard(Component):
                 resize(10),
             )
 
-            # Rank and team name
+            # Rank
             self.surface.blit(
                 self.text.get_surface(
-                    f"#{i + 1} {data[2]}",
+                    i + 1,
                     30,
                     (255, 255, 255),
                 ),
                 (resize(40, "x"), resize(i * 50 + 10, "y")),
+            )
+
+            # Name
+            self.surface.blit(
+                self.text.get_surface(
+                    data[2],
+                    20,
+                    (255, 255, 255),
+                ),
+                (resize(70, "x"), resize(i * 50 + 17, "y")),
             )
 
             # Score
