@@ -2,7 +2,6 @@ from math import ceil
 
 import pygame
 
-from ....configuration import DEFAULT_FONT
 from ....entities.BarrelShort import BarrelShort
 from ....entities.BarrelTall import BarrelTall
 from ....entities.GameEntity import GameEntity
@@ -16,7 +15,6 @@ from ....math.Point import Point
 from ....math.rotations import rotate
 from ....utils.DeltaTime import DeltaTime
 from ...resize import resize
-from ...Text import Text
 from ..Component import Component
 from .EditorState import EditorState
 from .Item import Item, wall_items
@@ -30,12 +28,6 @@ class View(Component):
         data=[],
     ):
         super().__init__()
-
-        self.text = Text(
-            DEFAULT_FONT["font"],
-            DEFAULT_FONT["font_is_file"],
-            DEFAULT_FONT["size_multiplier"],
-        )
 
         self.set_original_size(1920 - 500, 1080 - 150)
 

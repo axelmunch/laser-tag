@@ -541,9 +541,57 @@ package laser_tag {
             run_action()
         }
 
+        class Text {
+            reset(font, font_is_file: Boolean, size_multiplier)
+            create_cache(size)
+            clear_cache()
+            generate_text(text, size, color)
+            get_size(generated_text)
+            blit(generated_text, x, y, align_x, align_y)
+            text(text, x, y, size, color, align_x, align_y)
+            get_surface(text, size, color)
+
+            font
+            font_is_file: Boolean
+            size_multiplier
+            cache
+            create_cache(size)
+            clear_cache()
+            generate_text(text, size, color)
+            get_size(generated_text)
+            blit(generated_text, x, y, align_x, align_y)
+            text(text, x, y, size, color, align_x, align_y)
+        }
+
+        class Texture {
+            texture_cache
+            cache_limit
+            original_width
+            original_height
+            texture_original
+            resize(size)
+            get_surface()
+            get_original_size()
+            reduce_cache()
+            clear_cache()
+            set_cache_limit(limit)
+        }
+
+        class Textures {
+            textures
+            load_texture(id, path, alpha: Boolean, custom_size, keep: Boolean)
+            resize_texture(id, size)
+            get_surface(id)
+            get_original_size(id)
+            remove_texture(id)
+            clear_cache()
+            set_cache_limit(id, limit)
+        }
+
         package components {
             class Component {
                 language: Language
+                text: Text
                 data
                 surface
                 width
@@ -604,7 +652,6 @@ package laser_tag {
                 }
 
                 class ItemMenu extends Component {
-                    text: Text
                     mouse_x
                     mouse_y
                     selected_item_index
@@ -620,7 +667,6 @@ package laser_tag {
                 }
 
                 class Toolbar extends Component {
-                    text: Text
                     mouse_x
                     mouse_y
                     editor_state: EditorState
@@ -641,7 +687,6 @@ package laser_tag {
                 }
 
                 class View extends Component {
-                    text: Text
                     mouse_x
                     mouse_y
                     cell_size
@@ -719,7 +764,6 @@ package laser_tag {
 
             package menus {
                 class PauseMenu extends Component {
-                    text: Text
                     mouse_x
                     mouse_y
                     resume_clicked: Boolean
@@ -749,53 +793,6 @@ package laser_tag {
             resize()
             update(game: Game, events: EventInstance[])
             render(game: Game)
-        }
-
-        class Text {
-            reset(font, font_is_file: Boolean, size_multiplier)
-            create_cache(size)
-            clear_cache()
-            generate_text(text, size, color)
-            get_size(generated_text)
-            blit(generated_text, x, y, align_x, align_y)
-            text(text, x, y, size, color, align_x, align_y)
-            get_surface(text, size, color)
-
-            font
-            font_is_file: Boolean
-            size_multiplier
-            cache
-            create_cache(size)
-            clear_cache()
-            generate_text(text, size, color)
-            get_size(generated_text)
-            blit(generated_text, x, y, align_x, align_y)
-            text(text, x, y, size, color, align_x, align_y)
-        }
-
-        class Texture {
-            texture_cache
-            cache_limit
-            original_width
-            original_height
-            texture_original
-            resize(size)
-            get_surface()
-            get_original_size()
-            reduce_cache()
-            clear_cache()
-            set_cache_limit(limit)
-        }
-
-        class Textures {
-            textures
-            load_texture(id, path, alpha: Boolean, custom_size, keep: Boolean)
-            resize_texture(id, size)
-            get_surface(id)
-            get_original_size(id)
-            remove_texture(id)
-            clear_cache()
-            set_cache_limit(id, limit)
         }
 
         Button --> ButtonState

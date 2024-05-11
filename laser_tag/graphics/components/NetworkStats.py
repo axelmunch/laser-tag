@@ -1,9 +1,7 @@
 from time import time
 
-from ...configuration import DEFAULT_FONT
 from ...language.LanguageKey import LanguageKey
 from ..resize import resize
-from ..Text import Text
 from .Component import Component
 
 
@@ -15,12 +13,6 @@ class NetworkStats(Component):
         data={"pings": [], "connected": False, "bytes_sent": [], "bytes_received": []},
     ):
         super().__init__()
-
-        self.text = Text(
-            DEFAULT_FONT["font"],
-            DEFAULT_FONT["font_is_file"],
-            DEFAULT_FONT["size_multiplier"],
-        )
 
         self.set_original_size(250, 400)
 

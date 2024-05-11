@@ -2,9 +2,10 @@ from math import ceil
 
 import pygame
 
-from ...configuration import VARIABLES
+from ...configuration import DEFAULT_FONT, VARIABLES
 from ...language.Language import Language
 from ..resize import resize
+from ..Text import Text
 
 
 class Component:
@@ -12,6 +13,11 @@ class Component:
 
     def __init__(self, data=None):
         self.language = Language()
+        self.text = Text(
+            DEFAULT_FONT["font"],
+            DEFAULT_FONT["font_is_file"],
+            DEFAULT_FONT["size_multiplier"],
+        )
 
         self.data = data
         self.surface: pygame.Surface

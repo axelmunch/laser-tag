@@ -1,9 +1,7 @@
 import pygame
 
-from ...configuration import DEFAULT_FONT
 from ...game.Team import Team, get_color
 from ..resize import resize
-from ..Text import Text
 from .Component import Component
 
 
@@ -15,12 +13,6 @@ class Leaderboard(Component):
         data=[],
     ):
         super().__init__()
-
-        self.text = Text(
-            DEFAULT_FONT["font"],
-            DEFAULT_FONT["font_is_file"],
-            DEFAULT_FONT["size_multiplier"],
-        )
 
         self.max_length = 5
 

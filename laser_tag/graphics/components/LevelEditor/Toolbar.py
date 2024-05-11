@@ -1,12 +1,11 @@
 import pygame
 
-from ....configuration import DEFAULT_FONT, VARIABLES
+from ....configuration import VARIABLES
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
 from ....language.LanguageKey import LanguageKey
 from ...Button import Button, ButtonState
 from ...resize import resize
-from ...Text import Text
 from ..Component import Component
 from .EditorState import EditorState
 
@@ -21,12 +20,6 @@ class Toolbar(Component):
         save_action=None,
     ):
         super().__init__()
-
-        self.text = Text(
-            DEFAULT_FONT["font"],
-            DEFAULT_FONT["font_is_file"],
-            DEFAULT_FONT["size_multiplier"],
-        )
 
         self.set_original_size(1920, 150)
 

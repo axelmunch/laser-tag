@@ -1,8 +1,6 @@
 from time import time
 
-from ...configuration import DEFAULT_FONT
 from ..resize import resize
-from ..Text import Text
 from .Component import Component
 
 
@@ -19,12 +17,6 @@ class GameTimer(Component):
         },
     ):
         super().__init__()
-
-        self.text = Text(
-            DEFAULT_FONT["font"],
-            DEFAULT_FONT["font_is_file"],
-            DEFAULT_FONT["size_multiplier"],
-        )
 
         self.set_original_size(250, 50)
 

@@ -1,11 +1,10 @@
 import json
 
-from ....configuration import DEFAULT_FONT, LEVEL_EDITOR_WORLD_FILE
+from ....configuration import LEVEL_EDITOR_WORLD_FILE
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
 from ....game.load_world import load_world
 from ...resize import resize
-from ...Text import Text
 from ..Component import Component
 from .ItemMenu import ItemMenu
 from .Toolbar import Toolbar
@@ -29,12 +28,6 @@ class LevelEditor(Component):
         ]
 
         super().__init__()
-
-        self.text = Text(
-            DEFAULT_FONT["font"],
-            DEFAULT_FONT["font_is_file"],
-            DEFAULT_FONT["size_multiplier"],
-        )
 
         self.set_original_size(1920, 1080)
 

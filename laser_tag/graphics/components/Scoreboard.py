@@ -1,12 +1,10 @@
 import pygame
 
-from ...configuration import DEFAULT_FONT
 from ...entities.GameEntity import GameEntity
 from ...entities.Player import Player
 from ...game.Team import get_color
 from ...language.LanguageKey import LanguageKey
 from ..resize import resize
-from ..Text import Text
 from .Component import Component
 
 
@@ -18,12 +16,6 @@ class Scoreboard(Component):
         data=[],
     ):
         super().__init__()
-
-        self.text = Text(
-            DEFAULT_FONT["font"],
-            DEFAULT_FONT["font_is_file"],
-            DEFAULT_FONT["size_multiplier"],
-        )
 
         self.set_original_size(1280, 720)
 
