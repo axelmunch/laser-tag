@@ -51,12 +51,6 @@ class Renderer:
         if VARIABLES.show_network_stats:
             self.network_stats.update(pings, connected, bytes_sent, bytes_received)
 
-    def set_events(self, events: list[EventInstance], game_paused: bool):
-        if VARIABLES.level_editor:
-            self.level_editor.update(events)
-        if game_paused:
-            self.pause_menu.update(events)
-
     def get_pause_status(self):
         return self.pause_menu.get_status()
 
@@ -64,10 +58,11 @@ class Renderer:
         for component in self.components:
             component.resize()
 
-    def render(self, game: Game):
+    def render(self, game: Game, events: list[EventInstance]):
         # Update display
 
         if VARIABLES.level_editor:
+            self.level_editor.update(events)
             display.screen.blit(self.level_editor.get(), (0, 0))
 
             if VARIABLES.show_fps:
@@ -150,6 +145,7 @@ class Renderer:
         )
 
         if game.game_paused:
+            self.pause_menu.update(events)
             display.screen.blit(self.pause_menu.get(), (0, 0))
 
         if VARIABLES.show_fps:

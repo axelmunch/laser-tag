@@ -111,8 +111,7 @@ if __name__ == "__main__":
         renderer.set_network_stats(
             network_stats[0], network_stats[1], network_stats[2], network_stats[3]
         )
-        renderer.set_events(events, game.game_paused)
-        renderer.render(game)
+        renderer.render(game, events)
 
         pygame.display.flip()
 

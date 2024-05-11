@@ -744,10 +744,9 @@ package laser_tag {
             clock
             components: Component[]
             set_network_stats(pings, connected: Boolean, bytes_sent, bytes_received)
-            set_events(events: EventInstance[], game_paused: Boolean)
             get_pause_status()
             resize()
-            render(game: Game)
+            render(game: Game, events: EventInstance[])
         }
 
         class Text {
