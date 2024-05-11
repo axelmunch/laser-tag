@@ -53,8 +53,8 @@ class Renderer:
     ):
         self.network_stats.update(pings, connected, bytes_sent, bytes_received)
 
-    def get_pause_status(self):
-        return self.pause_menu.get_status()
+    def close_game_event(self) -> bool:
+        return self.pause_menu.get_status()[1]
 
     def resize(self):
         for component in self.components:
@@ -97,6 +97,9 @@ class Renderer:
 
         if game.game_paused:
             self.pause_menu.update(events)
+
+            if self.pause_menu.get_status()[0]:
+                game.game_paused = False
 
     def render(self, game: Game):
         # Update display

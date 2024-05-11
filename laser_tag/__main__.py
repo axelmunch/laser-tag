@@ -87,13 +87,6 @@ if __name__ == "__main__":
                     pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_ARROW)
                 )
 
-        # Pause menu events
-        pause_menu_status = renderer.get_pause_status()
-        if pause_menu_status[0]:
-            game.game_paused = False
-        if pause_menu_status[1]:
-            running = False
-
         # Predict
         game.update(events)
 
@@ -114,6 +107,11 @@ if __name__ == "__main__":
             )
 
         renderer.update(game, events)
+
+        # Close game event from menus
+        if renderer.close_game_event():
+            running = False
+
         renderer.render(game)
 
         pygame.display.flip()

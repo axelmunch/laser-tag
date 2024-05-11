@@ -745,7 +745,7 @@ package laser_tag {
             components: Component[]
             set_network_stats(pings, connected: Boolean, bytes_sent, bytes_received)
             init_components()
-            get_pause_status()
+            close_game_event(): Boolean
             resize()
             update(game: Game, events: EventInstance[])
             render(game: Game)
