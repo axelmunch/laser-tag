@@ -14,10 +14,7 @@ from .View import View
 class LevelEditor(Component):
     """Level editor component"""
 
-    def __init__(
-        self,
-        data=[],
-    ):
+    def __init__(self):
         self.toolbar = Toolbar(load_action=self.load, save_action=self.save)
         self.item_menu = ItemMenu()
         self.view = View()
@@ -38,7 +35,7 @@ class LevelEditor(Component):
         self.item_menu_position = (0, 1080 - self.item_menu.get_size()[1])
         self.view_position = (self.item_menu.get_size()[0], self.toolbar.get_size()[1])
 
-        self.update(data)
+        self.update()
 
     def resize(self):
         super().resize()
@@ -100,7 +97,7 @@ class LevelEditor(Component):
             json.dump(data, file, indent=4, default=repr)
             file.write("\n")
 
-    def update(self, events: list[EventInstance]):
+    def update(self, events: list[EventInstance] = []):
         """
         Update the component
 
@@ -117,19 +114,13 @@ class LevelEditor(Component):
         # Toolbar
         self.toolbar.update(
             self.data,
-            (
-                self.mouse_x - self.toolbar_position[0],
-                self.mouse_y - self.toolbar_position[1],
-            ),
+            (self.toolbar_position[0], self.toolbar_position[1]),
         )
 
         # Item menu
         self.item_menu.update(
             self.data,
-            (
-                self.mouse_x - self.item_menu_position[0],
-                self.mouse_y - self.item_menu_position[1],
-            ),
+            (self.item_menu_position[0], self.item_menu_position[1]),
         )
 
         # View
@@ -138,13 +129,7 @@ class LevelEditor(Component):
         variables = self.toolbar.get_view_variables()
         self.view.set_view_variables(variables[0], variables[1], variables[2])
 
-        self.view.update(
-            self.data,
-            (
-                self.mouse_x - self.view_position[0],
-                self.mouse_y - self.view_position[1],
-            ),
-        )
+        self.view.update(self.data, (self.view_position[0], self.view_position[1]))
 
         super().update()
 

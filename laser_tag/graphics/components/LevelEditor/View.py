@@ -23,10 +23,7 @@ from .Item import Item, wall_items
 class View(Component):
     """Level editor view component"""
 
-    def __init__(
-        self,
-        data=[],
-    ):
+    def __init__(self):
         super().__init__()
 
         self.set_original_size(1920 - 500, 1080 - 150)
@@ -69,7 +66,7 @@ class View(Component):
         self.selected_elements: list[Point] = []
 
         self.reset_center()
-        self.update(data)
+        self.update()
 
     def get_map_data(self):
         return {
@@ -367,20 +364,16 @@ class View(Component):
 
     def update(
         self,
-        events: list[EventInstance],
-        relative_mouse_position: tuple[int, int] = (0, 0),
+        events: list[EventInstance] = [],
+        relative_offset: tuple[int, int] = (0, 0),
     ):
         """
         Update the component
 
         Parameters:
             events (list): Events
-            relative_mouse_position (tuple): Mouse position in the component
+            relative_offset (tuple): Component position on the screen
         """
-
-        self.data = events
-        self.mouse_x = relative_mouse_position[0]
-        self.mouse_y = relative_mouse_position[1]
 
         self.position_aimed = self.screen_position_to_world_point(
             self.mouse_x, self.mouse_y
@@ -404,8 +397,11 @@ class View(Component):
         mouse_left_click_release = False
         mouse_right_click_press = False
 
-        for event in self.data:
-            if event.id == Event.MOUSE_LEFT_CLICK_PRESS:
+        for event in events:
+            if event.id == Event.MOUSE_MOVE:
+                self.mouse_x = event.data[0] - relative_offset[0]
+                self.mouse_y = event.data[1] - relative_offset[1]
+            elif event.id == Event.MOUSE_LEFT_CLICK_PRESS:
                 mouse_left_click_press = True
             elif event.id == Event.MOUSE_LEFT_CLICK_RELEASE:
                 mouse_left_click_release = True

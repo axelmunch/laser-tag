@@ -1,23 +1,19 @@
 from math import ceil
 
-import pygame
-
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
 from ....math.Point import Point
-from ...Button import Button, ButtonState
+from ...Button import ButtonState
 from ...resize import resize
 from ..Component import Component
+from ..GraphicalButton import ButtonType, GraphicalButton
 from .Item import Item
 
 
 class ItemMenu(Component):
     """Level editor item menu component"""
 
-    def __init__(
-        self,
-        data=[],
-    ):
+    def __init__(self):
         super().__init__()
 
         self.set_original_size(500, 1080 - 150)
@@ -39,7 +35,7 @@ class ItemMenu(Component):
             column = i % buttons_quantity_line
 
             self.buttons.append(
-                Button(
+                GraphicalButton(
                     margin
                     + column * (self.original_width - margin) / buttons_quantity_line,
                     margin
@@ -49,6 +45,7 @@ class ItemMenu(Component):
                     (self.original_width - (buttons_quantity_line + 1) * margin)
                     / buttons_quantity_line,
                     content=list(Item)[i].name,
+                    type=ButtonType.LEVEL_EDITOR_ITEM,
                 )
             )
 
@@ -70,7 +67,16 @@ class ItemMenu(Component):
         )
         self.scroll_step = 20
 
-        self.update(data)
+        self.update()
+
+    def resize(self):
+        super().resize()
+
+        try:
+            for button in self.buttons:
+                button.resize()
+        except AttributeError:
+            pass
 
     def get_selected_item(self) -> Item:
         if self.selected_item_index is None:
@@ -91,30 +97,18 @@ class ItemMenu(Component):
 
     def update(
         self,
-        events: list[EventInstance],
-        relative_mouse_position: tuple[int, int] = (0, 0),
+        events: list[EventInstance] = [],
+        relative_offset: tuple[int, int] = (0, 0),
     ):
         """
         Update the component
 
         Parameters:
             events (list): Events
-            relative_mouse_position (tuple): Mouse position in the component
+            relative_offset (tuple): Component position on the screen
         """
 
-        self.data = events
-        self.mouse_x = relative_mouse_position[0]
-        self.mouse_y = relative_mouse_position[1]
-
-        mouse_press = False
-        mouse_release = False
-
         for event in events:
-            if event.id == Event.MOUSE_LEFT_CLICK_PRESS:
-                mouse_press = True
-            elif event.id == Event.MOUSE_LEFT_CLICK_RELEASE:
-                mouse_release = True
-
             if event.id == Event.MOUSE_SCROLL_UP:
                 if self.in_view_screen(Point(self.mouse_x, self.mouse_y)):
                     old_scroll = self.scroll
@@ -134,79 +128,27 @@ class ItemMenu(Component):
                     if old_scroll != self.scroll:
                         self.move_buttons(self.scroll - old_scroll)
 
+            elif event.id == Event.MOUSE_MOVE:
+                self.mouse_x = event.data[0] - relative_offset[0]
+                self.mouse_y = event.data[1] - relative_offset[1]
+
         for i in range(len(self.buttons)):
             button = self.buttons[i]
-
-            button.update(self.mouse_x, self.mouse_y)
-            if mouse_press:
-                button.click_press()
-            elif mouse_release:
-                button.click_release()
-
+            button.set_relative_offset(relative_offset[0], relative_offset[1])
+            button.update(events)
             if button.get_state() == ButtonState.RELEASED:
                 self.selected_item_index = i
+            button.set_selected(self.selected_item_index == i)
 
         super().update()
 
     def render(self):
         self.surface.fill((0, 64, 0))
 
-        for i in range(len(self.buttons)):
-            button = self.buttons[i]
-
-            button_pos = button.get_pos()
-            button_state = button.get_state()
-            button_content = button.get_content()
-
-            color = (64, 64, 64)
-            if button_state == ButtonState.HOVERED:
-                color = (128, 128, 128)
-            elif button_state == ButtonState.PRESSED:
-                color = (255, 255, 255)
-
-            if self.selected_item_index == i:
-                border_size = 6
-                pygame.draw.rect(
-                    self.surface,
-                    (192, 192, 192),
-                    (
-                        resize(button_pos[0] - border_size, "x"),
-                        resize(button_pos[1] - border_size, "y"),
-                        resize(button_pos[2] + border_size * 2, "x"),
-                        resize(button_pos[3] + border_size * 2, "y"),
-                    ),
-                )
-
-            pygame.draw.rect(
-                self.surface,
-                color,
-                (
-                    resize(button_pos[0], "x"),
-                    resize(button_pos[1], "y"),
-                    resize(button_pos[2], "x"),
-                    resize(button_pos[3], "y"),
-                ),
-            )
-
-            text_surface = self.text.get_surface(
-                button_content,
-                25,
-                (255, 255, 255),
-            )
+        for button in self.buttons:
             self.surface.blit(
-                text_surface,
-                (
-                    resize(
-                        button_pos[0] + button_pos[2] / 2,
-                        "x",
-                    )
-                    - text_surface.get_width() / 2,
-                    resize(
-                        button_pos[1] + button_pos[3] / 2,
-                        "y",
-                    )
-                    - text_surface.get_height() / 2,
-                ),
+                button.get(),
+                (resize(button.x, "x"), resize(button.y, "y")),
             )
 
         super().render()

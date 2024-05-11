@@ -606,6 +606,30 @@ package laser_tag {
                 render()
             }
 
+            enum ButtonType {
+                MENU
+                LEVEL_EDITOR
+                LEVEL_EDITOR_ITEM
+            }
+
+            class GraphicalButton extends Component {
+                x
+                y
+                button_width
+                button_height
+                content
+                action
+                disabled: Boolean
+                selected: Boolean
+                type: ButtonType
+
+                set_disabled(disabled: Boolean)
+                set_selected(selected: Boolean)
+                set_relative_offset(offset_x, offset_y)
+                get_state(): ButtonState
+                update(events: EventInstance[])
+            }
+
             class Fps extends Component {
                 update(fps)
             }
@@ -655,7 +679,7 @@ package laser_tag {
                     mouse_x
                     mouse_y
                     selected_item_index
-                    buttons: Button[]
+                    buttons: GraphicalButton[]
                     scroll
                     scroll_max
                     scroll_step
@@ -663,7 +687,7 @@ package laser_tag {
                     get_selected_item(): Item
                     move_buttons(y_value)
                     in_view_screen(point: Point)
-                    update(events: EventInstance[], relative_mouse_position)
+                    update(events: EventInstance[], relative_offset)
                 }
 
                 class Toolbar extends Component {
@@ -678,12 +702,12 @@ package laser_tag {
                     snap_to_grid_button: Button
                     show_grid_button: Button
                     preview_player_button: Button
-                    buttons: Button[]
+                    buttons: GraphicalButton[]
 
                     get_editor_state(): EditorState
                     get_view_variables()
                     quit()
-                    update(events: EventInstance[], relative_mouse_position)
+                    update(events: EventInstance[], relative_offset)
                 }
 
                 class View extends Component {
@@ -733,7 +757,7 @@ package laser_tag {
                     find_nearest_object_position(point: Point): Point
                     delete_element_containing_point(point: Point)
                     cancel_placing_or_moving()
-                    update(events: EventInstance[], relative_mouse_position)
+                    update(events: EventInstance[], relative_offset)
                 }
 
                 class "LevelEditor" as LevelEditorComponent extends Component {
@@ -768,7 +792,7 @@ package laser_tag {
                     mouse_y
                     resume_clicked: Boolean
                     quit_clicked: Boolean
-                    buttons: Button[]
+                    buttons: GraphicalButton[]
 
                     get_status()
                     update(events: EventInstance[])
