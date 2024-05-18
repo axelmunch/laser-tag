@@ -8,16 +8,10 @@ from ..GraphicalButton import GraphicalButton
 class PauseMenu(Component):
     """Pause menu component"""
 
-    def __init__(
-        self,
-        data=[],
-    ):
+    def __init__(self):
         super().__init__()
 
         self.set_original_size(1920, 1080)
-
-        self.mouse_x = 0
-        self.mouse_y = 0
 
         self.resume_clicked = False
         self.quit_clicked = False
@@ -45,7 +39,7 @@ class PauseMenu(Component):
             ),
         ]
 
-        self.update(data)
+        self.update()
 
     def resize(self):
         super().resize()
@@ -59,7 +53,7 @@ class PauseMenu(Component):
     def get_status(self):
         return self.resume_clicked, self.quit_clicked
 
-    def update(self, events: list[EventInstance]):
+    def update(self, events: list[EventInstance] = []):
         """
         Update the component
 
@@ -79,7 +73,7 @@ class PauseMenu(Component):
         self.surface.fill((0, 0, 0, 128))
 
         pause_text = self.text.get_surface(
-            self.language.get(LanguageKey.MENU_PAUSE_PAUSE),
+            self.language.get(LanguageKey.MENU_PAUSE_TITLE),
             50,
             (255, 255, 255),
         )

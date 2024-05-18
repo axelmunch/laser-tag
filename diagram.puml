@@ -497,7 +497,7 @@ package laser_tag {
             GAME_SCOREBOARD_SCORE
             GAME_SCOREBOARD_ELIMINATIONS
             GAME_SCOREBOARD_DEATHS
-            MENU_PAUSE_PAUSE
+            MENU_PAUSE_TITLE
             MENU_PAUSE_INFORMATION
             MENU_PAUSE_RESUME
             MENU_PAUSE_QUIT
@@ -792,8 +792,6 @@ package laser_tag {
 
             package menus {
                 class PauseMenu extends Component {
-                    mouse_x
-                    mouse_y
                     resume_clicked: Boolean
                     quit_clicked: Boolean
                     buttons: GraphicalButton[]
