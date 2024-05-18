@@ -8,6 +8,7 @@ from .components.Fps import Fps
 from .components.GameTimer import GameTimer
 from .components.Leaderboard import Leaderboard
 from .components.LevelEditor.LevelEditor import LevelEditor
+from .components.menus.Menus import Menus
 from .components.menus.PauseMenu import PauseMenu
 from .components.Minimap import Minimap
 from .components.NetworkStats import NetworkStats
@@ -19,6 +20,10 @@ from .resize import resize
 class Renderer:
     def __init__(self, clock: pygame.time.Clock):
         self.clock = clock
+
+        self.menus = Menus()
+        self.last_game_paused = False
+        self.close_game = False
 
         self.init_components()
 
@@ -41,7 +46,6 @@ class Renderer:
             self.game_timer,
             self.world,
             self.level_editor,
-            self.pause_menu,
         ]
 
     def set_network_stats(
@@ -54,11 +58,12 @@ class Renderer:
         self.network_stats.update(pings, connected, bytes_sent, bytes_received)
 
     def close_game_event(self) -> bool:
-        return self.pause_menu.get_status()[1]
+        return self.close_game
 
     def resize(self):
         for component in self.components:
             component.resize()
+        self.menus.resize()
 
     def update(self, game: Game, events: list[EventInstance]):
         # Update components
@@ -95,11 +100,19 @@ class Renderer:
             game.game_mode.game_time_end,
         )
 
-        if game.game_paused:
-            self.pause_menu.update(events)
+        self.menus.update(events)
 
-            if self.pause_menu.get_status()[0]:
+        if game.game_paused and game.game_paused != self.last_game_paused:
+            self.pause_menu = PauseMenu()
+            self.menus.open_menu(self.pause_menu)
+        self.last_game_paused = game.game_paused
+
+        if game.game_paused:
+            pause_menu_status = self.pause_menu.get_status()
+            if pause_menu_status[0]:
                 game.game_paused = False
+            if pause_menu_status[1]:
+                self.close_game = True
 
     def render(self, game: Game):
         # Update display
@@ -164,8 +177,8 @@ class Renderer:
             ),
         )
 
-        if game.game_paused:
-            display.screen.blit(self.pause_menu.get(), (0, 0))
+        for menu in self.menus.get_menus():
+            display.screen.blit(menu.get(), (0, 0))
 
         if VARIABLES.show_fps:
             display.screen.blit(self.fps.get(), (resize(10, "x"), resize(10, "y")))

@@ -791,11 +791,32 @@ package laser_tag {
             }
 
             package menus {
-                class PauseMenu extends Component {
+                class Menu {
+                    buttons: GraphicalButton[]
+                    active: Boolean
+
+                    update(events: EventInstance[])
+                    is_active(): Boolean
+                    set_active(active: Boolean)
+                    deactivate_event()
+                }
+
+                class Menus {
+                    menus: Menu[]
+
+                    init_menus()
+                    resize()
+                    update(events: EventInstance[])
+                    get_menus(): Menu[]
+                    open_menu(menu: Menu)
+                }
+
+                class PauseMenu extends Component, Menu {
                     resume_clicked: Boolean
                     quit_clicked: Boolean
-                    buttons: GraphicalButton[]
 
+                    resume()
+                    quit()
                     get_status()
                     update(events: EventInstance[])
                 }
@@ -812,7 +833,11 @@ package laser_tag {
 
         class Renderer {
             clock
+            menus: Menus
+            last_game_paused: Boolean
+            close_game: Boolean
             components: Component[]
+
             set_network_stats(pings, connected: Boolean, bytes_sent, bytes_received)
             init_components()
             close_game_event(): Boolean

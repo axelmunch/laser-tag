@@ -1,15 +1,18 @@
+from ....events.Event import Event
 from ....events.EventInstance import EventInstance
 from ....language.LanguageKey import LanguageKey
 from ...resize import resize
 from ..Component import Component
 from ..GraphicalButton import GraphicalButton
+from .Menu import Menu
 
 
-class PauseMenu(Component):
+class PauseMenu(Component, Menu):
     """Pause menu component"""
 
     def __init__(self):
-        super().__init__()
+        Component.__init__(self)
+        Menu.__init__(self)
 
         self.set_original_size(1920, 1080)
 
@@ -27,7 +30,7 @@ class PauseMenu(Component):
                 button_width,
                 button_height,
                 content=self.language.get(LanguageKey.MENU_PAUSE_RESUME),
-                action=lambda: setattr(self, "resume_clicked", True),
+                action=lambda: self.resume(),
             ),
             GraphicalButton(
                 960 - button_width / 2,
@@ -35,7 +38,7 @@ class PauseMenu(Component):
                 button_width,
                 button_height,
                 content=self.language.get(LanguageKey.MENU_PAUSE_QUIT),
-                action=lambda: setattr(self, "quit_clicked", True),
+                action=lambda: self.quit(),
             ),
         ]
 
@@ -50,8 +53,19 @@ class PauseMenu(Component):
         except AttributeError:
             pass
 
+    def resume(self):
+        self.resume_clicked = True
+        self.set_active(False)
+
+    def quit(self):
+        self.quit_clicked = True
+        self.set_active(False)
+
     def get_status(self):
         return self.resume_clicked, self.quit_clicked
+
+    def deactivate_event(self):
+        self.resume_clicked = True
 
     def update(self, events: list[EventInstance] = []):
         """
@@ -61,13 +75,12 @@ class PauseMenu(Component):
             events (list): Events
         """
 
-        self.resume_clicked = False
-        self.quit_clicked = False
+        for event in events:
+            if event.id == Event.KEY_ESCAPE_PRESS:
+                self.resume()
 
-        for button in self.buttons:
-            button.update(events)
-
-        super().update()
+        Menu.update(self, events)
+        Component.update(self)
 
     def render(self):
         self.surface.fill((0, 0, 0, 128))
