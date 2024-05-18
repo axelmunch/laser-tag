@@ -75,10 +75,6 @@ class PauseMenu(Component, Menu):
             events (list): Events
         """
 
-        for event in events:
-            if event.id == Event.KEY_ESCAPE_PRESS:
-                self.resume()
-
         Menu.update(self, events)
         Component.update(self)
 

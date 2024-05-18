@@ -1,3 +1,4 @@
+from ....events.Event import Event
 from ....events.EventInstance import EventInstance
 from ..GraphicalButton import GraphicalButton
 
@@ -14,6 +15,11 @@ class Menu:
         Parameters:
             events (list): Events
         """
+
+        for event in events:
+            if event.id == Event.KEY_ESCAPE_PRESS:
+                self.set_active(False)
+                return
 
         for button in self.buttons:
             button.update(events)
