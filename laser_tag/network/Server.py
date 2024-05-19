@@ -230,6 +230,7 @@ class Server:
 if __name__ == "__main__":
     port = None
     debug = None
+    non_interactive = False
     if len(argv) < 2:
         # Manual input of port
         while port is None:
@@ -247,20 +248,28 @@ if __name__ == "__main__":
             if port < 0 or port > 65535:
                 raise ValueError
             debug = len(argv) > 2
+            non_interactive = len(argv) > 3
         except:
-            print("Usage: python -m laser_tag.network.Server [port] [debug]")
+            print(f"Usage: {argv[0]} [port] [debug] [non-interactive]")
             sys_exit(1)
 
     server = Server(port, debug)
     server.start()
-    try:
-        while (
-            "exit"
-            not in input('Enter "exit" or press Ctrl+C to stop the server\n').lower()
-        ):
-            continue
 
-    except KeyboardInterrupt:
-        if debug:
-            print()
-    server.stop()
+    if not non_interactive:
+        try:
+            while (
+                "exit"
+                not in input(
+                    'Enter "exit" or press Ctrl+C to stop the server\n'
+                ).lower()
+            ):
+                continue
+
+        except KeyboardInterrupt:
+            if debug:
+                print()
+        server.stop()
+
+    else:
+        server.running_thread.join()

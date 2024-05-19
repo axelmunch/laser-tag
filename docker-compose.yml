@@ -1,0 +1,9 @@
+services:
+  laser-tag-server:
+    container_name: laser-tag-server
+    build:
+      context: .
+    ports:
+      - 8000:8000
+    volumes:
+      - ./data:/game/data:ro
