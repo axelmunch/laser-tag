@@ -631,7 +631,14 @@ package laser_tag {
                 LEVEL_EDITOR_ITEM
             }
 
-            class GraphicalButton extends Component {
+            class GraphicalElement {
+                selected: Boolean
+
+                is_selected(): Boolean
+                set_selected(selected: Boolean)
+            }
+
+            class GraphicalButton extends Component, GraphicalElement {
                 x
                 y
                 button_width
@@ -639,11 +646,9 @@ package laser_tag {
                 text_key: LanguageKey
                 action
                 disabled: Boolean
-                selected: Boolean
                 type: ButtonType
 
                 set_disabled(disabled: Boolean)
-                set_selected(selected: Boolean)
                 set_relative_offset(offset_x, offset_y)
                 get_state(): ButtonState
                 update(events: EventInstance[])

@@ -9,6 +9,7 @@ from ...language.LanguageKey import LanguageKey
 from ..Button import Button, ButtonState
 from ..resize import resize
 from .Component import Component
+from .GraphicalElement import GraphicalElement
 
 
 class ButtonType(Enum):
@@ -22,7 +23,7 @@ class ButtonType(Enum):
     LEVEL_EDITOR_ITEM = auto()
 
 
-class GraphicalButton(Component):
+class GraphicalButton(Component, GraphicalElement):
     """Button component"""
 
     def __init__(
@@ -37,7 +38,8 @@ class GraphicalButton(Component):
         selected=False,
         type=ButtonType.MENU,
     ):
-        super().__init__()
+        Component.__init__(self)
+        GraphicalElement.__init__(self)
 
         self.x = x
         self.y = y
@@ -46,7 +48,7 @@ class GraphicalButton(Component):
         self.text_key = text_key
         self.action = action
         self.disabled = disabled
-        self.selected = selected
+        self.set_selected(selected)
         self.type = type
 
         self.relative_offset_x = 0
@@ -74,9 +76,6 @@ class GraphicalButton(Component):
             self.button.disable()
         else:
             self.button.enable()
-
-    def set_selected(self, selected: bool):
-        self.selected = selected
 
     def set_relative_offset(self, offset_x: float, offset_y: float):
         self.relative_offset_x = offset_x
@@ -145,7 +144,7 @@ class GraphicalButton(Component):
             ),
         )
 
-        if self.selected:
+        if self.is_selected():
             border_size = 6
             pygame.draw.rect(
                 self.surface,
