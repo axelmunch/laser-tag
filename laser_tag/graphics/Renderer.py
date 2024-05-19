@@ -8,6 +8,7 @@ from .components.Fps import Fps
 from .components.GameTimer import GameTimer
 from .components.Leaderboard import Leaderboard
 from .components.LevelEditor.LevelEditor import LevelEditor
+from .components.menus.MainMenu import MainMenu
 from .components.menus.Menus import Menus
 from .components.menus.PauseMenu import PauseMenu
 from .components.Minimap import Minimap
@@ -104,17 +105,22 @@ class Renderer:
 
         if game.game_paused and game.game_paused != self.last_game_paused:
             self.pause_menu = PauseMenu(
-                callback_resume=lambda: self.resume_game(game),
-                callback_quit=self.quit,
+                callback_resume=lambda: setattr(game, "game_paused", False),
+                callback_quit=lambda: self.quit(game),
             )
             self.menus.open_menu(self.pause_menu)
         self.last_game_paused = game.game_paused
 
-    def resume_game(self, game: Game):
-        game.game_paused = False
+    def quit(self, game: Game):
+        game.update_loop = False
 
-    def quit(self):
-        self.close_game = True
+        self.menus.open_menu(
+            MainMenu(
+                callback_play=lambda: setattr(game, "update_loop", True),
+                callback_settings=lambda: print("Settings"),
+                callback_quit=lambda: setattr(self, "close_game", True),
+            )
+        )
 
     def render(self, game: Game):
         # Update display

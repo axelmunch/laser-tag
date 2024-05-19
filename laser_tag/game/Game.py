@@ -20,6 +20,7 @@ class Game:
 
         self.lock_cursor = True
         self.game_paused = False
+        self.update_loop = True
 
     def __repr__(self):
         return f"[{self.game_mode}, {self.world}]"
@@ -108,6 +109,9 @@ class Game:
         player_delta_time: DeltaTime = None,
     ):
         delta_time.update()
+
+        if not self.update_loop:
+            return
 
         self.show_scoreboard = False
 

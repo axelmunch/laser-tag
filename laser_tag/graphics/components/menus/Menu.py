@@ -30,8 +30,9 @@ class Menu:
         return self.active
 
     def set_active(self, active: bool):
+        change_active = self.active != active
         self.active = active
-        if not self.active:
+        if not self.active and change_active:
             self.deactivate_event()
 
     def deactivate_event(self):

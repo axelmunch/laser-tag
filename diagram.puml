@@ -470,6 +470,7 @@ package laser_tag {
 
     package language {
         enum LanguageKey {
+            GAME_NAME
             NETWORK_STATS_CONNECTED
             NETWORK_STATS_DISCONNECTED
             NETWORK_STATS_CONNECTING
@@ -497,6 +498,9 @@ package laser_tag {
             GAME_SCOREBOARD_SCORE
             GAME_SCOREBOARD_ELIMINATIONS
             GAME_SCOREBOARD_DEATHS
+            MENU_MAIN_PLAY
+            MENU_MAIN_SETTINGS
+            MENU_MAIN_QUIT
             MENU_PAUSE_TITLE
             MENU_PAUSE_INFORMATION
             MENU_PAUSE_RESUME
@@ -504,6 +508,7 @@ package laser_tag {
             MENU_CONFIRMATION_YES
             MENU_CONFIRMATION_NO
             MENU_CONFIRMATION_QUIT_GAME
+            MENU_CONFIRMATION_CLOSE_GAME
         }
 
         class Language {
@@ -825,6 +830,18 @@ package laser_tag {
                     yes()
                     no()
                     cancel()
+                    update(events: EventInstance[])
+                }
+
+                class MainMenu extends Component, Menu {
+                    callback_play
+                    callback_settings
+                    callback_quit
+                    can_deactivate: Boolean
+
+                    play()
+                    settings()
+                    quit()
                     update(events: EventInstance[])
                 }
 

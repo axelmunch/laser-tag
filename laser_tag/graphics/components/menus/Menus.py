@@ -34,8 +34,13 @@ class Menus:
         # Update only the top menu
         if len(self.menus) > 0:
             self.menus[-1].update(events)
-            if not self.menus[-1].is_active():
-                self.menus.pop(-1)
+
+        i = 0
+        while i < len(self.menus):
+            if not self.menus[i].is_active():
+                self.menus.pop(i)
+            else:
+                i += 1
 
     def get_menus(self) -> list[Menu]:
         return self.menus

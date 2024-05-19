@@ -3,6 +3,7 @@
         "EN": "English"
     },
     "EN": {
+        "GAME_NAME": "Laser Tag",
         "NETWORK_STATS_CONNECTED": "Connected",
         "NETWORK_STATS_DISCONNECTED": "Disconnected",
         "NETWORK_STATS_CONNECTING": "Connecting...",
@@ -30,12 +31,16 @@
         "GAME_SCOREBOARD_SCORE": "Score",
         "GAME_SCOREBOARD_ELIMINATIONS": "Eliminations",
         "GAME_SCOREBOARD_DEATHS": "Deaths",
+        "MENU_MAIN_PLAY": "Play",
+        "MENU_MAIN_SETTINGS": "Settings",
+        "MENU_MAIN_QUIT": "Quit",
         "MENU_PAUSE_TITLE": "Pause",
         "MENU_PAUSE_INFORMATION": "The game is still ongoing",
         "MENU_PAUSE_RESUME": "Resume",
         "MENU_PAUSE_QUIT": "Quit",
         "MENU_CONFIRMATION_YES":"Yes",
         "MENU_CONFIRMATION_NO":"No",
-        "MENU_CONFIRMATION_QUIT_GAME":"Quit game?"
+        "MENU_CONFIRMATION_QUIT_GAME":"Quit game?",
+        "MENU_CONFIRMATION_CLOSE_GAME": "Close game?"
     }
 }
