@@ -73,6 +73,12 @@ python -m laser_tag
 python -m laser_tag.network.Server [port] [debug]
 ```
 
+### Run the standalone server (using Docker)
+
+```shell
+docker compose up --build
+```
+
 ## Build
 
 Linux

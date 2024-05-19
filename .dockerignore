@@ -1,0 +1,17 @@
+**/__pycache__
+**/.venv
+**/.mypy_cache
+**/.dockerignore
+**/.git
+**/.gitignore
+**/.gitattributes
+**/.editorconfig
+**/.github
+**/.vscode
+**/build
+**/dist
+**/screenshots
+build*
+diagram.puml
+LICENSE
+README.md
