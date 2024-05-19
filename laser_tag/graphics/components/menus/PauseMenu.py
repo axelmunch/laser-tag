@@ -11,14 +11,14 @@ from .Menus import Menus
 class PauseMenu(Component, Menu):
     """Pause menu component"""
 
-    def __init__(self):
+    def __init__(self, callback_resume=None, callback_quit=None):
         Component.__init__(self)
         Menu.__init__(self)
 
         self.set_original_size(1920, 1080)
 
-        self.resume_clicked = False
-        self.quit_clicked = False
+        self.callback_resume = callback_resume
+        self.callback_quit = callback_quit
 
         button_width = 400
         button_height = 150
@@ -59,18 +59,18 @@ class PauseMenu(Component, Menu):
             pass
 
     def resume(self):
-        self.resume_clicked = True
+        if self.callback_resume is not None:
+            self.callback_resume()
         self.set_active(False)
 
     def quit(self):
-        self.quit_clicked = True
+        if self.callback_quit is not None:
+            self.callback_quit()
         self.set_active(False)
 
-    def get_status(self):
-        return self.resume_clicked, self.quit_clicked
-
     def deactivate_event(self):
-        self.resume_clicked = True
+        if self.callback_resume is not None:
+            self.callback_resume()
 
     def update(self, events: list[EventInstance] = []):
         """

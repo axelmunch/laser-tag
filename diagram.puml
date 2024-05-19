@@ -829,12 +829,11 @@ package laser_tag {
                 }
 
                 class PauseMenu extends Component, Menu {
-                    resume_clicked: Boolean
-                    quit_clicked: Boolean
+                    callback_resume
+                    callback_quit
 
                     resume()
                     quit()
-                    get_status()
                     update(events: EventInstance[])
                 }
             }

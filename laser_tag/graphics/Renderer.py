@@ -103,16 +103,18 @@ class Renderer:
         self.menus.update(events)
 
         if game.game_paused and game.game_paused != self.last_game_paused:
-            self.pause_menu = PauseMenu()
+            self.pause_menu = PauseMenu(
+                callback_resume=lambda: self.resume_game(game),
+                callback_quit=self.quit,
+            )
             self.menus.open_menu(self.pause_menu)
         self.last_game_paused = game.game_paused
 
-        if game.game_paused:
-            pause_menu_status = self.pause_menu.get_status()
-            if pause_menu_status[0]:
-                game.game_paused = False
-            if pause_menu_status[1]:
-                self.close_game = True
+    def resume_game(self, game: Game):
+        game.game_paused = False
+
+    def quit(self):
+        self.close_game = True
 
     def render(self, game: Game):
         # Update display
