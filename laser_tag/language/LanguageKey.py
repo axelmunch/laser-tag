@@ -44,3 +44,7 @@ class LanguageKey(Enum):
     MENU_PAUSE_INFORMATION = auto()
     MENU_PAUSE_RESUME = auto()
     MENU_PAUSE_QUIT = auto()
+
+    MENU_CONFIRMATION_YES = auto()
+    MENU_CONFIRMATION_NO = auto()
+    MENU_CONFIRMATION_QUIT_GAME = auto()

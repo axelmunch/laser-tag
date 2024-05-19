@@ -5,6 +5,8 @@ from ..GraphicalButton import GraphicalButton
 
 class Menu:
     def __init__(self):
+        self.menu_offset_x = 0
+        self.menu_offset_y = 0
         self.buttons: list[GraphicalButton] = []
         self.active: bool = True
 

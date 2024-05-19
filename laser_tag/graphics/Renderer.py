@@ -178,7 +178,11 @@ class Renderer:
         )
 
         for menu in self.menus.get_menus():
-            display.screen.blit(menu.get(), (0, 0))
+            offset_x = menu.menu_offset_x
+            offset_y = menu.menu_offset_y
+            display.screen.blit(
+                menu.get(), (resize(offset_x, "x"), resize(offset_y, "y"))
+            )
 
         if VARIABLES.show_fps:
             display.screen.blit(self.fps.get(), (resize(10, "x"), resize(10, "y")))

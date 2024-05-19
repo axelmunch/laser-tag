@@ -501,6 +501,9 @@ package laser_tag {
             MENU_PAUSE_INFORMATION
             MENU_PAUSE_RESUME
             MENU_PAUSE_QUIT
+            MENU_CONFIRMATION_YES
+            MENU_CONFIRMATION_NO
+            MENU_CONFIRMATION_QUIT_GAME
         }
 
         class Language {
@@ -809,6 +812,20 @@ package laser_tag {
                     update(events: EventInstance[])
                     get_menus(): Menu[]
                     open_menu(menu: Menu)
+                }
+
+                class Confirmation extends Component, Menu {
+                    text_key
+                    callback_yes
+                    callback_no
+                    callback_cancel
+                    confirmation_box_width
+                    confirmation_box_height
+
+                    yes()
+                    no()
+                    cancel()
+                    update(events: EventInstance[])
                 }
 
                 class PauseMenu extends Component, Menu {

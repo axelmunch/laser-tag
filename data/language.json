@@ -33,6 +33,9 @@
         "MENU_PAUSE_TITLE": "Pause",
         "MENU_PAUSE_INFORMATION": "The game is still ongoing",
         "MENU_PAUSE_RESUME": "Resume",
-        "MENU_PAUSE_QUIT": "Quit"
+        "MENU_PAUSE_QUIT": "Quit",
+        "MENU_CONFIRMATION_YES":"Yes",
+        "MENU_CONFIRMATION_NO":"No",
+        "MENU_CONFIRMATION_QUIT_GAME":"Quit game?"
     }
 }

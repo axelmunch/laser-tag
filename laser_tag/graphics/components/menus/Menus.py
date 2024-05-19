@@ -21,6 +21,7 @@ class Menus:
     def resize(self):
         for menu in self.menus:
             menu.resize()
+            menu.update()
 
     def update(self, events: list[EventInstance] = []):
         """

@@ -1,10 +1,11 @@
-from ....events.Event import Event
 from ....events.EventInstance import EventInstance
 from ....language.LanguageKey import LanguageKey
 from ...resize import resize
 from ..Component import Component
 from ..GraphicalButton import GraphicalButton
+from .Confirmation import Confirmation
 from .Menu import Menu
+from .Menus import Menus
 
 
 class PauseMenu(Component, Menu):
@@ -38,7 +39,11 @@ class PauseMenu(Component, Menu):
                 button_width,
                 button_height,
                 content=self.language.get(LanguageKey.MENU_PAUSE_QUIT),
-                action=lambda: self.quit(),
+                action=lambda: Menus().open_menu(
+                    Confirmation(
+                        LanguageKey.MENU_CONFIRMATION_QUIT_GAME, callback_yes=self.quit
+                    )
+                ),
             ),
         ]
 
