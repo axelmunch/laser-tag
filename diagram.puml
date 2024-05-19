@@ -491,6 +491,13 @@ package laser_tag {
             LEVEL_EDITOR_GRID
             LEVEL_EDITOR_PREVIEW
             LEVEL_EDITOR_HELP
+            LEVEL_EDITOR_ITEM_WALL_1
+            LEVEL_EDITOR_ITEM_WALL_2
+            LEVEL_EDITOR_ITEM_WALL_3
+            LEVEL_EDITOR_ITEM_WALL_4
+            LEVEL_EDITOR_ITEM_BARREL_SHORT
+            LEVEL_EDITOR_ITEM_BARREL_TALL
+            LEVEL_EDITOR_ITEM_SPAWN_POINT
             GAME_FPS
             GAME_SCOREBOARD_TITLE
             GAME_SCOREBOARD_TEAM
@@ -535,7 +542,7 @@ package laser_tag {
             y
             width
             height
-            content
+            text_key: LanguageKey
             action
             disabled: Boolean
             state: ButtonState
@@ -545,7 +552,7 @@ package laser_tag {
             is_disabled(): Boolean
             get_state(): ButtonState
             get_pos()
-            get_content()
+            get_text_key()
             update(mouse_x, mouse_y)
             is_hovered(): Boolean
             click_press()
@@ -629,7 +636,7 @@ package laser_tag {
                 y
                 button_width
                 button_height
-                content
+                text_key: LanguageKey
                 action
                 disabled: Boolean
                 selected: Boolean

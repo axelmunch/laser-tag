@@ -30,7 +30,7 @@ class PauseMenu(Component, Menu):
                 1080 - button_height * 5,
                 button_width,
                 button_height,
-                content=self.language.get(LanguageKey.MENU_PAUSE_RESUME),
+                text_key=LanguageKey.MENU_PAUSE_RESUME,
                 action=self.resume,
             ),
             GraphicalButton(
@@ -38,7 +38,7 @@ class PauseMenu(Component, Menu):
                 1080 - button_height * 3,
                 button_width,
                 button_height,
-                content=self.language.get(LanguageKey.MENU_PAUSE_QUIT),
+                text_key=LanguageKey.MENU_PAUSE_QUIT,
                 action=lambda: Menus().open_menu(
                     Confirmation(
                         LanguageKey.MENU_CONFIRMATION_QUIT_GAME, callback_yes=self.quit

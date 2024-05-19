@@ -33,7 +33,7 @@ class MainMenu(Component, Menu):
                 1080 - button_height * 6,
                 button_width,
                 button_height,
-                content=self.language.get(LanguageKey.MENU_MAIN_PLAY),
+                text_key=LanguageKey.MENU_MAIN_PLAY,
                 action=self.play,
             ),
             GraphicalButton(
@@ -41,7 +41,7 @@ class MainMenu(Component, Menu):
                 1080 - button_height * 4,
                 button_width,
                 button_height,
-                content=self.language.get(LanguageKey.MENU_MAIN_SETTINGS),
+                text_key=LanguageKey.MENU_MAIN_SETTINGS,
                 action=self.settings,
             ),
             GraphicalButton(
@@ -49,7 +49,7 @@ class MainMenu(Component, Menu):
                 1080 - button_height * 2,
                 button_width,
                 button_height,
-                content=self.language.get(LanguageKey.MENU_MAIN_QUIT),
+                text_key=LanguageKey.MENU_MAIN_QUIT,
                 action=lambda: Menus().open_menu(
                     Confirmation(
                         LanguageKey.MENU_CONFIRMATION_CLOSE_GAME, callback_yes=self.quit

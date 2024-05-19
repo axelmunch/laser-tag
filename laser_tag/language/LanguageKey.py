@@ -33,6 +33,13 @@ class LanguageKey(Enum):
     LEVEL_EDITOR_GRID = auto()
     LEVEL_EDITOR_PREVIEW = auto()
     LEVEL_EDITOR_HELP = auto()
+    LEVEL_EDITOR_ITEM_WALL_1 = auto()
+    LEVEL_EDITOR_ITEM_WALL_2 = auto()
+    LEVEL_EDITOR_ITEM_WALL_3 = auto()
+    LEVEL_EDITOR_ITEM_WALL_4 = auto()
+    LEVEL_EDITOR_ITEM_BARREL_SHORT = auto()
+    LEVEL_EDITOR_ITEM_BARREL_TALL = auto()
+    LEVEL_EDITOR_ITEM_SPAWN_POINT = auto()
 
     GAME_FPS = auto()
     GAME_SCOREBOARD_TITLE = auto()

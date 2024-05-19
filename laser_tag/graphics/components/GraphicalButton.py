@@ -5,6 +5,7 @@ import pygame
 
 from ...events.Event import Event
 from ...events.EventInstance import EventInstance
+from ...language.LanguageKey import LanguageKey
 from ..Button import Button, ButtonState
 from ..resize import resize
 from .Component import Component
@@ -30,7 +31,7 @@ class GraphicalButton(Component):
         y: float,
         width: float,
         height: float,
-        content=None,
+        text_key: LanguageKey = None,
         action=None,
         disabled=False,
         selected=False,
@@ -42,7 +43,7 @@ class GraphicalButton(Component):
         self.y = y
         self.button_width = width
         self.button_height = height
-        self.content = content
+        self.text_key = text_key
         self.action = action
         self.disabled = disabled
         self.selected = selected
@@ -58,7 +59,7 @@ class GraphicalButton(Component):
             self.y,
             self.button_width,
             self.button_height,
-            self.content,
+            self.text_key,
             self.action,
             self.disabled,
         )
@@ -118,7 +119,6 @@ class GraphicalButton(Component):
 
     def render(self):
         button_state = self.button.get_state()
-        button_content = self.button.get_content()
 
         color = (64, 64, 64)
         if button_state == ButtonState.HOVERED:
@@ -129,7 +129,7 @@ class GraphicalButton(Component):
         self.surface.fill(color)
 
         text_surface = self.text.get_surface(
-            button_content,
+            self.language.get(self.button.get_text_key()),
             (
                 (50 if self.type != ButtonType.LEVEL_EDITOR_ITEM else 25)
                 if self.type != ButtonType.LEVEL_EDITOR

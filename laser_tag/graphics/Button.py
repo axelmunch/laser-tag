@@ -1,5 +1,7 @@
 from enum import Enum, auto
 
+from ..language.LanguageKey import LanguageKey
+
 
 class ButtonState(Enum):
     NONE = auto()
@@ -15,7 +17,7 @@ class Button:
         y: float,
         width: float,
         height: float,
-        content=None,
+        text_key: LanguageKey = None,
         action=None,
         disabled=False,
     ):
@@ -24,7 +26,7 @@ class Button:
         self.width = width
         self.height = height
 
-        self.content = content
+        self.text_key = text_key
         self.action = action
 
         self.state = ButtonState.NONE
@@ -49,8 +51,8 @@ class Button:
     def get_pos(self) -> tuple[float, float, float, float]:
         return (self.x, self.y, self.width, self.height)
 
-    def get_content(self):
-        return self.content
+    def get_text_key(self):
+        return self.text_key
 
     def update(self, mouse_x, mouse_y):
         self.mouse_x = mouse_x

@@ -46,7 +46,7 @@ class Confirmation(Component, Menu):
                 - button_height / 5,
                 button_width,
                 button_height,
-                content=self.language.get(LanguageKey.MENU_CONFIRMATION_NO),
+                text_key=LanguageKey.MENU_CONFIRMATION_NO,
                 action=lambda: self.no(),
             ),
             GraphicalButton(
@@ -60,7 +60,7 @@ class Confirmation(Component, Menu):
                 - button_height / 5,
                 button_width,
                 button_height,
-                content=self.language.get(LanguageKey.MENU_CONFIRMATION_YES),
+                text_key=LanguageKey.MENU_CONFIRMATION_YES,
                 action=lambda: self.yes(),
             ),
         ]
