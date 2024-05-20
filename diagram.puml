@@ -516,6 +516,8 @@ package laser_tag {
             MENU_CONFIRMATION_NO
             MENU_CONFIRMATION_QUIT_GAME
             MENU_CONFIRMATION_CLOSE_GAME
+            MENU_SETTINGS_TITLE
+            MENU_SETTINGS_BACK
         }
 
         class Language {
@@ -865,6 +867,13 @@ package laser_tag {
 
                     resume()
                     quit()
+                    update(events: EventInstance[])
+                }
+
+                class SettingsMenu extends Component, Menu {
+                    settings_box_width
+                    settings_box_height
+
                     update(events: EventInstance[])
                 }
             }
