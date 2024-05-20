@@ -8,7 +8,6 @@ from ...events.EventInstance import EventInstance
 from ...language.LanguageKey import LanguageKey
 from ..Button import Button, ButtonState
 from ..resize import resize
-from .Component import Component
 from .GraphicalElement import GraphicalElement
 
 
@@ -23,7 +22,7 @@ class ButtonType(Enum):
     LEVEL_EDITOR_ITEM = auto()
 
 
-class GraphicalButton(Component, GraphicalElement):
+class GraphicalButton(GraphicalElement):
     """Button component"""
 
     def __init__(
@@ -38,8 +37,7 @@ class GraphicalButton(Component, GraphicalElement):
         selected=False,
         type=ButtonType.MENU,
     ):
-        Component.__init__(self)
-        GraphicalElement.__init__(self)
+        super().__init__()
 
         self.x = x
         self.y = y

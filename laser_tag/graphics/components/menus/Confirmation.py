@@ -34,7 +34,7 @@ class Confirmation(Component, Menu):
         button_height = 150
 
         # Create buttons
-        self.buttons = [
+        self.elements = [
             GraphicalButton(
                 960
                 - self.confirmation_box_width / 2
@@ -71,8 +71,8 @@ class Confirmation(Component, Menu):
         super().resize()
 
         try:
-            for button in self.buttons:
-                button.resize()
+            for element in self.elements:
+                element.resize()
         except AttributeError:
             pass
 
@@ -131,10 +131,10 @@ class Confirmation(Component, Menu):
             ),
         )
 
-        for button in self.buttons:
+        for element in self.elements:
             self.surface.blit(
-                button.get(),
-                (resize(button.x, "x"), resize(button.y, "y")),
+                element.get(),
+                (resize(element.x, "x"), resize(element.y, "y")),
             )
 
         super().render()

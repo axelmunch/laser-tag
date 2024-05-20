@@ -631,14 +631,16 @@ package laser_tag {
                 LEVEL_EDITOR_ITEM
             }
 
-            class GraphicalElement {
+            class GraphicalElement extends Component {
                 selected: Boolean
 
                 is_selected(): Boolean
                 set_selected(selected: Boolean)
+                update(events: EventInstance[])
+                render()
             }
 
-            class GraphicalButton extends Component, GraphicalElement {
+            class GraphicalButton extends GraphicalElement {
                 x
                 y
                 button_width
@@ -812,7 +814,7 @@ package laser_tag {
 
             package menus {
                 class Menu {
-                    buttons: GraphicalButton[]
+                    elements: GraphicalElement[]
                     active: Boolean
 
                     update(events: EventInstance[])

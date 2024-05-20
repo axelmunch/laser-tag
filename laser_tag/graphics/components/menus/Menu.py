@@ -1,18 +1,18 @@
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
-from ..GraphicalButton import GraphicalButton
+from ..GraphicalElement import GraphicalElement
 
 
 class Menu:
     def __init__(self):
         self.menu_offset_x = 0
         self.menu_offset_y = 0
-        self.buttons: list[GraphicalButton] = []
+        self.elements: list[GraphicalElement] = []
         self.active: bool = True
 
     def update(self, events: list[EventInstance] = []):
         """
-        Update the component
+        Update the menu
 
         Parameters:
             events (list): Events
@@ -23,8 +23,8 @@ class Menu:
                 self.set_active(False)
                 return
 
-        for button in self.buttons:
-            button.update(events)
+        for element in self.elements:
+            element.update(events)
 
     def is_active(self) -> bool:
         return self.active

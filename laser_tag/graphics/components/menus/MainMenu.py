@@ -27,7 +27,7 @@ class MainMenu(Component, Menu):
         button_height = 100
 
         # Create buttons
-        self.buttons = [
+        self.elements = [
             GraphicalButton(
                 960 - button_width / 2,
                 1080 - button_height * 6,
@@ -64,8 +64,8 @@ class MainMenu(Component, Menu):
         super().resize()
 
         try:
-            for button in self.buttons:
-                button.resize()
+            for element in self.elements:
+                element.resize()
         except AttributeError:
             pass
 
@@ -118,10 +118,10 @@ class MainMenu(Component, Menu):
             (resize(960, "x") - pause_text.get_width() / 2, resize(100, "y")),
         )
 
-        for button in self.buttons:
+        for element in self.elements:
             self.surface.blit(
-                button.get(),
-                (resize(button.x, "x"), resize(button.y, "y")),
+                element.get(),
+                (resize(element.x, "x"), resize(element.y, "y")),
             )
 
         super().render()
