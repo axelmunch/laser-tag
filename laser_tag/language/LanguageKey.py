@@ -56,6 +56,7 @@ class LanguageKey(Enum):
     MENU_PAUSE_TITLE = auto()
     MENU_PAUSE_INFORMATION = auto()
     MENU_PAUSE_RESUME = auto()
+    MENU_PAUSE_SETTINGS = auto()
     MENU_PAUSE_QUIT = auto()
 
     MENU_CONFIRMATION_YES = auto()

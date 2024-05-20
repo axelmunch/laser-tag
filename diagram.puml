@@ -511,6 +511,7 @@ package laser_tag {
             MENU_PAUSE_TITLE
             MENU_PAUSE_INFORMATION
             MENU_PAUSE_RESUME
+            MENU_PAUSE_SETTINGS
             MENU_PAUSE_QUIT
             MENU_CONFIRMATION_YES
             MENU_CONFIRMATION_NO
@@ -900,6 +901,7 @@ package laser_tag {
                     callback_quit
 
                     resume()
+                    settings()
                     quit()
                     update(events: EventInstance[])
                 }

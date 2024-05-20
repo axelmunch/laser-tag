@@ -6,6 +6,7 @@ from ..GraphicalButton import GraphicalButton
 from .Confirmation import Confirmation
 from .Menu import Menu
 from .Menus import Menus
+from .SettingsMenu import SettingsMenu
 
 
 class PauseMenu(Component, Menu):
@@ -27,7 +28,7 @@ class PauseMenu(Component, Menu):
         self.elements = [
             GraphicalButton(
                 960 - button_width / 2,
-                1080 - button_height * 5,
+                1080 - button_height * 4.5,
                 button_width,
                 button_height,
                 text_key=LanguageKey.MENU_PAUSE_RESUME,
@@ -36,6 +37,14 @@ class PauseMenu(Component, Menu):
             GraphicalButton(
                 960 - button_width / 2,
                 1080 - button_height * 3,
+                button_width,
+                button_height,
+                text_key=LanguageKey.MENU_PAUSE_SETTINGS,
+                action=self.settings,
+            ),
+            GraphicalButton(
+                960 - button_width / 2,
+                1080 - button_height * 1.5,
                 button_width,
                 button_height,
                 text_key=LanguageKey.MENU_PAUSE_QUIT,
@@ -62,6 +71,9 @@ class PauseMenu(Component, Menu):
         if self.callback_resume is not None:
             self.callback_resume()
         self.set_active(False)
+
+    def settings(self):
+        Menus().open_menu(SettingsMenu())
 
     def quit(self):
         if self.callback_quit is not None:
