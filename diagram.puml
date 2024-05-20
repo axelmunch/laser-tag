@@ -651,10 +651,28 @@ package laser_tag {
                 action
                 disabled: Boolean
                 type: ButtonType
+                button: Button
 
                 set_disabled(disabled: Boolean)
                 set_relative_offset(offset_x, offset_y)
                 get_state(): ButtonState
+                update(events: EventInstance[])
+            }
+
+            class GraphicalCheckbox extends GraphicalElement {
+                x
+                y
+                checkbox_width
+                checkbox_height
+                checked: Boolean
+                check_action
+                uncheck_action
+                disabled: Boolean
+                button: Button
+
+                set_disabled(disabled: Boolean)
+                set_relative_offset(offset_x, offset_y)
+                toggle()
                 update(events: EventInstance[])
             }
 
