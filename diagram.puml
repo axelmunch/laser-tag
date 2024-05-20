@@ -676,6 +676,22 @@ package laser_tag {
                 update(events: EventInstance[])
             }
 
+            class GraphicalText extends GraphicalElement {
+                original_x
+                original_y
+                x
+                y
+                align_x
+                align_y
+                text_str
+                text_key: LanguageKey
+                size
+                color
+
+                get_text_to_render()
+                update(events: EventInstance[])
+            }
+
             class Fps extends Component {
                 update(fps)
             }
