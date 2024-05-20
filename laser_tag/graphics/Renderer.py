@@ -11,6 +11,7 @@ from .components.LevelEditor.LevelEditor import LevelEditor
 from .components.menus.MainMenu import MainMenu
 from .components.menus.Menus import Menus
 from .components.menus.PauseMenu import PauseMenu
+from .components.menus.SettingsMenu import SettingsMenu
 from .components.Minimap import Minimap
 from .components.NetworkStats import NetworkStats
 from .components.Scoreboard import Scoreboard
@@ -117,7 +118,7 @@ class Renderer:
         self.menus.open_menu(
             MainMenu(
                 callback_play=lambda: setattr(game, "update_loop", True),
-                callback_settings=lambda: print("Settings"),
+                callback_settings=lambda: self.menus.open_menu(SettingsMenu()),
                 callback_quit=lambda: setattr(self, "close_game", True),
             )
         )

@@ -48,6 +48,8 @@
         "MENU_CONFIRMATION_YES":"Yes",
         "MENU_CONFIRMATION_NO":"No",
         "MENU_CONFIRMATION_QUIT_GAME":"Quit game?",
-        "MENU_CONFIRMATION_CLOSE_GAME": "Close game?"
+        "MENU_CONFIRMATION_CLOSE_GAME": "Close game?",
+        "MENU_SETTINGS_TITLE": "Settings",
+        "MENU_SETTINGS_BACK": "Back"
     }
 }

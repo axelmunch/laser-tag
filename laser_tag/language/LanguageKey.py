@@ -62,3 +62,6 @@ class LanguageKey(Enum):
     MENU_CONFIRMATION_NO = auto()
     MENU_CONFIRMATION_QUIT_GAME = auto()
     MENU_CONFIRMATION_CLOSE_GAME = auto()
+
+    MENU_SETTINGS_TITLE = auto()
+    MENU_SETTINGS_BACK = auto()
