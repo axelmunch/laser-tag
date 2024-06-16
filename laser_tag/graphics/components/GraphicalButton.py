@@ -31,6 +31,7 @@ class GraphicalButton(GraphicalElement):
         y: float,
         width: float,
         height: float,
+        text: str = None,
         text_key: LanguageKey = None,
         action=None,
         disabled=False,
@@ -43,6 +44,7 @@ class GraphicalButton(GraphicalElement):
         self.y = y
         self.button_width = width
         self.button_height = height
+        self.text_str = text
         self.text_key = text_key
         self.action = action
         self.disabled = disabled
@@ -59,9 +61,10 @@ class GraphicalButton(GraphicalElement):
             self.y,
             self.button_width,
             self.button_height,
-            self.text_key,
-            self.action,
-            self.disabled,
+            text=self.text_str,
+            text_key=self.text_key,
+            action=self.action,
+            disabled=self.disabled,
         )
 
         self.set_original_size(self.button_width, self.button_height)
@@ -126,7 +129,7 @@ class GraphicalButton(GraphicalElement):
         self.surface.fill(color)
 
         text_surface = self.text.get_surface(
-            self.language.get(self.button.get_text_key()),
+            self.button.get_text(),
             (
                 (50 if self.type != ButtonType.LEVEL_EDITOR_ITEM else 25)
                 if self.type != ButtonType.LEVEL_EDITOR

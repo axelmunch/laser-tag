@@ -545,6 +545,7 @@ package laser_tag {
             y
             width
             height
+            text_str
             text_key: LanguageKey
             action
             disabled: Boolean
@@ -555,7 +556,7 @@ package laser_tag {
             is_disabled(): Boolean
             get_state(): ButtonState
             get_pos()
-            get_text_key()
+            get_text()
             update(mouse_x, mouse_y)
             is_hovered(): Boolean
             click_press()
@@ -648,6 +649,7 @@ package laser_tag {
                 y
                 button_width
                 button_height
+                text_str
                 text_key: LanguageKey
                 action
                 disabled: Boolean
@@ -674,6 +676,33 @@ package laser_tag {
                 set_disabled(disabled: Boolean)
                 set_relative_offset(offset_x, offset_y)
                 toggle()
+                update(events: EventInstance[])
+            }
+
+            class GraphicalComboBox extends GraphicalElement {
+                x
+                y
+                choice_width
+                choice_height
+                choices
+                choice
+                change_action
+                disabled: Boolean
+                opened: Boolean
+                relative_offset_x
+                relative_offset_y
+                mouse_x
+                mouse_y
+                max_elements
+                button: Button
+                choices_buttons: Button[]
+
+                set_disabled(disabled: Boolean)
+                set_relative_offset(offset_x, offset_y)
+                toggle()
+                open()
+                close()
+                select(key)
                 update(events: EventInstance[])
             }
 
