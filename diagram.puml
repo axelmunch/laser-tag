@@ -706,6 +706,28 @@ package laser_tag {
                 update(events: EventInstance[])
             }
 
+            class GraphicalComboBox extends GraphicalElement {
+                x
+                y
+                min_value
+                max_value
+                precision
+                change_action
+                current_value
+                percentage
+                selection: Boolean
+                disabled: Boolean
+                relative_offset_x
+                relative_offset_y
+                mouse_x
+                mouse_y
+
+                set_disabled(disabled: Boolean)
+                set_relative_offset(offset_x, offset_y)
+                select()
+                update(events: EventInstance[])
+            }
+
             class GraphicalText extends GraphicalElement {
                 original_x
                 original_y

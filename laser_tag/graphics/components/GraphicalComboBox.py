@@ -47,7 +47,7 @@ class GraphicalComboBox(GraphicalElement):
             0,
             self.choice_width,
             self.choice_height,
-            action=lambda: self.toggle(),
+            action=self.toggle,
             disabled=self.disabled,
         )
 
