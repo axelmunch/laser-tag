@@ -519,6 +519,11 @@ package laser_tag {
             MENU_CONFIRMATION_CLOSE_GAME
             MENU_SETTINGS_TITLE
             MENU_SETTINGS_BACK
+            MENU_SETTINGS_GENERAL
+            MENU_SETTINGS_GRAPHICS
+            MENU_SETTINGS_CONTROLS
+            MENU_SETTINGS_AUDIO
+            MENU_SETTINGS_DEBUG
         }
 
         class Language {
@@ -633,6 +638,8 @@ package laser_tag {
                 MENU
                 LEVEL_EDITOR
                 LEVEL_EDITOR_ITEM
+                SETTINGS_CATEGORY
+                OPEN_FOLDER
             }
 
             class GraphicalElement extends Component {
@@ -960,7 +967,13 @@ package laser_tag {
                 class SettingsMenu extends Component, Menu {
                     settings_box_width
                     settings_box_height
+                    back_button : GraphicalButton
+                    default_elements: GraphicalElement[]
+                    pages_buttons: GraphicalButton[]
+                    pages_elements
+                    elements
 
+                    switch_settings_page(page)
                     update(events: EventInstance[])
                 }
             }

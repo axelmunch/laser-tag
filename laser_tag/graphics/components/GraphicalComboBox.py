@@ -217,6 +217,40 @@ class GraphicalComboBox(GraphicalElement):
         text_color = (255, 255, 255)
         text_size = 50
 
+        if self.opened:
+            for choice_button in self.choices_buttons:
+                button_state = choice_button.get_state()
+                button_text = choice_button.get_text()
+
+                color = (64, 64, 64)
+                if button_state == ButtonState.HOVERED:
+                    color = (128, 128, 128)
+                elif button_state == ButtonState.PRESSED:
+                    color = (192, 192, 192)
+
+                pygame.draw.rect(
+                    self.surface,
+                    color,
+                    (
+                        0,
+                        resize(choice_button.y, "y"),
+                        resize(self.choice_width, "x"),
+                        resize(self.choice_height, "y"),
+                    ),
+                )
+
+                text_surface = self.text.get_surface(button_text, text_size, text_color)
+                self.surface.blit(
+                    text_surface,
+                    (
+                        resize(self.choice_width / 2, "x")
+                        - text_surface.get_width() / 2,
+                        resize(choice_button.y, "y")
+                        + resize(self.choice_height / 2, "y")
+                        - text_surface.get_height() / 2,
+                    ),
+                )
+
         button_state = self.button.get_state()
 
         color = (64, 64, 64)
@@ -259,40 +293,6 @@ class GraphicalComboBox(GraphicalElement):
                 resize(self.choice_height / 2, "y") - text_surface.get_height() / 2,
             ),
         )
-
-        if self.opened:
-            for choice_button in self.choices_buttons:
-                button_state = choice_button.get_state()
-                button_text = choice_button.get_text()
-
-                color = (64, 64, 64)
-                if button_state == ButtonState.HOVERED:
-                    color = (128, 128, 128)
-                elif button_state == ButtonState.PRESSED:
-                    color = (192, 192, 192)
-
-                pygame.draw.rect(
-                    self.surface,
-                    color,
-                    (
-                        0,
-                        resize(choice_button.y, "y"),
-                        resize(self.choice_width, "x"),
-                        resize(self.choice_height, "y"),
-                    ),
-                )
-
-                text_surface = self.text.get_surface(button_text, text_size, text_color)
-                self.surface.blit(
-                    text_surface,
-                    (
-                        resize(self.choice_width / 2, "x")
-                        - text_surface.get_width() / 2,
-                        resize(choice_button.y, "y")
-                        + resize(self.choice_height / 2, "y")
-                        - text_surface.get_height() / 2,
-                    ),
-                )
 
         if self.is_selected():
             border_size = 6

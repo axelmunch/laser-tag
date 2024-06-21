@@ -116,32 +116,10 @@ class GraphicalSlider(GraphicalElement):
         super().update()
 
     def render(self):
+        self.surface.fill((0, 0, 0, 0))
+
         text_color = (255, 255, 255)
         text_size = 50
-
-        color = (64, 64, 64)
-
-        pygame.draw.rect(
-            self.surface,
-            color,
-            (
-                0,
-                0,
-                ceil(resize(self.original_width, "x")),
-                ceil(resize(self.original_height, "y")),
-            ),
-        )
-        pygame.draw.rect(
-            self.surface,
-            (0, 0, 0),
-            (
-                0,
-                0,
-                ceil(resize(self.original_width, "x")),
-                ceil(resize(self.original_height, "y")),
-            ),
-            max(1, int(resize(6, "x"))),
-        )
 
         text_surface = self.text.get_surface(self.min_value, text_size, text_color)
         text_width_left = text_surface.get_width()

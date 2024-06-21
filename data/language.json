@@ -51,6 +51,11 @@
         "MENU_CONFIRMATION_QUIT_GAME":"Quit game?",
         "MENU_CONFIRMATION_CLOSE_GAME": "Close game?",
         "MENU_SETTINGS_TITLE": "Settings",
-        "MENU_SETTINGS_BACK": "Back"
+        "MENU_SETTINGS_BACK": "Back",
+        "MENU_SETTINGS_GENERAL": "General",
+        "MENU_SETTINGS_GRAPHICS": "Graphics",
+        "MENU_SETTINGS_CONTROLS": "Controls",
+        "MENU_SETTINGS_AUDIO": "Audio",
+        "MENU_SETTINGS_DEBUG": "Debug"
     }
 }

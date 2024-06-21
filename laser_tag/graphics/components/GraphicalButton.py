@@ -6,9 +6,13 @@ import pygame
 from ...events.Event import Event
 from ...events.EventInstance import EventInstance
 from ...language.LanguageKey import LanguageKey
+from ..AssetsLoader import TextureNames
 from ..Button import Button, ButtonState
 from ..resize import resize
+from ..Textures import Textures
 from .GraphicalElement import GraphicalElement
+
+textures = Textures()
 
 
 class ButtonType(Enum):
@@ -20,6 +24,8 @@ class ButtonType(Enum):
     MENU = auto()
     LEVEL_EDITOR = auto()
     LEVEL_EDITOR_ITEM = auto()
+    SETTINGS_CATEGORY = auto()
+    OPEN_FOLDER = auto()
 
 
 class GraphicalButton(GraphicalElement):
@@ -127,6 +133,19 @@ class GraphicalButton(GraphicalElement):
             color = (192, 192, 192)
 
         self.surface.fill(color)
+
+        if self.type == ButtonType.OPEN_FOLDER:
+            self.surface.blit(
+                textures.resize_texture(
+                    TextureNames.RED,
+                    (self.original_width - 20, self.original_height - 20),
+                ),
+                (
+                    resize(10, "x"),
+                    resize(10, "y"),
+                ),
+            )
+            return
 
         text_surface = self.text.get_surface(
             self.button.get_text(),

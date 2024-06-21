@@ -66,3 +66,8 @@ class LanguageKey(Enum):
 
     MENU_SETTINGS_TITLE = auto()
     MENU_SETTINGS_BACK = auto()
+    MENU_SETTINGS_GENERAL = auto()
+    MENU_SETTINGS_GRAPHICS = auto()
+    MENU_SETTINGS_CONTROLS = auto()
+    MENU_SETTINGS_AUDIO = auto()
+    MENU_SETTINGS_DEBUG = auto()
