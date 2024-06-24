@@ -20,6 +20,7 @@ class Game:
 
         self.lock_cursor = True
         self.game_paused = False
+        self.update_loop = True
 
     def __repr__(self):
         return f"[{self.game_mode}, {self.world}]"
@@ -109,13 +110,16 @@ class Game:
     ):
         delta_time.update()
 
+        if not self.update_loop:
+            return
+
         self.show_scoreboard = False
 
         for event in events:
             match event.id:
                 case Event.KEY_ESCAPE_PRESS:
-                    if not VARIABLES.level_editor:
-                        self.game_paused = not self.game_paused
+                    if not self.game_paused and not VARIABLES.level_editor:
+                        self.game_paused = True
                 case Event.START_GAME:
                     if self.game_mode.start():
                         # Reset

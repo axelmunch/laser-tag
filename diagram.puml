@@ -470,6 +470,7 @@ package laser_tag {
 
     package language {
         enum LanguageKey {
+            GAME_NAME
             NETWORK_STATS_CONNECTED
             NETWORK_STATS_DISCONNECTED
             NETWORK_STATS_CONNECTING
@@ -490,6 +491,13 @@ package laser_tag {
             LEVEL_EDITOR_GRID
             LEVEL_EDITOR_PREVIEW
             LEVEL_EDITOR_HELP
+            LEVEL_EDITOR_ITEM_WALL_1
+            LEVEL_EDITOR_ITEM_WALL_2
+            LEVEL_EDITOR_ITEM_WALL_3
+            LEVEL_EDITOR_ITEM_WALL_4
+            LEVEL_EDITOR_ITEM_BARREL_SHORT
+            LEVEL_EDITOR_ITEM_BARREL_TALL
+            LEVEL_EDITOR_ITEM_SPAWN_POINT
             GAME_FPS
             GAME_SCOREBOARD_TITLE
             GAME_SCOREBOARD_TEAM
@@ -497,10 +505,25 @@ package laser_tag {
             GAME_SCOREBOARD_SCORE
             GAME_SCOREBOARD_ELIMINATIONS
             GAME_SCOREBOARD_DEATHS
-            MENU_PAUSE_PAUSE
+            MENU_MAIN_PLAY
+            MENU_MAIN_SETTINGS
+            MENU_MAIN_QUIT
+            MENU_PAUSE_TITLE
             MENU_PAUSE_INFORMATION
             MENU_PAUSE_RESUME
+            MENU_PAUSE_SETTINGS
             MENU_PAUSE_QUIT
+            MENU_CONFIRMATION_YES
+            MENU_CONFIRMATION_NO
+            MENU_CONFIRMATION_QUIT_GAME
+            MENU_CONFIRMATION_CLOSE_GAME
+            MENU_SETTINGS_TITLE
+            MENU_SETTINGS_BACK
+            MENU_SETTINGS_GENERAL
+            MENU_SETTINGS_GRAPHICS
+            MENU_SETTINGS_CONTROLS
+            MENU_SETTINGS_AUDIO
+            MENU_SETTINGS_DEBUG
         }
 
         class Language {
@@ -527,7 +550,8 @@ package laser_tag {
             y
             width
             height
-            content
+            text_str
+            text_key: LanguageKey
             action
             disabled: Boolean
             state: ButtonState
@@ -537,7 +561,7 @@ package laser_tag {
             is_disabled(): Boolean
             get_state(): ButtonState
             get_pos()
-            get_content()
+            get_text()
             update(mouse_x, mouse_y)
             is_hovered(): Boolean
             click_press()
@@ -614,23 +638,134 @@ package laser_tag {
                 MENU
                 LEVEL_EDITOR
                 LEVEL_EDITOR_ITEM
+                SETTINGS_CATEGORY
+                OPEN_FOLDER
+                MINI_BUTTON
             }
 
-            class GraphicalButton extends Component {
+            class GraphicalElement extends Component {
+                selected: Boolean
+
+                is_selected(): Boolean
+                set_selected(selected: Boolean)
+                update(events: EventInstance[])
+                render()
+            }
+
+            class GraphicalButton extends GraphicalElement {
                 x
                 y
                 button_width
                 button_height
-                content
+                text_str
+                text_key: LanguageKey
                 action
                 disabled: Boolean
-                selected: Boolean
                 type: ButtonType
+                button: Button
 
                 set_disabled(disabled: Boolean)
-                set_selected(selected: Boolean)
                 set_relative_offset(offset_x, offset_y)
                 get_state(): ButtonState
+                update(events: EventInstance[])
+            }
+
+            class GraphicalCheckbox extends GraphicalElement {
+                x
+                y
+                checkbox_width
+                checkbox_height
+                checked: Boolean
+                check_action
+                uncheck_action
+                disabled: Boolean
+                button: Button
+
+                set_disabled(disabled: Boolean)
+                set_relative_offset(offset_x, offset_y)
+                toggle()
+                update(events: EventInstance[])
+            }
+
+            class GraphicalComboBox extends GraphicalElement {
+                x
+                y
+                choice_width
+                choice_height
+                choices
+                choice
+                change_action
+                disabled: Boolean
+                opened: Boolean
+                relative_offset_x
+                relative_offset_y
+                mouse_x
+                mouse_y
+                max_elements
+                button: Button
+                choices_buttons: Button[]
+
+                set_disabled(disabled: Boolean)
+                set_relative_offset(offset_x, offset_y)
+                toggle()
+                open()
+                close()
+                select(key)
+                update(events: EventInstance[])
+            }
+
+            class GraphicalNumberSelect extends GraphicalElement {
+                x
+                y
+                min_value
+                max_value
+                step
+                change_action
+                current_value
+
+                set_disabled(disabled: Boolean)
+                set_relative_offset(offset_x, offset_y)
+                decrease()
+                increase()
+                change(value)
+                update(events: EventInstance[])
+            }
+
+            class GraphicalSlider extends GraphicalElement {
+                x
+                y
+                min_value
+                max_value
+                precision
+                change_action
+                current_value
+                percentage
+                selecting: Boolean
+                disabled: Boolean
+                relative_offset_x
+                relative_offset_y
+                mouse_x
+                mouse_y
+
+                set_disabled(disabled: Boolean)
+                set_relative_offset(offset_x, offset_y)
+                select()
+                update(events: EventInstance[])
+            }
+
+            class GraphicalText extends GraphicalElement {
+                original_x
+                original_y
+                x
+                y
+                align_x
+                align_y
+                text_str
+                text_key: LanguageKey
+                size
+                color
+
+                get_text_to_render()
                 update(events: EventInstance[])
             }
 
@@ -791,14 +926,72 @@ package laser_tag {
             }
 
             package menus {
-                class PauseMenu extends Component {
-                    mouse_x
-                    mouse_y
-                    resume_clicked: Boolean
-                    quit_clicked: Boolean
-                    buttons: GraphicalButton[]
+                class Menu {
+                    elements: GraphicalElement[]
+                    active: Boolean
 
-                    get_status()
+                    update(events: EventInstance[])
+                    is_active(): Boolean
+                    set_active(active: Boolean)
+                    deactivate_event()
+                }
+
+                class Menus {
+                    menus: Menu[]
+
+                    init_menus()
+                    resize()
+                    update(events: EventInstance[])
+                    get_menus(): Menu[]
+                    open_menu(menu: Menu)
+                }
+
+                class Confirmation extends Component, Menu {
+                    text_key
+                    callback_yes
+                    callback_no
+                    callback_cancel
+                    confirmation_box_width
+                    confirmation_box_height
+
+                    yes()
+                    no()
+                    cancel()
+                    update(events: EventInstance[])
+                }
+
+                class MainMenu extends Component, Menu {
+                    callback_play
+                    callback_settings
+                    callback_quit
+                    can_deactivate: Boolean
+
+                    play()
+                    settings()
+                    quit()
+                    update(events: EventInstance[])
+                }
+
+                class PauseMenu extends Component, Menu {
+                    callback_resume
+                    callback_quit
+
+                    resume()
+                    settings()
+                    quit()
+                    update(events: EventInstance[])
+                }
+
+                class SettingsMenu extends Component, Menu {
+                    settings_box_width
+                    settings_box_height
+                    back_button : GraphicalButton
+                    default_elements: GraphicalElement[]
+                    pages_buttons: GraphicalButton[]
+                    pages_elements
+                    elements
+
+                    switch_settings_page(page)
                     update(events: EventInstance[])
                 }
             }
@@ -814,7 +1007,11 @@ package laser_tag {
 
         class Renderer {
             clock
+            menus: Menus
+            last_game_paused: Boolean
+            close_game: Boolean
             components: Component[]
+
             set_network_stats(pings, connected: Boolean, bytes_sent, bytes_received)
             init_components()
             close_game_event(): Boolean

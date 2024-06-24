@@ -10,6 +10,8 @@ class LanguageKey(Enum):
     def __str__(self):
         return str(self.name)
 
+    GAME_NAME = auto()
+
     NETWORK_STATS_CONNECTED = auto()
     NETWORK_STATS_DISCONNECTED = auto()
     NETWORK_STATS_CONNECTING = auto()
@@ -31,6 +33,13 @@ class LanguageKey(Enum):
     LEVEL_EDITOR_GRID = auto()
     LEVEL_EDITOR_PREVIEW = auto()
     LEVEL_EDITOR_HELP = auto()
+    LEVEL_EDITOR_ITEM_WALL_1 = auto()
+    LEVEL_EDITOR_ITEM_WALL_2 = auto()
+    LEVEL_EDITOR_ITEM_WALL_3 = auto()
+    LEVEL_EDITOR_ITEM_WALL_4 = auto()
+    LEVEL_EDITOR_ITEM_BARREL_SHORT = auto()
+    LEVEL_EDITOR_ITEM_BARREL_TALL = auto()
+    LEVEL_EDITOR_ITEM_SPAWN_POINT = auto()
 
     GAME_FPS = auto()
     GAME_SCOREBOARD_TITLE = auto()
@@ -40,7 +49,25 @@ class LanguageKey(Enum):
     GAME_SCOREBOARD_ELIMINATIONS = auto()
     GAME_SCOREBOARD_DEATHS = auto()
 
-    MENU_PAUSE_PAUSE = auto()
+    MENU_MAIN_PLAY = auto()
+    MENU_MAIN_SETTINGS = auto()
+    MENU_MAIN_QUIT = auto()
+
+    MENU_PAUSE_TITLE = auto()
     MENU_PAUSE_INFORMATION = auto()
     MENU_PAUSE_RESUME = auto()
+    MENU_PAUSE_SETTINGS = auto()
     MENU_PAUSE_QUIT = auto()
+
+    MENU_CONFIRMATION_YES = auto()
+    MENU_CONFIRMATION_NO = auto()
+    MENU_CONFIRMATION_QUIT_GAME = auto()
+    MENU_CONFIRMATION_CLOSE_GAME = auto()
+
+    MENU_SETTINGS_TITLE = auto()
+    MENU_SETTINGS_BACK = auto()
+    MENU_SETTINGS_GENERAL = auto()
+    MENU_SETTINGS_GRAPHICS = auto()
+    MENU_SETTINGS_CONTROLS = auto()
+    MENU_SETTINGS_AUDIO = auto()
+    MENU_SETTINGS_DEBUG = auto()

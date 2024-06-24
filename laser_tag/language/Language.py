@@ -42,4 +42,4 @@ class Language:
         except KeyError:
             if VARIABLES.debug:
                 print(f"Language key {key} not found for language {self.language}")
-            return ""
+            return str(key)
