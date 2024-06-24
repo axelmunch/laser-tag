@@ -640,6 +640,7 @@ package laser_tag {
                 LEVEL_EDITOR_ITEM
                 SETTINGS_CATEGORY
                 OPEN_FOLDER
+                MINI_BUTTON
             }
 
             class GraphicalElement extends Component {
@@ -713,7 +714,24 @@ package laser_tag {
                 update(events: EventInstance[])
             }
 
-            class GraphicalComboBox extends GraphicalElement {
+            class GraphicalNumberSelect extends GraphicalElement {
+                x
+                y
+                min_value
+                max_value
+                step
+                change_action
+                current_value
+
+                set_disabled(disabled: Boolean)
+                set_relative_offset(offset_x, offset_y)
+                decrease()
+                increase()
+                change(value)
+                update(events: EventInstance[])
+            }
+
+            class GraphicalSlider extends GraphicalElement {
                 x
                 y
                 min_value
@@ -722,7 +740,7 @@ package laser_tag {
                 change_action
                 current_value
                 percentage
-                selection: Boolean
+                selecting: Boolean
                 disabled: Boolean
                 relative_offset_x
                 relative_offset_y

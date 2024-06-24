@@ -26,6 +26,7 @@ class ButtonType(Enum):
     LEVEL_EDITOR_ITEM = auto()
     SETTINGS_CATEGORY = auto()
     OPEN_FOLDER = auto()
+    MINI_BUTTON = auto()
 
 
 class GraphicalButton(GraphicalElement):
