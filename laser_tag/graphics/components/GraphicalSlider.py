@@ -139,7 +139,11 @@ class GraphicalSlider(GraphicalElement):
         )
 
         text_surface = self.text.get_surface(
-            self.current_value if self.precision > 0 else int(self.current_value),
+            (
+                round(self.current_value, self.precision)
+                if self.precision > 0
+                else int(self.current_value)
+            ),
             text_size,
             text_color,
         )

@@ -123,7 +123,11 @@ class GraphicalNumberSelect(GraphicalElement):
         text_size = 50
 
         text_surface = self.text.get_surface(
-            self.current_value,
+            (
+                int(self.current_value)
+                if self.current_value == int(self.current_value)
+                else self.current_value
+            ),
             text_size,
             text_color,
         )
