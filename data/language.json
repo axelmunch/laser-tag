@@ -53,9 +53,13 @@
         "MENU_SETTINGS_TITLE": "Settings",
         "MENU_SETTINGS_BACK": "Back",
         "MENU_SETTINGS_GENERAL": "General",
-        "MENU_SETTINGS_GRAPHICS": "Graphics",
+        "MENU_SETTINGS_DISPLAY": "Display",
         "MENU_SETTINGS_CONTROLS": "Controls",
         "MENU_SETTINGS_AUDIO": "Audio",
-        "MENU_SETTINGS_DEBUG": "Debug"
+        "MENU_SETTINGS_DEBUG": "Debug",
+        "MENU_SETTINGS_FOV": "FOV",
+        "MENU_SETTINGS_RAY_WIDTH": "Ray width",
+        "MENU_SETTINGS_LANGUAGE": "Language",
+        "MENU_SETTINGS_ASSETS_PACK": "Assets pack"
     }
 }

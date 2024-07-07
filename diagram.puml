@@ -520,10 +520,14 @@ package laser_tag {
             MENU_SETTINGS_TITLE
             MENU_SETTINGS_BACK
             MENU_SETTINGS_GENERAL
-            MENU_SETTINGS_GRAPHICS
+            MENU_SETTINGS_DISPLAY
             MENU_SETTINGS_CONTROLS
             MENU_SETTINGS_AUDIO
             MENU_SETTINGS_DEBUG
+            MENU_SETTINGS_FOV
+            MENU_SETTINGS_RAY_WIDTH
+            MENU_SETTINGS_LANGUAGE
+            MENU_SETTINGS_ASSETS_PACK
         }
 
         class Language {
@@ -991,6 +995,9 @@ package laser_tag {
                     pages_elements
                     elements
 
+                    change_ray_width(value)
+                    change_assets(assets_folder)
+                    change_language(language)
                     switch_settings_page(page)
                     update(events: EventInstance[])
                 }

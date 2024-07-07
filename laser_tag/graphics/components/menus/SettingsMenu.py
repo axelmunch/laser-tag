@@ -1,10 +1,16 @@
 import pygame
 
+from ....configuration import VARIABLES
 from ....events.EventInstance import EventInstance
 from ....language.LanguageKey import LanguageKey
+from ...AssetsLoader import get_assets_folders, load_assets, open_assets_folder
 from ...resize import resize
 from ..Component import Component
 from ..GraphicalButton import ButtonType, GraphicalButton
+from ..GraphicalComboBox import GraphicalComboBox
+from ..GraphicalNumberSelect import GraphicalNumberSelect
+from ..GraphicalSlider import GraphicalSlider
+from ..GraphicalText import GraphicalText
 from .Menu import Menu
 
 
@@ -56,7 +62,7 @@ class SettingsMenu(Component, Menu):
                 540 - self.settings_box_height / 2 + border_margin,
                 button_width,
                 button_height,
-                text_key=LanguageKey.MENU_SETTINGS_GRAPHICS,
+                text_key=LanguageKey.MENU_SETTINGS_DISPLAY,
                 action=lambda: self.switch_settings_page(1),
                 type=ButtonType.SETTINGS_CATEGORY,
             ),
@@ -100,7 +106,93 @@ class SettingsMenu(Component, Menu):
                 type=ButtonType.SETTINGS_CATEGORY,
             ),
         ]
-        self.pages_elements = [[], [], [], [], []]
+        self.pages_elements = [
+            [
+                GraphicalText(
+                    960 - self.settings_box_width / 4 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 150 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(LanguageKey.MENU_SETTINGS_FOV),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalSlider(
+                    960 - self.settings_box_width / 4,
+                    540 - self.settings_box_height / 2 + border_margin + 150,
+                    60,
+                    110,
+                    VARIABLES.fov,
+                    0,
+                    change_action=lambda i: setattr(VARIABLES, "fov", i),
+                ),
+                GraphicalText(
+                    960 - self.settings_box_width / 4 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 300 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(LanguageKey.MENU_SETTINGS_RAY_WIDTH),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalNumberSelect(
+                    960 - self.settings_box_width / 4,
+                    540 - self.settings_box_height / 2 + border_margin + 300,
+                    1,
+                    32,
+                    VARIABLES.ray_width,
+                    change_action=self.change_ray_width,
+                ),
+                GraphicalText(
+                    960 - self.settings_box_width / 4 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 450 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(LanguageKey.MENU_SETTINGS_LANGUAGE),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalComboBox(
+                    960 - self.settings_box_width / 4,
+                    540 - self.settings_box_height / 2 + border_margin + 450,
+                    choices=self.language.get_language_list(),
+                    default_choice=VARIABLES.language,
+                    change_action=lambda i: self.change_language(i),
+                    disabled=False,
+                    selected=False,
+                ),
+                GraphicalText(
+                    960 + self.settings_box_width / 6 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 450 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(LanguageKey.MENU_SETTINGS_ASSETS_PACK),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalComboBox(
+                    960 + self.settings_box_width / 6,
+                    540 - self.settings_box_height / 2 + border_margin + 450,
+                    choices={name: name for name in get_assets_folders()},
+                    default_choice=VARIABLES.assets_folder,
+                    change_action=lambda i: self.change_assets(i),
+                    disabled=False,
+                    selected=False,
+                ),
+                GraphicalButton(
+                    960 + self.settings_box_width / 6 + 270,
+                    540 - self.settings_box_height / 2 + border_margin + 450,
+                    button_height,
+                    button_height,
+                    action=open_assets_folder,
+                    type=ButtonType.OPEN_FOLDER,
+                ),
+            ],
+            [],
+            [],
+            [],
+            [],
+        ]
         self.elements = []
 
         self.switch_settings_page(0)
@@ -115,6 +207,19 @@ class SettingsMenu(Component, Menu):
                 element.resize()
         except AttributeError:
             pass
+
+    def change_ray_width(self, value):
+        VARIABLES.ray_width = value
+        VARIABLES.rays_quantity = 1920 // VARIABLES.ray_width
+        VARIABLES.wall_height_approximation = 1920 // VARIABLES.rays_quantity
+
+    def change_assets(self, assets_folder):
+        VARIABLES.assets_folder = assets_folder
+        load_assets()
+
+    def change_language(self, language):
+        VARIABLES.language = language
+        self.language.set_language(language)
 
     def switch_settings_page(self, page: int):
         # Default
