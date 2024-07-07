@@ -64,6 +64,9 @@ class Variables:
         except FileNotFoundError:
             self.save()
 
+        if self.debug:
+            print("Variables loaded")
+
     def save(self):
         variables = {
             key: value
@@ -75,6 +78,9 @@ class Variables:
         with open(self.settings_file, "w") as file:
             json.dump(variables, file, indent=4)
             file.write("\n")
+
+        if self.debug:
+            print("Variables saved")
 
     def set_full_screen_size(self, width, height):
         self.full_screen_width = width

@@ -232,6 +232,11 @@ class SettingsMenu(Component, Menu):
         for element in self.pages_elements[page]:
             self.elements.append(element)
 
+    def set_active(self, active: bool):
+        if not active:
+            VARIABLES.save()
+        return super().set_active(active)
+
     def update(self, events: list[EventInstance] = []):
         """
         Update the component
