@@ -7,7 +7,6 @@ package laser_tag {
         class configuration {
             VERSION
             GAME_NAME
-            WINDOW_WINDOWED_SIZE_RATIO
             TARGET_FPS
             DEFAULT_FONT
             DATA_PATH
@@ -41,6 +40,8 @@ package laser_tag {
             screen_width
             screen_height
             fullscreen
+            windowed_resolution_ratio
+            resize_display
             server_port
             fps
             show_fps
@@ -528,6 +529,11 @@ package laser_tag {
             MENU_SETTINGS_RAY_WIDTH
             MENU_SETTINGS_LANGUAGE
             MENU_SETTINGS_ASSETS_PACK
+            MENU_SETTINGS_SHOW_FPS
+            MENU_SETTINGS_FPS
+            MENU_SETTINGS_TEXT_ANTI_ALIASING
+            MENU_SETTINGS_RESOLUTION
+            MENU_SETTINGS_FULLSCREEN
         }
 
         class Language {
@@ -995,6 +1001,8 @@ package laser_tag {
                     pages_elements
                     elements
 
+                    change_screen_resolution(value)
+                    change_fullscreen(value)
                     change_ray_width(value)
                     change_assets(assets_folder)
                     change_language(language)
@@ -1008,7 +1016,7 @@ package laser_tag {
 
         class Display {
             screen
-            refresh_display()
+            refresh_display(free_aspect_ratio)
             screenshot()
         }
 

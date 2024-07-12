@@ -2,10 +2,8 @@ from pathlib import Path
 
 from .variables import *
 
-VERSION = "v0.0.10"
+VERSION = "v0.0.11"
 GAME_NAME = "Laser Tag"
-
-WINDOW_WINDOWED_SIZE_RATIO = 0.5
 
 TARGET_FPS = 60
 

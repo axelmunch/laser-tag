@@ -60,6 +60,11 @@
         "MENU_SETTINGS_FOV": "FOV",
         "MENU_SETTINGS_RAY_WIDTH": "Ray width",
         "MENU_SETTINGS_LANGUAGE": "Language",
-        "MENU_SETTINGS_ASSETS_PACK": "Assets pack"
+        "MENU_SETTINGS_ASSETS_PACK": "Assets pack",
+        "MENU_SETTINGS_SHOW_FPS": "Show FPS",
+        "MENU_SETTINGS_FPS": "FPS",
+        "MENU_SETTINGS_TEXT_ANTI_ALIASING": "Text anti-aliasing",
+        "MENU_SETTINGS_RESOLUTION": "Resolution",
+        "MENU_SETTINGS_FULLSCREEN": "Fullscreen"
     }
 }

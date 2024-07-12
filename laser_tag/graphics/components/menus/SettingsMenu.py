@@ -7,6 +7,7 @@ from ...AssetsLoader import get_assets_folders, load_assets, open_assets_folder
 from ...resize import resize
 from ..Component import Component
 from ..GraphicalButton import ButtonType, GraphicalButton
+from ..GraphicalCheckbox import GraphicalCheckbox
 from ..GraphicalComboBox import GraphicalComboBox
 from ..GraphicalNumberSelect import GraphicalNumberSelect
 from ..GraphicalSlider import GraphicalSlider
@@ -66,32 +67,32 @@ class SettingsMenu(Component, Menu):
                 action=lambda: self.switch_settings_page(1),
                 type=ButtonType.SETTINGS_CATEGORY,
             ),
-            GraphicalButton(
-                960
-                - self.settings_box_width / 2
-                + border_margin
-                + 20 * 2
-                + button_width * 2,
-                540 - self.settings_box_height / 2 + border_margin,
-                button_width,
-                button_height,
-                text_key=LanguageKey.MENU_SETTINGS_CONTROLS,
-                action=lambda: self.switch_settings_page(2),
-                type=ButtonType.SETTINGS_CATEGORY,
-            ),
-            GraphicalButton(
-                960
-                - self.settings_box_width / 2
-                + border_margin
-                + 20 * 3
-                + button_width * 3,
-                540 - self.settings_box_height / 2 + border_margin,
-                button_width,
-                button_height,
-                text_key=LanguageKey.MENU_SETTINGS_AUDIO,
-                action=lambda: self.switch_settings_page(3),
-                type=ButtonType.SETTINGS_CATEGORY,
-            ),
+            # GraphicalButton(
+            #     960
+            #     - self.settings_box_width / 2
+            #     + border_margin
+            #     + 20 * 2
+            #     + button_width * 2,
+            #     540 - self.settings_box_height / 2 + border_margin,
+            #     button_width,
+            #     button_height,
+            #     text_key=LanguageKey.MENU_SETTINGS_CONTROLS,
+            #     action=lambda: self.switch_settings_page(2),
+            #     type=ButtonType.SETTINGS_CATEGORY,
+            # ),
+            # GraphicalButton(
+            #     960
+            #     - self.settings_box_width / 2
+            #     + border_margin
+            #     + 20 * 3
+            #     + button_width * 3,
+            #     540 - self.settings_box_height / 2 + border_margin,
+            #     button_width,
+            #     button_height,
+            #     text_key=LanguageKey.MENU_SETTINGS_AUDIO,
+            #     action=lambda: self.switch_settings_page(3),
+            #     type=ButtonType.SETTINGS_CATEGORY,
+            # ),
             GraphicalButton(
                 960
                 - self.settings_box_width / 2
@@ -102,8 +103,9 @@ class SettingsMenu(Component, Menu):
                 button_width,
                 button_height,
                 text_key=LanguageKey.MENU_SETTINGS_DEBUG,
-                action=lambda: self.switch_settings_page(4),
+                action=lambda: self.switch_settings_page(2),
                 type=ButtonType.SETTINGS_CATEGORY,
+                disabled=not VARIABLES.debug,
             ),
         ]
         self.pages_elements = [
@@ -188,9 +190,112 @@ class SettingsMenu(Component, Menu):
                     type=ButtonType.OPEN_FOLDER,
                 ),
             ],
-            [],
-            [],
-            [],
+            [
+                GraphicalText(
+                    960 - self.settings_box_width / 4 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 150 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(LanguageKey.MENU_SETTINGS_SHOW_FPS),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalCheckbox(
+                    960 - self.settings_box_width / 4,
+                    540 - self.settings_box_height / 2 + border_margin + 150 + 25,
+                    VARIABLES.show_fps,
+                    check_action=lambda: setattr(VARIABLES, "show_fps", True),
+                    uncheck_action=lambda: setattr(VARIABLES, "show_fps", False),
+                    disabled=False,
+                    selected=False,
+                ),
+                GraphicalText(
+                    960 + self.settings_box_width / 6 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 150 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(LanguageKey.MENU_SETTINGS_FPS),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalComboBox(
+                    960 + self.settings_box_width / 6,
+                    540 - self.settings_box_height / 2 + border_margin + 150,
+                    choices={
+                        0: 0,
+                        25: 25,
+                        60: 60,
+                        120: 120,
+                        144: 144,
+                        150: 150,
+                        240: 240,
+                    },
+                    default_choice=VARIABLES.fps,
+                    change_action=lambda i: setattr(VARIABLES, "fps", i),
+                    disabled=False,
+                    selected=False,
+                ),
+                GraphicalText(
+                    960 - self.settings_box_width / 4 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 300 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(
+                        LanguageKey.MENU_SETTINGS_TEXT_ANTI_ALIASING
+                    ),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalCheckbox(
+                    960 - self.settings_box_width / 4,
+                    540 - self.settings_box_height / 2 + border_margin + 300 + 25,
+                    VARIABLES.anti_aliased_text,
+                    check_action=lambda: setattr(VARIABLES, "anti_aliased_text", True),
+                    uncheck_action=lambda: setattr(
+                        VARIABLES, "anti_aliased_text", False
+                    ),
+                    disabled=False,
+                    selected=False,
+                ),
+                GraphicalText(
+                    960 - self.settings_box_width / 4 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 450 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(LanguageKey.MENU_SETTINGS_RESOLUTION),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalSlider(
+                    960 - self.settings_box_width / 4,
+                    540 - self.settings_box_height / 2 + border_margin + 450,
+                    0.2,
+                    1,
+                    VARIABLES.windowed_resolution_ratio,
+                    1,
+                    change_action=lambda i: self.change_screen_resolution(i),
+                ),
+                GraphicalText(
+                    960 + self.settings_box_width / 6 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 450 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(LanguageKey.MENU_SETTINGS_FULLSCREEN),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalCheckbox(
+                    960 + self.settings_box_width / 6,
+                    540 - self.settings_box_height / 2 + border_margin + 450 + 25,
+                    VARIABLES.fullscreen,
+                    check_action=lambda: self.change_fullscreen(True),
+                    uncheck_action=lambda: self.change_fullscreen(False),
+                    disabled=False,
+                    selected=False,
+                ),
+            ],
+            # [],
+            # [],
             [],
         ]
         self.elements = []
@@ -207,6 +312,14 @@ class SettingsMenu(Component, Menu):
                 element.resize()
         except AttributeError:
             pass
+
+    def change_screen_resolution(self, value):
+        VARIABLES.windowed_resolution_ratio = value
+        VARIABLES.resize_display = True
+
+    def change_fullscreen(self, value):
+        VARIABLES.fullscreen = value
+        VARIABLES.resize_display = True
 
     def change_ray_width(self, value):
         VARIABLES.ray_width = value

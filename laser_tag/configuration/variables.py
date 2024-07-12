@@ -12,6 +12,7 @@ class Variables:
             "full_screen_height",
             "screen_width",
             "screen_height",
+            "resize_display",
         ]
 
         # Default values
@@ -20,6 +21,8 @@ class Variables:
         self.screen_width = self.full_screen_width
         self.screen_height = self.full_screen_height
         self.fullscreen = False
+        self.windowed_resolution_ratio = 0.5
+        self.resize_display = False
 
         self.server_port = 16168
 
@@ -60,6 +63,8 @@ class Variables:
                 self.__dict__.update(variables)
                 if "version" not in variables or self.version != current_version:
                     self.version = current_version
+                    if self.debug:
+                        print("Variables version update")
                     self.save()
         except FileNotFoundError:
             self.save()
