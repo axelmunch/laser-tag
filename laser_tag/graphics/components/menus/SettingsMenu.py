@@ -322,7 +322,9 @@ class SettingsMenu(Component, Menu):
                     540 - self.settings_box_height / 2 + border_margin + 150 + 50,
                     align_x="right",
                     align_y="center",
-                    text=self.language.get(LanguageKey.MENU_SETTINGS_COMPONENTS_OUTLINE),
+                    text=self.language.get(
+                        LanguageKey.MENU_SETTINGS_COMPONENTS_OUTLINE
+                    ),
                     size=50,
                     color=(0, 0, 255),
                 ),
@@ -364,7 +366,9 @@ class SettingsMenu(Component, Menu):
                     540 - self.settings_box_height / 2 + border_margin + 300 + 50,
                     align_x="right",
                     align_y="center",
-                    text=self.language.get(LanguageKey.MENU_SETTINGS_ALL_ENTITIES_MINIMAP),
+                    text=self.language.get(
+                        LanguageKey.MENU_SETTINGS_ALL_ENTITIES_MINIMAP
+                    ),
                     size=50,
                     color=(0, 0, 255),
                 ),
