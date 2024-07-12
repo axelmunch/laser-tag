@@ -32,6 +32,8 @@ class Variables:
         self.show_network_stats = True
         self.show_components_outline = False
         self.show_rays_minimap = False
+        self.show_minimap = True
+        self.show_all_entities_minimap = False
 
         self.level_editor = False
 

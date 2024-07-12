@@ -65,6 +65,10 @@
         "MENU_SETTINGS_FPS": "FPS",
         "MENU_SETTINGS_TEXT_ANTI_ALIASING": "Text anti-aliasing",
         "MENU_SETTINGS_RESOLUTION": "Resolution",
-        "MENU_SETTINGS_FULLSCREEN": "Fullscreen"
+        "MENU_SETTINGS_FULLSCREEN": "Fullscreen",
+        "MENU_SETTINGS_NETWORK_STATS": "Network stats",
+        "MENU_SETTINGS_COMPONENTS_OUTLINE": "Components outline",
+        "MENU_SETTINGS_RAYS_MINIMAP": "Rays minimap",
+        "MENU_SETTINGS_ALL_ENTITIES_MINIMAP": "All entities minimap"
     }
 }

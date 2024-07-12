@@ -48,6 +48,8 @@ package laser_tag {
             show_network_stats
             show_components_outline
             show_rays_minimap
+            show_minimap
+            show_all_entities_minimap
             anti_aliased_text
             debug
             rotate_sensitivity
@@ -534,6 +536,10 @@ package laser_tag {
             MENU_SETTINGS_TEXT_ANTI_ALIASING
             MENU_SETTINGS_RESOLUTION
             MENU_SETTINGS_FULLSCREEN
+            MENU_SETTINGS_NETWORK_STATS
+            MENU_SETTINGS_COMPONENTS_OUTLINE
+            MENU_SETTINGS_RAYS_MINIMAP
+            MENU_SETTINGS_ALL_ENTITIES_MINIMAP
         }
 
         class Language {

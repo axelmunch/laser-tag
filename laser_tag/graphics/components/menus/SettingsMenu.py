@@ -296,7 +296,92 @@ class SettingsMenu(Component, Menu):
             ],
             # [],
             # [],
-            [],
+            [
+                GraphicalText(
+                    960 - self.settings_box_width / 4 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 150 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(LanguageKey.MENU_SETTINGS_NETWORK_STATS),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalCheckbox(
+                    960 - self.settings_box_width / 4,
+                    540 - self.settings_box_height / 2 + border_margin + 150 + 25,
+                    VARIABLES.show_network_stats,
+                    check_action=lambda: setattr(VARIABLES, "show_network_stats", True),
+                    uncheck_action=lambda: setattr(
+                        VARIABLES, "show_network_stats", False
+                    ),
+                    disabled=False,
+                    selected=False,
+                ),
+                GraphicalText(
+                    960 + self.settings_box_width / 6 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 150 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(LanguageKey.MENU_SETTINGS_COMPONENTS_OUTLINE),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalCheckbox(
+                    960 + self.settings_box_width / 6,
+                    540 - self.settings_box_height / 2 + border_margin + 150 + 25,
+                    VARIABLES.show_components_outline,
+                    check_action=lambda: setattr(
+                        VARIABLES, "show_components_outline", True
+                    ),
+                    uncheck_action=lambda: setattr(
+                        VARIABLES, "show_components_outline", False
+                    ),
+                    disabled=False,
+                    selected=False,
+                ),
+                GraphicalText(
+                    960 - self.settings_box_width / 4 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 300 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(LanguageKey.MENU_SETTINGS_RAYS_MINIMAP),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalCheckbox(
+                    960 - self.settings_box_width / 4,
+                    540 - self.settings_box_height / 2 + border_margin + 300 + 25,
+                    VARIABLES.show_rays_minimap,
+                    check_action=lambda: setattr(VARIABLES, "show_rays_minimap", True),
+                    uncheck_action=lambda: setattr(
+                        VARIABLES, "show_rays_minimap", False
+                    ),
+                    disabled=False,
+                    selected=False,
+                ),
+                GraphicalText(
+                    960 + self.settings_box_width / 6 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 300 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(LanguageKey.MENU_SETTINGS_ALL_ENTITIES_MINIMAP),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalCheckbox(
+                    960 + self.settings_box_width / 6,
+                    540 - self.settings_box_height / 2 + border_margin + 300 + 25,
+                    VARIABLES.show_all_entities_minimap,
+                    check_action=lambda: setattr(
+                        VARIABLES, "show_all_entities_minimap", True
+                    ),
+                    uncheck_action=lambda: setattr(
+                        VARIABLES, "show_all_entities_minimap", False
+                    ),
+                    disabled=False,
+                    selected=False,
+                ),
+            ],
         ]
         self.elements = []
 

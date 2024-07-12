@@ -70,6 +70,8 @@ class Renderer:
     def update(self, game: Game, events: list[EventInstance]):
         # Update components
 
+        controlled_entity_id = game.world.controlled_entity
+
         if VARIABLES.show_fps:
             self.fps.update(self.clock.get_fps())
 
@@ -83,12 +85,19 @@ class Renderer:
             game.world.entities.values(),
             game.world.get_entity(game.world.controlled_entity),
         )
-        self.minimap.update(
-            game.world.map.walls,
-            game.world.map.get_map_bounds(),
-            game.world.entities.values(),
-            rays=rays,
-        )
+        if VARIABLES.show_minimap:
+            entity_list = []
+            if VARIABLES.show_all_entities_minimap:
+                entity_list = game.world.entities.values()
+            else:
+                if controlled_entity_id is not None:
+                    entity_list.append(game.world.get_entity(controlled_entity_id))
+            self.minimap.update(
+                game.world.map.walls,
+                game.world.map.get_map_bounds(),
+                entity_list,
+                rays=rays,
+            )
 
         self.leaderboard.update(game.game_mode.leaderboard)
 
