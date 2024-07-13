@@ -1,6 +1,6 @@
 import pygame
 
-from ..configuration import DEFAULT_TEXTURE_CACHE_LIMIT
+from ..configuration import DEFAULT_TEXTURE_CACHE_LIMIT, VARIABLES
 from .resize import resize
 
 
@@ -12,7 +12,14 @@ class Texture:
 
         self.cache_limit = DEFAULT_TEXTURE_CACHE_LIMIT
 
-        texture = pygame.image.load(path)
+        try:
+            texture = pygame.image.load(path)
+        except FileNotFoundError:
+            if VARIABLES.debug:
+                print(f"Texture not found: {path}")
+            texture = pygame.Surface((16, 16))
+            texture.fill((255, 0, 255))
+            pygame.draw.circle(texture, (0, 0, 0), (8, 8), 4)
 
         if alpha:
             texture = texture.convert_alpha()
