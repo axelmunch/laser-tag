@@ -12,10 +12,10 @@ class Item(Enum):
     def __str__(self):
         return str(self.value)
 
-    WALL_1 = WallType.WALL_1
-    WALL_2 = WallType.WALL_2
-    WALL_3 = WallType.WALL_3
-    WALL_4 = WallType.WALL_4
+    WALL_1 = WallType.WALL_1.value
+    WALL_2 = WallType.WALL_2.value
+    WALL_3 = WallType.WALL_3.value
+    WALL_4 = WallType.WALL_4.value
     BARREL_SHORT = auto()
     BARREL_TALL = auto()
     SPAWN_POINT = auto()

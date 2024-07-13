@@ -90,3 +90,20 @@ local_events = [
     Event.WINDOW_QUIT,
     Event.SCREENSHOT,
 ]
+
+# Events used in game
+game_events = [
+    Event.GAME_MOVE,
+    Event.GAME_MOVE_FORWARD,
+    Event.GAME_MOVE_BACKWARD,
+    Event.GAME_MOVE_LEFT,
+    Event.GAME_MOVE_RIGHT,
+    Event.GAME_RUN,
+    Event.GAME_JUMP,
+    Event.GAME_CROUCH,
+    Event.GAME_RELOAD,
+    Event.GAME_SHOOT,
+    Event.GAME_ROTATE,
+    Event.GAME_SELECT_TEAM,
+    Event.GAME_SCOREBOARD,
+]

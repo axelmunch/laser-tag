@@ -2,6 +2,7 @@ from math import ceil
 
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
+from ....language.LanguageKey import LanguageKey
 from ....math.Point import Point
 from ...Button import ButtonState
 from ...resize import resize
@@ -44,7 +45,11 @@ class ItemMenu(Component):
                     / buttons_quantity_line,
                     (self.original_width - (buttons_quantity_line + 1) * margin)
                     / buttons_quantity_line,
-                    content=list(Item)[i].name,
+                    text_key=LanguageKey(
+                        list(Item)[i].value
+                        - Item.WALL_1.value
+                        + LanguageKey.LEVEL_EDITOR_ITEM_WALL_1.value
+                    ),
                     type=ButtonType.LEVEL_EDITOR_ITEM,
                 )
             )

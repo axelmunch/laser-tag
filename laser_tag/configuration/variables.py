@@ -12,6 +12,7 @@ class Variables:
             "full_screen_height",
             "screen_width",
             "screen_height",
+            "resize_display",
         ]
 
         # Default values
@@ -20,6 +21,8 @@ class Variables:
         self.screen_width = self.full_screen_width
         self.screen_height = self.full_screen_height
         self.fullscreen = False
+        self.windowed_resolution_ratio = 0.5
+        self.resize_display = False
 
         self.server_port = 16168
 
@@ -29,6 +32,8 @@ class Variables:
         self.show_network_stats = True
         self.show_components_outline = False
         self.show_rays_minimap = False
+        self.show_minimap = True
+        self.show_all_entities_minimap = False
 
         self.level_editor = False
 
@@ -60,9 +65,14 @@ class Variables:
                 self.__dict__.update(variables)
                 if "version" not in variables or self.version != current_version:
                     self.version = current_version
+                    if self.debug:
+                        print("Variables version update")
                     self.save()
         except FileNotFoundError:
             self.save()
+
+        if self.debug:
+            print("Variables loaded")
 
     def save(self):
         variables = {
@@ -75,6 +85,9 @@ class Variables:
         with open(self.settings_file, "w") as file:
             json.dump(variables, file, indent=4)
             file.write("\n")
+
+        if self.debug:
+            print("Variables saved")
 
     def set_full_screen_size(self, width, height):
         self.full_screen_width = width

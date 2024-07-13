@@ -109,13 +109,17 @@ class Game:
     ):
         delta_time.update()
 
+        self.lock_cursor = not (self.game_paused or VARIABLES.level_editor)
+        if self.game_paused:
+            return
+
         self.show_scoreboard = False
 
         for event in events:
             match event.id:
                 case Event.KEY_ESCAPE_PRESS:
-                    if not VARIABLES.level_editor:
-                        self.game_paused = not self.game_paused
+                    if not self.game_paused and not VARIABLES.level_editor:
+                        self.game_paused = True
                 case Event.START_GAME:
                     if self.game_mode.start():
                         # Reset
@@ -130,5 +134,3 @@ class Game:
         self.world.update(events, controlled_entity_id, delta_time, player_delta_time)
 
         self.game_mode.update(self.world.entities)
-
-        self.lock_cursor = not (self.game_paused or VARIABLES.level_editor)

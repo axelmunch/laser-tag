@@ -1,4 +1,7 @@
 from enum import Enum, auto
+from os import startfile
+from subprocess import call
+from sys import platform
 
 from ..configuration import ASSETS_PATH, VARIABLES
 from .Textures import Textures
@@ -34,3 +37,15 @@ def load_textures(path):
     textures.load_texture(TextureNames.BLUE, path.joinpath("blue.jpg"), keep=False)
     textures.load_texture(TextureNames.BLACK, path.joinpath("black.jpg"), keep=False)
     textures.load_texture(TextureNames.WHITE, path.joinpath("white.jpg"), keep=False)
+
+
+def open_assets_folder():
+    if platform == "win32":
+        startfile(ASSETS_PATH)
+    else:
+        opener = "open" if platform == "darwin" else "xdg-open"
+        call([opener, ASSETS_PATH])
+
+
+def get_assets_folders():
+    return [folder.name for folder in ASSETS_PATH.iterdir() if folder.is_dir()]

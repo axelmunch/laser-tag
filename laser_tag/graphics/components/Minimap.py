@@ -24,6 +24,16 @@ class Minimap(Component):
 
         self.update(data["map"], data["map_bounds"], data["entities"], data["rays"])
 
+        self.walls_surface = None
+
+    def resize(self):
+        super().resize()
+
+        try:
+            self.generate_walls()
+        except TypeError:
+            pass
+
     def update(
         self,
         map: list[Wall],
@@ -48,8 +58,8 @@ class Minimap(Component):
         }
         super().update()
 
-    def render(self):
-        self.surface.fill((0, 0, 0, 0))
+    def generate_walls(self):
+        self.walls_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
 
         map_width = ceil(self.data["map_bounds"][2] - self.data["map_bounds"][0]) + 1
         map_height = ceil(self.data["map_bounds"][3] - self.data["map_bounds"][1]) + 1
@@ -57,7 +67,7 @@ class Minimap(Component):
             line: Line = wall.get_line()
 
             pygame.draw.line(
-                self.surface,
+                self.walls_surface,
                 (0, 255, 255),
                 (
                     (line.point1.x - self.data["map_bounds"][0])
@@ -77,6 +87,16 @@ class Minimap(Component):
                 ),
                 max(1, int(resize(2))),
             )
+
+    def render(self):
+        self.surface.fill((0, 0, 0, 0))
+
+        if self.walls_surface is None:
+            self.generate_walls()
+        self.surface.blit(self.walls_surface, (0, 0))
+
+        map_width = ceil(self.data["map_bounds"][2] - self.data["map_bounds"][0]) + 1
+        map_height = ceil(self.data["map_bounds"][3] - self.data["map_bounds"][1]) + 1
 
         if VARIABLES.show_rays_minimap:
             for _, ray in self.data["rays"]:

@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 
-from laser_tag.configuration import VARIABLES, WINDOW_WINDOWED_SIZE_RATIO
+from laser_tag.configuration import VARIABLES
 from laser_tag.events.Event import Event
 from laser_tag.events.get_events import *
 from laser_tag.game.Game import Game
@@ -48,21 +48,11 @@ if __name__ == "__main__":
                     break
                 case Event.WINDOW_FULLSCREEN:
                     VARIABLES.fullscreen = not VARIABLES.fullscreen
-                    if VARIABLES.fullscreen:
-                        VARIABLES.set_screen_size(
-                            VARIABLES.full_screen_width, VARIABLES.full_screen_height
-                        )
-                    else:
-                        VARIABLES.set_screen_size(
-                            int(VARIABLES.screen_width * WINDOW_WINDOWED_SIZE_RATIO),
-                            int(VARIABLES.screen_height * WINDOW_WINDOWED_SIZE_RATIO),
-                        )
-                    display.refresh_display()
-                    renderer.resize()
+                    VARIABLES.resize_display = True
                 case Event.WINDOW_RESIZE:
                     if not VARIABLES.fullscreen:
                         VARIABLES.set_screen_size(event.data[0], event.data[1])
-                        display.refresh_display()
+                        display.refresh_display(free_aspect_ratio=True)
                         renderer.resize()
                 case Event.SCREENSHOT:
                     display.screenshot()
@@ -70,6 +60,11 @@ if __name__ == "__main__":
                     # Center mouse cursor
                     if game.lock_cursor:
                         pygame.mouse.set_pos(resize(960, "x"), resize(540, "y"))
+
+        if VARIABLES.resize_display:
+            display.refresh_display()
+            renderer.resize()
+            VARIABLES.resize_display = False
 
         # Hide or show cursor
         if game.lock_cursor:
@@ -91,7 +86,13 @@ if __name__ == "__main__":
         game.update(events)
 
         # Send
-        client.add_events_to_send([event for event in events if not event.local])
+        client.add_events_to_send(
+            [
+                event
+                for event in events
+                if not event.local and not (game.game_paused and event.game)
+            ]
+        )
 
         # Receive
         if client.is_connected():

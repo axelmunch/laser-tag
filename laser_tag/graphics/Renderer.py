@@ -8,7 +8,10 @@ from .components.Fps import Fps
 from .components.GameTimer import GameTimer
 from .components.Leaderboard import Leaderboard
 from .components.LevelEditor.LevelEditor import LevelEditor
+from .components.menus.MainMenu import MainMenu
+from .components.menus.Menus import Menus
 from .components.menus.PauseMenu import PauseMenu
+from .components.menus.SettingsMenu import SettingsMenu
 from .components.Minimap import Minimap
 from .components.NetworkStats import NetworkStats
 from .components.Scoreboard import Scoreboard
@@ -19,6 +22,10 @@ from .resize import resize
 class Renderer:
     def __init__(self, clock: pygame.time.Clock):
         self.clock = clock
+
+        self.menus = Menus()
+        self.last_game_paused = False
+        self.close_game = False
 
         self.init_components()
 
@@ -31,7 +38,6 @@ class Renderer:
         self.game_timer = GameTimer()
         self.world = World()
         self.level_editor = LevelEditor()
-        self.pause_menu = PauseMenu()
         self.components = [
             self.fps,
             self.minimap,
@@ -41,7 +47,6 @@ class Renderer:
             self.game_timer,
             self.world,
             self.level_editor,
-            self.pause_menu,
         ]
 
     def set_network_stats(
@@ -54,14 +59,17 @@ class Renderer:
         self.network_stats.update(pings, connected, bytes_sent, bytes_received)
 
     def close_game_event(self) -> bool:
-        return self.pause_menu.get_status()[1]
+        return self.close_game
 
     def resize(self):
         for component in self.components:
             component.resize()
+        self.menus.resize()
 
     def update(self, game: Game, events: list[EventInstance]):
         # Update components
+
+        controlled_entity_id = game.world.controlled_entity
 
         if VARIABLES.show_fps:
             self.fps.update(self.clock.get_fps())
@@ -76,12 +84,19 @@ class Renderer:
             game.world.entities.values(),
             game.world.get_entity(game.world.controlled_entity),
         )
-        self.minimap.update(
-            game.world.map.walls,
-            game.world.map.get_map_bounds(),
-            game.world.entities.values(),
-            rays=rays,
-        )
+        if VARIABLES.show_minimap:
+            entity_list = []
+            if VARIABLES.show_all_entities_minimap:
+                entity_list = game.world.entities.values()
+            else:
+                if controlled_entity_id is not None:
+                    entity_list.append(game.world.get_entity(controlled_entity_id))
+            self.minimap.update(
+                game.world.map.walls,
+                game.world.map.get_map_bounds(),
+                entity_list,
+                rays=rays,
+            )
 
         self.leaderboard.update(game.game_mode.leaderboard)
 
@@ -95,11 +110,25 @@ class Renderer:
             game.game_mode.game_time_end,
         )
 
-        if game.game_paused:
-            self.pause_menu.update(events)
+        self.menus.update(events)
 
-            if self.pause_menu.get_status()[0]:
-                game.game_paused = False
+        if game.game_paused and game.game_paused != self.last_game_paused:
+            self.menus.open_menu(
+                PauseMenu(
+                    callback_resume=lambda: setattr(game, "game_paused", False),
+                    callback_quit=lambda: self.quit(game),
+                )
+            )
+        self.last_game_paused = game.game_paused
+
+    def quit(self, game: Game):
+        self.menus.open_menu(
+            MainMenu(
+                callback_play=lambda: setattr(game, "game_paused", False),
+                callback_settings=lambda: self.menus.open_menu(SettingsMenu()),
+                callback_quit=lambda: setattr(self, "close_game", True),
+            )
+        )
 
     def render(self, game: Game):
         # Update display
@@ -164,8 +193,12 @@ class Renderer:
             ),
         )
 
-        if game.game_paused:
-            display.screen.blit(self.pause_menu.get(), (0, 0))
+        for menu in self.menus.get_menus():
+            offset_x = menu.menu_offset_x
+            offset_y = menu.menu_offset_y
+            display.screen.blit(
+                menu.get(), (resize(offset_x, "x"), resize(offset_y, "y"))
+            )
 
         if VARIABLES.show_fps:
             display.screen.blit(self.fps.get(), (resize(10, "x"), resize(10, "y")))
