@@ -413,7 +413,6 @@ class SettingsMenu(Component, Menu):
     def change_ray_width(self, value):
         VARIABLES.ray_width = value
         VARIABLES.rays_quantity = 1920 // VARIABLES.ray_width
-        VARIABLES.wall_height_approximation = 1920 // VARIABLES.rays_quantity
 
     def change_assets(self, assets_folder):
         VARIABLES.assets_folder = assets_folder

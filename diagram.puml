@@ -57,7 +57,6 @@ package laser_tag {
             fov
             ray_width
             rays_quantity
-            wall_height_approximation
             world_scale
             assets_folder
             language
@@ -616,6 +615,7 @@ package laser_tag {
             texture_original
             resize(size)
             get_surface()
+            get_original_surface()
             get_original_size()
             reduce_cache()
             clear_cache()
@@ -627,6 +627,7 @@ package laser_tag {
             load_texture(id, path, alpha: Boolean, custom_size, keep: Boolean)
             resize_texture(id, size)
             get_surface(id)
+            get_original_surface(id)
             get_original_size(id)
             remove_texture(id)
             clear_cache()

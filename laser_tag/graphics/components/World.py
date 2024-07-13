@@ -1,4 +1,4 @@
-from math import cos
+from math import ceil, cos
 
 import pygame
 
@@ -126,25 +126,16 @@ class World(Component):
                     else:
                         ray_world_size = VARIABLES.world_scale / ray.distance
 
-                # Limit wall height (for performance)
+                # Limit wall height
                 ray_world_size = min(ray_world_size, MAX_WALL_HEIGHT)
 
-                approximate_display_size = (
-                    ray_world_size
-                    // VARIABLES.wall_height_approximation
-                    * VARIABLES.wall_height_approximation
-                )
+                approximate_display_size = ray_world_size
 
                 height_cropping_offset = 0
                 if approximate_display_size > 1080:
                     height_cropping_offset = resize(
                         (approximate_display_size - 1080) / 2, "y"
                     )
-
-                texture_surface_full = textures.resize_texture(
-                    TextureNames.BLUE,
-                    (approximate_display_size, approximate_display_size),
-                )
 
                 ratio = ray.hit_infos[0]
                 line_rotation = ray.hit_infos[1]
@@ -158,13 +149,31 @@ class World(Component):
                     if rotation_difference <= 90 or rotation_difference >= 270:
                         reversed_texture = True
 
+                texture_surface_full = textures.get_original_surface(TextureNames.BLUE)
+
+                texture_size_ratio = (
+                    texture_surface_full.get_width() / approximate_display_size
+                )
+                resized_ray_width = ceil(VARIABLES.ray_width * texture_size_ratio)
+
+                # Crop surface to the center
+                height_cropping_offset = 0
+                if approximate_display_size > 1080:
+                    height_cropping_offset = int(
+                        resize(
+                            (approximate_display_size - 1080) / 2,
+                            "y",
+                        )
+                        * texture_size_ratio
+                    )
+
                 subsurface_start = texture_surface_full.get_width() * ratio
                 if (
-                    subsurface_start + VARIABLES.ray_width
+                    subsurface_start + resized_ray_width
                     > texture_surface_full.get_width()
                 ):
                     subsurface_start = max(
-                        0, texture_surface_full.get_width() - VARIABLES.ray_width
+                        0, texture_surface_full.get_width() - resized_ray_width
                     )
 
                 texture_subsurface = texture_surface_full.subsurface(
@@ -172,11 +181,19 @@ class World(Component):
                         subsurface_start,
                         height_cropping_offset,
                         min(
-                            VARIABLES.ray_width,
+                            resized_ray_width,
                             texture_surface_full.get_width() - subsurface_start,
                         ),
                         texture_surface_full.get_height() - height_cropping_offset * 2,
                     )
+                )
+
+                texture_subsurface = pygame.transform.scale(
+                    texture_subsurface,
+                    (
+                        ceil(resize(VARIABLES.ray_width, "x")),
+                        resize(approximate_display_size, "y"),
+                    ),
                 )
                 if reversed_texture:
                     texture_subsurface = pygame.transform.flip(

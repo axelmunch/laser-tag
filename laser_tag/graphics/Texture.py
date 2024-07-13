@@ -53,6 +53,9 @@ class Texture:
     def get_surface(self) -> pygame.Surface:
         return self.resize()
 
+    def get_original_surface(self) -> pygame.Surface:
+        return self.texture_original
+
     def get_original_size(self) -> tuple[int, int]:
         return self.original_width, self.original_height
 
