@@ -20,7 +20,6 @@ class Game:
 
         self.lock_cursor = True
         self.game_paused = False
-        self.update_loop = True
 
     def __repr__(self):
         return f"[{self.game_mode}, {self.world}]"
@@ -110,7 +109,8 @@ class Game:
     ):
         delta_time.update()
 
-        if not self.update_loop:
+        self.lock_cursor = not (self.game_paused or VARIABLES.level_editor)
+        if self.game_paused:
             return
 
         self.show_scoreboard = False
@@ -134,5 +134,3 @@ class Game:
         self.world.update(events, controlled_entity_id, delta_time, player_delta_time)
 
         self.game_mode.update(self.world.entities)
-
-        self.lock_cursor = not (self.game_paused or VARIABLES.level_editor)

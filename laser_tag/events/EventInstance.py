@@ -2,8 +2,7 @@ from __future__ import annotations
 
 from time import time
 
-from ..network.safe_eval import safe_eval
-from .Event import Event, local_events
+from .Event import Event, game_events, local_events
 
 
 class EventInstance:
@@ -14,6 +13,7 @@ class EventInstance:
         self.id = id
         self.data = data
         self.local = id in local_events
+        self.game = id in game_events
 
     def __repr__(self):
         return f"[{self.id},{self.data},{self.timestamp}]"

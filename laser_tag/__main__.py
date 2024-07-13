@@ -86,7 +86,13 @@ if __name__ == "__main__":
         game.update(events)
 
         # Send
-        client.add_events_to_send([event for event in events if not event.local])
+        client.add_events_to_send(
+            [
+                event
+                for event in events
+                if not event.local and not (game.game_paused and event.game)
+            ]
+        )
 
         # Receive
         if client.is_connected():

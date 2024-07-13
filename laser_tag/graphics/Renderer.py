@@ -38,7 +38,6 @@ class Renderer:
         self.game_timer = GameTimer()
         self.world = World()
         self.level_editor = LevelEditor()
-        self.pause_menu = PauseMenu()
         self.components = [
             self.fps,
             self.minimap,
@@ -114,19 +113,18 @@ class Renderer:
         self.menus.update(events)
 
         if game.game_paused and game.game_paused != self.last_game_paused:
-            self.pause_menu = PauseMenu(
-                callback_resume=lambda: setattr(game, "game_paused", False),
-                callback_quit=lambda: self.quit(game),
+            self.menus.open_menu(
+                PauseMenu(
+                    callback_resume=lambda: setattr(game, "game_paused", False),
+                    callback_quit=lambda: self.quit(game),
+                )
             )
-            self.menus.open_menu(self.pause_menu)
         self.last_game_paused = game.game_paused
 
     def quit(self, game: Game):
-        game.update_loop = False
-
         self.menus.open_menu(
             MainMenu(
-                callback_play=lambda: setattr(game, "update_loop", True),
+                callback_play=lambda: setattr(game, "game_paused", False),
                 callback_settings=lambda: self.menus.open_menu(SettingsMenu()),
                 callback_quit=lambda: setattr(self, "close_game", True),
             )

@@ -189,6 +189,7 @@ package laser_tag {
             id
             data
             local: Boolean
+            game: Boolean
 
             create(parsed_object): EventInstance
         }
@@ -991,6 +992,7 @@ package laser_tag {
                 class PauseMenu extends Component, Menu {
                     callback_resume
                     callback_quit
+                    block_resume: Boolean
 
                     resume()
                     settings()

@@ -21,6 +21,8 @@ class PauseMenu(Component, Menu):
         self.callback_resume = callback_resume
         self.callback_quit = callback_quit
 
+        self.block_resume = False
+
         button_width = 400
         button_height = 150
 
@@ -78,10 +80,12 @@ class PauseMenu(Component, Menu):
     def quit(self):
         if self.callback_quit is not None:
             self.callback_quit()
+        self.block_resume = True
         self.set_active(False)
 
     def deactivate_event(self):
-        self.resume()
+        if not self.block_resume:
+            self.resume()
 
     def update(self, events: list[EventInstance] = []):
         """
