@@ -399,6 +399,9 @@ class SettingsMenu(Component, Menu):
         try:
             for element in self.elements:
                 element.resize()
+            for page_elements in self.pages_elements:
+                for element in page_elements:
+                    element.resize()
         except AttributeError:
             pass
 
