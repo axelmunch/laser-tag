@@ -25,7 +25,8 @@ class ClientServerGroup:
         return self.client.is_connected()
 
     def disconnect_client(self):
-        self.client.disconnect()
+        if self.client is not None:
+            self.client.disconnect()
 
     def get_client(self):
         return self.client

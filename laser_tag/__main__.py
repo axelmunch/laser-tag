@@ -83,27 +83,31 @@ if __name__ == "__main__":
         # Predict
         game.update(events)
 
-        # Send
-        client_server.get_client().add_events_to_send(
-            [
-                event
-                for event in events
-                if not event.local and not (game.game_paused and event.game)
-            ]
-        )
-
-        # Receive
         if client_server.is_client_connected():
-            received_data = client_server.get_client().get_received_data()
-            for state in received_data:
-                game.set_state(state)
-
-        # Display
-        if VARIABLES.show_network_stats:
-            network_stats = client_server.get_client().get_network_stats()
-            renderer.set_network_stats(
-                network_stats[0], network_stats[1], network_stats[2], network_stats[3]
+            # Send
+            client_server.get_client().add_events_to_send(
+                [
+                    event
+                    for event in events
+                    if not event.local and not (game.game_paused and event.game)
+                ]
             )
+
+            # Receive
+            if client_server.is_client_connected():
+                received_data = client_server.get_client().get_received_data()
+                for state in received_data:
+                    game.set_state(state)
+
+            # Display
+            if VARIABLES.show_network_stats:
+                network_stats = client_server.get_client().get_network_stats()
+                renderer.set_network_stats(
+                    network_stats[0],
+                    network_stats[1],
+                    network_stats[2],
+                    network_stats[3],
+                )
 
         renderer.update(game, events)
 
