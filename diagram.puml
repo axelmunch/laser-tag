@@ -42,7 +42,6 @@ package laser_tag {
             fullscreen
             windowed_resolution_ratio
             resize_display
-            server_port
             fps
             show_fps
             show_network_stats
@@ -58,6 +57,9 @@ package laser_tag {
             ray_width
             rays_quantity
             world_scale
+            latest_join_ip
+            latest_join_port
+            latest_host_port
             assets_folder
             language
 
@@ -465,6 +467,22 @@ package laser_tag {
             controlled_entity_id
         }
 
+        class ClientServerGroup {
+            client: Client
+            server: Server
+
+            connect_client(ip, port, debug: Boolean)
+            is_client_connected(): Boolean
+            disconnect_client()
+            get_client(): Client
+            start_server(port, debug: Boolean)
+            is_server_running(): Boolean
+            stop_server()
+            get_server(): Server
+        }
+
+        ClientServerGroup --> Client
+        ClientServerGroup --> Server
         Client --> EventInstance
         Server --> Game
         Server --> DeltaTime

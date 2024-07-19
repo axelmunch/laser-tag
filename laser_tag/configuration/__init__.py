@@ -2,7 +2,7 @@ from pathlib import Path
 
 from .variables import *
 
-VERSION = "v0.0.11"
+VERSION = "v0.0.12"
 GAME_NAME = "Laser Tag"
 
 TARGET_FPS = 60
