@@ -979,6 +979,7 @@ package laser_tag {
                     elements: GraphicalElement[]
                     active: Boolean
 
+                    resize()
                     update(events: EventInstance[])
                     is_active(): Boolean
                     set_active(active: Boolean)

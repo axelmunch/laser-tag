@@ -394,16 +394,15 @@ class SettingsMenu(Component, Menu):
         self.update()
 
     def resize(self):
-        super().resize()
-
         try:
-            for element in self.elements:
-                element.resize()
             for page_elements in self.pages_elements:
                 for element in page_elements:
                     element.resize()
         except AttributeError:
             pass
+
+        Menu.resize(self)
+        Component.resize(self)
 
     def change_screen_resolution(self, value):
         VARIABLES.windowed_resolution_ratio = value

@@ -165,13 +165,8 @@ class ConnectionMenu(Component, Menu):
         self.update()
 
     def resize(self):
-        super().resize()
-
-        try:
-            for element in self.elements:
-                element.resize()
-        except AttributeError:
-            pass
+        Menu.resize(self)
+        Component.resize(self)
 
     def back_action(self):
         if self.callback_main_menu is not None:
