@@ -1,6 +1,6 @@
 import pygame
 
-from ....configuration import VARIABLES
+from ....configuration import MAX_PLAYER_NAME_LENGTH, VARIABLES
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
 from ....game.Game import Game
@@ -44,7 +44,7 @@ class ConnectionMenu(Component, Menu):
         )
         self.join_button_client = GraphicalButton(
             960 - button_width - 50,
-            540 + self.menu_box_height / 2 - button_height - 190,
+            540 + self.menu_box_height / 2 - button_height - 165,
             button_width,
             button_height,
             text_key=LanguageKey.MENU_CONNECTION_JOIN,
@@ -54,13 +54,13 @@ class ConnectionMenu(Component, Menu):
         )
         self.host_button_server = GraphicalButton(
             960 + 50,
-            540 + self.menu_box_height / 2 - button_height - 190,
+            540 + self.menu_box_height / 2 - button_height - 165,
             button_width,
             button_height,
         )
         self.join_button_server = GraphicalButton(
             960 + self.menu_box_width / 2 - button_width - 50,
-            540 + self.menu_box_height / 2 - button_height - 190,
+            540 + self.menu_box_height / 2 - button_height - 165,
             button_width,
             button_height,
             text_key=LanguageKey.MENU_CONNECTION_JOIN,
@@ -70,7 +70,7 @@ class ConnectionMenu(Component, Menu):
         )
         self.status_text = GraphicalText(
             960 - self.menu_box_width / 2.25 + self.menu_box_width / 2,
-            540 - self.menu_box_height / 2 + border_margin + 420 - 50,
+            540 - self.menu_box_height / 2 + border_margin + 395,
             align_x="left",
             align_y="center",
             text_key=LanguageKey.MENU_CONNECTION_SERVER_STOPPED,
@@ -79,7 +79,7 @@ class ConnectionMenu(Component, Menu):
         )
         self.hosted_port_text = GraphicalText(
             960 - self.menu_box_width / 2.25 + self.menu_box_width / 2,
-            540 - self.menu_box_height / 2 + border_margin + 420 + 50,
+            540 - self.menu_box_height / 2 + border_margin + 495,
             align_x="left",
             align_y="center",
             text="",
@@ -89,17 +89,29 @@ class ConnectionMenu(Component, Menu):
 
         self.elements = [
             self.back_button,
-            GraphicalText(
-                960 - self.menu_box_width / 4,
+            GraphicalTextInput(
+                960 - self.menu_box_width * 7 / 18 / 2,
                 540 - self.menu_box_height / 2 + 75,
+                self.menu_box_width * 7 / 18,
+                button_height,
+                default_text=VARIABLES.player_name,
+                max_text_length=MAX_PLAYER_NAME_LENGTH,
+                unfocus_action=lambda i: self.update_input_value(
+                    lambda: setattr(VARIABLES, "player_name", i)
+                ),
+                no_eval_banned_elements=True,
+            ),
+            GraphicalText(
+                960 - self.menu_box_width / 3,
+                540 - self.menu_box_height / 2 + 100,
                 align_x="center",
                 text_key=LanguageKey.MENU_CONNECTION_JOIN,
                 size=50,
                 color=(255, 255, 255),
             ),
             GraphicalText(
-                960 + self.menu_box_width / 4,
-                540 - self.menu_box_height / 2 + 75,
+                960 + self.menu_box_width / 3,
+                540 - self.menu_box_height / 2 + 100,
                 align_x="center",
                 text_key=LanguageKey.MENU_CONNECTION_HOST,
                 size=50,
@@ -107,7 +119,7 @@ class ConnectionMenu(Component, Menu):
             ),
             GraphicalText(
                 960 - self.menu_box_width / 2.25,
-                540 - self.menu_box_height / 2 + border_margin + 175,
+                540 - self.menu_box_height / 2 + border_margin + 200,
                 align_x="left",
                 align_y="center",
                 text_key=LanguageKey.MENU_CONNECTION_IP,
@@ -116,7 +128,7 @@ class ConnectionMenu(Component, Menu):
             ),
             GraphicalTextInput(
                 960 - self.menu_box_width / 2.25,
-                540 - self.menu_box_height / 2 + border_margin + 200,
+                540 - self.menu_box_height / 2 + border_margin + 225,
                 self.menu_box_width * 7 / 18,
                 button_height,
                 default_text=VARIABLES.latest_join_ip,
@@ -127,7 +139,7 @@ class ConnectionMenu(Component, Menu):
             ),
             GraphicalText(
                 960 - self.menu_box_width / 2.25,
-                540 - self.menu_box_height / 2 + border_margin + 375,
+                540 - self.menu_box_height / 2 + border_margin + 400,
                 align_x="left",
                 align_y="center",
                 text_key=LanguageKey.MENU_CONNECTION_PORT,
@@ -136,8 +148,8 @@ class ConnectionMenu(Component, Menu):
             ),
             GraphicalTextInput(
                 960 - self.menu_box_width / 2.25,
-                540 - self.menu_box_height / 2 + border_margin + 400,
-                self.menu_box_width * 7 / 18,
+                540 - self.menu_box_height / 2 + border_margin + 425,
+                button_width,
                 button_height,
                 default_text=VARIABLES.latest_join_port,
                 max_text_length=5,
@@ -149,7 +161,7 @@ class ConnectionMenu(Component, Menu):
             ),
             GraphicalText(
                 960 - self.menu_box_width / 2.25 + self.menu_box_width / 2,
-                540 - self.menu_box_height / 2 + border_margin + 175,
+                540 - self.menu_box_height / 2 + border_margin + 200,
                 align_x="left",
                 align_y="center",
                 text_key=LanguageKey.MENU_CONNECTION_PORT,
@@ -158,8 +170,8 @@ class ConnectionMenu(Component, Menu):
             ),
             GraphicalTextInput(
                 960 - self.menu_box_width / 2.25 + self.menu_box_width / 2,
-                540 - self.menu_box_height / 2 + border_margin + 200,
-                self.menu_box_width * 7 / 18,
+                540 - self.menu_box_height / 2 + border_margin + 225,
+                button_width,
                 button_height,
                 default_text=VARIABLES.latest_host_port,
                 max_text_length=5,

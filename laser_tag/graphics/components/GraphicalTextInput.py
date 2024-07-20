@@ -157,11 +157,12 @@ class GraphicalTextInput(GraphicalElement):
     def render(self):
         button_state = self.button.get_state()
 
-        color = (64, 64, 64)
-        if button_state == ButtonState.HOVERED:
-            color = (128, 128, 128)
-        elif button_state == ButtonState.PRESSED:
-            color = (192, 192, 192)
+        color = (96, 96, 96)
+        if not self.focused:
+            if button_state == ButtonState.HOVERED:
+                color = (128, 128, 128)
+            elif button_state == ButtonState.PRESSED:
+                color = (160, 160, 160)
 
         self.surface.fill(color)
 

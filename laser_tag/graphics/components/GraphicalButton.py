@@ -179,7 +179,7 @@ class GraphicalButton(GraphicalElement):
 
         if self.disabled:
             overlay = pygame.Surface((self.width, self.height))
-            overlay.set_alpha(64)
+            overlay.set_alpha(96)
             overlay.fill((0, 0, 0))
             self.surface.blit(overlay, (0, 0))
 
