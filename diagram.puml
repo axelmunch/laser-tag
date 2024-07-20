@@ -570,6 +570,8 @@ package laser_tag {
             MENU_CONNECTION_STOP
             MENU_CONNECTION_SERVER_RUNNING
             MENU_CONNECTION_SERVER_STOPPED
+            MENU_DISCONNECTED_TITLE
+            MENU_DISCONNECTED_MENU
         }
 
         class Language {
@@ -1050,6 +1052,15 @@ package laser_tag {
 
                     update_input_value(update_callback)
                     back_action()
+                    update(events: EventInstance[])
+                }
+
+                class Disconnected extends Component, Menu {
+                    callback_menu
+                    box_width
+                    box_height
+
+                    menu()
                     update(events: EventInstance[])
                 }
 

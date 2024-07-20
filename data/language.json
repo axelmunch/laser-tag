@@ -79,6 +79,8 @@
         "MENU_CONNECTION_HOSTED_PORT": "Hosted port:",
         "MENU_CONNECTION_STOP": "Stop",
         "MENU_CONNECTION_SERVER_RUNNING": "Server running",
-        "MENU_CONNECTION_SERVER_STOPPED": "Server stopped"
+        "MENU_CONNECTION_SERVER_STOPPED": "Server stopped",
+        "MENU_DISCONNECTED_TITLE": "Disconnected from the game",
+        "MENU_DISCONNECTED_MENU": "Back to menu"
     }
 }

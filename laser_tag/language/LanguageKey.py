@@ -95,3 +95,6 @@ class LanguageKey(Enum):
     MENU_CONNECTION_STOP = auto()
     MENU_CONNECTION_SERVER_RUNNING = auto()
     MENU_CONNECTION_SERVER_STOPPED = auto()
+
+    MENU_DISCONNECTED_TITLE = auto()
+    MENU_DISCONNECTED_MENU = auto()

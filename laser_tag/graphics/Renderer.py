@@ -10,6 +10,7 @@ from .components.GameTimer import GameTimer
 from .components.Leaderboard import Leaderboard
 from .components.LevelEditor.LevelEditor import LevelEditor
 from .components.menus.ConnectionMenu import ConnectionMenu
+from .components.menus.Disconnected import Disconnected
 from .components.menus.MainMenu import MainMenu
 from .components.menus.Menus import Menus
 from .components.menus.PauseMenu import PauseMenu
@@ -27,7 +28,9 @@ class Renderer:
 
         self.menus = Menus()
         self.last_game_paused = True
+        self.last_client_connected = False
         self.close_game = False
+        self.client_server = ClientServerGroup()
 
         self.init_components()
 
@@ -123,9 +126,26 @@ class Renderer:
             )
         self.last_game_paused = game.game_paused
 
+        if not game.game_paused:
+            if (
+                not self.client_server.is_client_connected()
+                and self.last_client_connected
+            ):
+                game.game_paused = True
+                self.last_game_paused = True
+                self.client_server.disconnect_client()
+                self.menus.open_menu(
+                    Disconnected(
+                        lambda: self.menus.open_menu(
+                            ConnectionMenu(game, lambda: self.open_main_menu(game))
+                        )
+                    )
+                )
+            self.last_client_connected = self.client_server.is_client_connected()
+
     def quit(self, game: Game):
         game.game_paused = True
-        ClientServerGroup().disconnect_client()
+        self.client_server.disconnect_client()
         self.open_main_menu(game)
 
     def open_main_menu(self, game: Game):
