@@ -78,6 +78,18 @@ class GraphicalButton(GraphicalElement):
 
         self.update()
 
+    def set_text(self, text: str):
+        self.text_str = text
+        self.button.text = text
+
+    def set_text_key(self, text_key: LanguageKey):
+        self.text_key = text_key
+        self.button.text_key = text_key
+
+    def set_action(self, action):
+        self.action = action
+        self.button.action = action
+
     def set_disabled(self, disabled: bool):
         self.disabled = disabled
         if disabled:
@@ -164,6 +176,12 @@ class GraphicalButton(GraphicalElement):
                 resize(self.button_height / 2, "y") - text_surface.get_height() / 2,
             ),
         )
+
+        if self.disabled:
+            overlay = pygame.Surface((self.width, self.height))
+            overlay.set_alpha(64)
+            overlay.fill((0, 0, 0))
+            self.surface.blit(overlay, (0, 0))
 
         if self.is_selected():
             border_size = 6

@@ -558,6 +558,16 @@ package laser_tag {
             MENU_SETTINGS_COMPONENTS_OUTLINE
             MENU_SETTINGS_RAYS_MINIMAP
             MENU_SETTINGS_ALL_ENTITIES_MINIMAP
+            MENU_CONNECTION_TITLE
+            MENU_CONNECTION_BACK
+            MENU_CONNECTION_JOIN
+            MENU_CONNECTION_HOST
+            MENU_CONNECTION_IP
+            MENU_CONNECTION_PORT
+            MENU_CONNECTION_HOSTED_PORT
+            MENU_CONNECTION_STOP
+            MENU_CONNECTION_SERVER_RUNNING
+            MENU_CONNECTION_SERVER_STOPPED
         }
 
         class Language {
@@ -700,6 +710,9 @@ package laser_tag {
                 type: ButtonType
                 button: Button
 
+                set_text(text)
+                set_text_key(text_key: LanguageKey)
+                set_action(action)
                 set_disabled(disabled: Boolean)
                 set_relative_offset(offset_x, offset_y)
                 get_state(): ButtonState
@@ -996,6 +1009,23 @@ package laser_tag {
                     update(events: EventInstance[])
                 }
 
+                class ConnectionMenu extends Component, Menu {
+                    game: Game
+                    callback_main_menu
+                    menu_box_width
+                    menu_box_height
+                    back_button: GraphicalButton
+                    join_button_client: GraphicalButton
+                    host_button_server: GraphicalButton
+                    join_button_server: GraphicalButton
+                    status_text: GraphicalText
+                    hosted_port_text: GraphicalText
+                    elements
+
+                    back_action()
+                    update(events: EventInstance[])
+                }
+
                 class MainMenu extends Component, Menu {
                     callback_play
                     callback_settings
@@ -1059,6 +1089,8 @@ package laser_tag {
             close_game_event(): Boolean
             resize()
             update(game: Game, events: EventInstance[])
+            quit(game)
+            open_main_menu(game)
             render(game: Game)
         }
 

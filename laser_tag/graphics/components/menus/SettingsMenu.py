@@ -32,7 +32,7 @@ class SettingsMenu(Component, Menu):
 
         self.back_button = GraphicalButton(
             960 - self.settings_box_width / 2 + 50,
-            540 + self.settings_box_height / 2 - button_height * 1.5,
+            540 + self.settings_box_height / 2 - button_height - 50,
             button_width,
             button_height,
             text_key=LanguageKey.MENU_SETTINGS_BACK,

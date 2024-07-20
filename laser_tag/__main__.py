@@ -22,10 +22,11 @@ if __name__ == "__main__":
 
     renderer = Renderer(clock)
 
-    # Local server
+    # Main menu
+    game.game_paused = True
+    renderer.open_main_menu(game)
+
     client_server = ClientServerGroup()
-    server_port = client_server.start_server(VARIABLES.latest_host_port, debug=False)
-    client_server.connect_client(VARIABLES.latest_join_ip, server_port, debug=False)
 
     running = True
 
