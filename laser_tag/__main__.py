@@ -100,6 +100,7 @@ if __name__ == "__main__":
                 for state in received_data:
                     game.set_state(state)
 
+        if client_server.get_client() is not None:
             # Display
             if VARIABLES.show_network_stats:
                 network_stats = client_server.get_client().get_network_stats()
