@@ -1,6 +1,7 @@
 services:
   laser-tag-server:
     container_name: laser-tag-server
+    image: laser-tag-server
     build:
       context: .
     ports:
