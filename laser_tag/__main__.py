@@ -9,8 +9,7 @@ from laser_tag.graphics import display
 from laser_tag.graphics.AssetsLoader import load_assets
 from laser_tag.graphics.Renderer import Renderer
 from laser_tag.graphics.resize import resize
-from laser_tag.network.Client import Client
-from laser_tag.network.Server import Server
+from laser_tag.network.ClientServerGroup import ClientServerGroup
 
 if __name__ == "__main__":
     pygame.init()
@@ -23,11 +22,11 @@ if __name__ == "__main__":
 
     renderer = Renderer(clock)
 
-    # Local server
-    server = Server(0, debug=False)
-    server.start()
+    # Main menu
+    game.game_paused = True
+    renderer.open_main_menu(game)
 
-    client = Client("localhost", server.get_port(), debug=False)
+    client_server = ClientServerGroup()
 
     running = True
 
@@ -85,27 +84,31 @@ if __name__ == "__main__":
         # Predict
         game.update(events)
 
-        # Send
-        client.add_events_to_send(
-            [
-                event
-                for event in events
-                if not event.local and not (game.game_paused and event.game)
-            ]
-        )
-
-        # Receive
-        if client.is_connected():
-            received_data = client.get_received_data()
-            for state in received_data:
-                game.set_state(state)
-
-        # Display
-        if VARIABLES.show_network_stats:
-            network_stats = client.get_network_stats()
-            renderer.set_network_stats(
-                network_stats[0], network_stats[1], network_stats[2], network_stats[3]
+        if client_server.is_client_connected():
+            # Send
+            client_server.get_client().add_events_to_send(
+                [
+                    event
+                    for event in events
+                    if not event.local and not (game.game_paused and event.game)
+                ]
             )
+
+            # Receive
+            if client_server.is_client_connected():
+                received_data = client_server.get_client().get_received_data()
+                for state in received_data:
+                    game.set_state(state)
+
+            # Display
+            if VARIABLES.show_network_stats:
+                network_stats = client_server.get_client().get_network_stats()
+                renderer.set_network_stats(
+                    network_stats[0],
+                    network_stats[1],
+                    network_stats[2],
+                    network_stats[3],
+                )
 
         renderer.update(game, events)
 
@@ -118,5 +121,5 @@ if __name__ == "__main__":
         pygame.display.flip()
 
     pygame.quit()
-    client.disconnect()
-    server.stop()
+    client_server.disconnect_client()
+    client_server.stop_server()

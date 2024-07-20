@@ -42,7 +42,6 @@ package laser_tag {
             fullscreen
             windowed_resolution_ratio
             resize_display
-            server_port
             fps
             show_fps
             show_network_stats
@@ -58,6 +57,9 @@ package laser_tag {
             ray_width
             rays_quantity
             world_scale
+            latest_join_ip
+            latest_join_port
+            latest_host_port
             assets_folder
             language
 
@@ -160,6 +162,8 @@ package laser_tag {
             KEY_ESCAPE_PRESS
             KEY_RETURN
             KEY_RETURN_PRESS
+            KEY_BACKSPACE
+            KEY_BACKSPACE_PRESS
             KEY_TAB
             KEY_UP
             KEY_DOWN
@@ -465,6 +469,22 @@ package laser_tag {
             controlled_entity_id
         }
 
+        class ClientServerGroup {
+            client: Client
+            server: Server
+
+            connect_client(ip, port, debug: Boolean)
+            is_client_connected(): Boolean
+            disconnect_client()
+            get_client(): Client
+            start_server(port, debug: Boolean)
+            is_server_running(): Boolean
+            stop_server()
+            get_server(): Server
+        }
+
+        ClientServerGroup --> Client
+        ClientServerGroup --> Server
         Client --> EventInstance
         Server --> Game
         Server --> DeltaTime
@@ -540,6 +560,16 @@ package laser_tag {
             MENU_SETTINGS_COMPONENTS_OUTLINE
             MENU_SETTINGS_RAYS_MINIMAP
             MENU_SETTINGS_ALL_ENTITIES_MINIMAP
+            MENU_CONNECTION_TITLE
+            MENU_CONNECTION_BACK
+            MENU_CONNECTION_JOIN
+            MENU_CONNECTION_HOST
+            MENU_CONNECTION_IP
+            MENU_CONNECTION_PORT
+            MENU_CONNECTION_HOSTED_PORT
+            MENU_CONNECTION_STOP
+            MENU_CONNECTION_SERVER_RUNNING
+            MENU_CONNECTION_SERVER_STOPPED
         }
 
         class Language {
@@ -682,6 +712,9 @@ package laser_tag {
                 type: ButtonType
                 button: Button
 
+                set_text(text)
+                set_text_key(text_key: LanguageKey)
+                set_action(action)
                 set_disabled(disabled: Boolean)
                 set_relative_offset(offset_x, offset_y)
                 get_state(): ButtonState
@@ -784,6 +817,29 @@ package laser_tag {
                 color
 
                 get_text_to_render()
+                update(events: EventInstance[])
+            }
+
+            class GraphicalTextInput extends GraphicalElement {
+                x
+                y
+                input_width
+                input_height
+                input_value
+                max_text_length
+                focus_action
+                unfocus_action
+                int_only: Boolean
+                max_int_value
+                no_eval_banned_elements: Boolean
+                disabled: Boolean
+                focused: Boolean
+
+                get_value()
+                focus_event()
+                unfocus_event()
+                set_disabled(disabled: Boolean)
+                set_relative_offset(offset_x, offset_y)
                 update(events: EventInstance[])
             }
 
@@ -948,6 +1004,7 @@ package laser_tag {
                     elements: GraphicalElement[]
                     active: Boolean
 
+                    resize()
                     update(events: EventInstance[])
                     is_active(): Boolean
                     set_active(active: Boolean)
@@ -975,6 +1032,24 @@ package laser_tag {
                     yes()
                     no()
                     cancel()
+                    update(events: EventInstance[])
+                }
+
+                class ConnectionMenu extends Component, Menu {
+                    game: Game
+                    callback_main_menu
+                    menu_box_width
+                    menu_box_height
+                    back_button: GraphicalButton
+                    join_button_client: GraphicalButton
+                    host_button_server: GraphicalButton
+                    join_button_server: GraphicalButton
+                    status_text: GraphicalText
+                    hosted_port_text: GraphicalText
+                    elements
+
+                    update_input_value(update_callback)
+                    back_action()
                     update(events: EventInstance[])
                 }
 
@@ -1041,6 +1116,8 @@ package laser_tag {
             close_game_event(): Boolean
             resize()
             update(game: Game, events: EventInstance[])
+            quit(game)
+            open_main_menu(game)
             render(game: Game)
         }
 

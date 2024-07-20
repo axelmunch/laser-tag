@@ -48,7 +48,8 @@ class Server:
             if self.debug:
                 print(f"SERVER port {self.port} is already in use")
             self.socket.close()
-            sys_exit(1)
+            self.running = False
+            return
         self.socket.listen()
 
         if self.debug:
@@ -70,6 +71,9 @@ class Server:
         if self.running is None:
             self.running = True
             self.running_thread.start()
+        elif not self.running:
+            if self.debug:
+                print("SERVER was not started")
         else:
             if self.debug:
                 print("SERVER has already been started")
@@ -136,6 +140,7 @@ class Server:
             and len(client.player_name) <= MAX_PLAYER_NAME_LENGTH
         ):
             client.player_name = "Player"
+        self.send(client, f'"{client.player_name}"')
 
         # Create player
         spawn_point = self.game.world.map.get_spawn_point()

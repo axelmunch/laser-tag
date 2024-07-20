@@ -69,6 +69,16 @@
         "MENU_SETTINGS_NETWORK_STATS": "Network stats",
         "MENU_SETTINGS_COMPONENTS_OUTLINE": "Components outline",
         "MENU_SETTINGS_RAYS_MINIMAP": "Rays minimap",
-        "MENU_SETTINGS_ALL_ENTITIES_MINIMAP": "All entities minimap"
+        "MENU_SETTINGS_ALL_ENTITIES_MINIMAP": "All entities minimap",
+        "MENU_CONNECTION_TITLE": "Connection menu",
+        "MENU_CONNECTION_BACK": "Back",
+        "MENU_CONNECTION_JOIN": "Join",
+        "MENU_CONNECTION_HOST": "Host",
+        "MENU_CONNECTION_IP": "IP",
+        "MENU_CONNECTION_PORT": "Port",
+        "MENU_CONNECTION_HOSTED_PORT": "Hosted port:",
+        "MENU_CONNECTION_STOP": "Stop",
+        "MENU_CONNECTION_SERVER_RUNNING": "Server running",
+        "MENU_CONNECTION_SERVER_STOPPED": "Server stopped"
     }
 }

@@ -63,6 +63,8 @@ class GraphicalNumberSelect(GraphicalElement):
         self.set_disabled(disabled)
         self.set_relative_offset(self.x, self.y)
 
+        self.change(self.current_value)
+
         self.update()
 
     def resize(self):

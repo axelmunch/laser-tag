@@ -3,11 +3,13 @@ import pygame
 from ..configuration import VARIABLES
 from ..events.EventInstance import EventInstance
 from ..game.Game import Game
+from ..network.ClientServerGroup import ClientServerGroup
 from . import display
 from .components.Fps import Fps
 from .components.GameTimer import GameTimer
 from .components.Leaderboard import Leaderboard
 from .components.LevelEditor.LevelEditor import LevelEditor
+from .components.menus.ConnectionMenu import ConnectionMenu
 from .components.menus.MainMenu import MainMenu
 from .components.menus.Menus import Menus
 from .components.menus.PauseMenu import PauseMenu
@@ -24,7 +26,7 @@ class Renderer:
         self.clock = clock
 
         self.menus = Menus()
-        self.last_game_paused = False
+        self.last_game_paused = True
         self.close_game = False
 
         self.init_components()
@@ -122,9 +124,16 @@ class Renderer:
         self.last_game_paused = game.game_paused
 
     def quit(self, game: Game):
+        game.game_paused = True
+        ClientServerGroup().disconnect_client()
+        self.open_main_menu(game)
+
+    def open_main_menu(self, game: Game):
         self.menus.open_menu(
             MainMenu(
-                callback_play=lambda: setattr(game, "game_paused", False),
+                lambda: self.menus.open_menu(
+                    ConnectionMenu(game, lambda: self.open_main_menu(game))
+                ),
                 callback_settings=lambda: self.menus.open_menu(SettingsMenu()),
                 callback_quit=lambda: setattr(self, "close_game", True),
             )

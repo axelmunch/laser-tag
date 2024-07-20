@@ -10,6 +10,13 @@ class Menu:
         self.elements: list[GraphicalElement] = []
         self.active: bool = True
 
+    def resize(self):
+        try:
+            for element in self.elements:
+                element.resize()
+        except AttributeError:
+            pass
+
     def update(self, events: list[EventInstance] = []):
         """
         Update the menu

@@ -24,8 +24,6 @@ class Variables:
         self.windowed_resolution_ratio = 0.5
         self.resize_display = False
 
-        self.server_port = 16168
-
         self.fps = 60
 
         self.show_fps = True
@@ -49,6 +47,10 @@ class Variables:
         self.ray_width = 15
         self.rays_quantity = 1920 // self.ray_width
         self.world_scale = 1200
+
+        self.latest_join_ip = "localhost"
+        self.latest_join_port = 8000
+        self.latest_host_port = 8000
 
         self.assets_folder = "default"
         self.language = "EN"

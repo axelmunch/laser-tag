@@ -61,13 +61,8 @@ class MainMenu(Component, Menu):
         self.update()
 
     def resize(self):
-        super().resize()
-
-        try:
-            for element in self.elements:
-                element.resize()
-        except AttributeError:
-            pass
+        Menu.resize(self)
+        Component.resize(self)
 
     def play(self):
         if self.callback_play is not None:
