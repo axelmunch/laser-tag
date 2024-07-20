@@ -69,7 +69,7 @@ class ConnectionMenu(Component, Menu):
         )
         self.status_text = GraphicalText(
             960 - self.menu_box_width / 2.25 + self.menu_box_width / 2,
-            540 - self.menu_box_height / 2 + border_margin + 420-50,
+            540 - self.menu_box_height / 2 + border_margin + 420 - 50,
             align_x="left",
             align_y="center",
             text_key=LanguageKey.MENU_CONNECTION_SERVER_STOPPED,
@@ -78,7 +78,7 @@ class ConnectionMenu(Component, Menu):
         )
         self.hosted_port_text = GraphicalText(
             960 - self.menu_box_width / 2.25 + self.menu_box_width / 2,
-            540 - self.menu_box_height / 2 + border_margin + 420+50,
+            540 - self.menu_box_height / 2 + border_margin + 420 + 50,
             align_x="left",
             align_y="center",
             text="",
@@ -191,9 +191,7 @@ class ConnectionMenu(Component, Menu):
             self.host_button_server.set_text_key(LanguageKey.MENU_CONNECTION_STOP)
             self.host_button_server.set_action(lambda: self.client_server.stop_server())
             self.status_text.text_key = LanguageKey.MENU_CONNECTION_SERVER_RUNNING
-            self.hosted_port_text.text_str = f"{self.language.get(
-                LanguageKey.MENU_CONNECTION_HOSTED_PORT
-            )} {self.client_server.get_server().get_port()}"
+            self.hosted_port_text.text_str = f"{self.language.get(LanguageKey.MENU_CONNECTION_HOSTED_PORT)} {self.client_server.get_server().get_port()}"
         else:
             # Host button
             self.host_button_server.set_text_key(LanguageKey.MENU_CONNECTION_HOST)
