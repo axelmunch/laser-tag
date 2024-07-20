@@ -68,6 +68,9 @@ class Client:
 
         # Send player name
         self.send(f'"{VARIABLES.player_name}"')
+        player_name, _ = self.recv()
+        if VARIABLES.debug:
+            print(f"CLIENT player name {player_name}")
 
         ping_timer = Timer()
         while self.connected:

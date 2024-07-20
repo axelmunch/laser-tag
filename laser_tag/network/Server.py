@@ -140,6 +140,7 @@ class Server:
             and len(client.player_name) <= MAX_PLAYER_NAME_LENGTH
         ):
             client.player_name = "Player"
+        self.send(client, f'"{client.player_name}"')
 
         # Create player
         spawn_point = self.game.world.map.get_spawn_point()
