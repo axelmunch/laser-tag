@@ -145,6 +145,7 @@ class ConnectionMenu(Component, Menu):
                     lambda: setattr(VARIABLES, "latest_join_port", i)
                 ),
                 int_only=True,
+                max_int_value=65535,
             ),
             GraphicalText(
                 960 - self.menu_box_width / 2.25 + self.menu_box_width / 2,
@@ -166,6 +167,7 @@ class ConnectionMenu(Component, Menu):
                     lambda: setattr(VARIABLES, "latest_host_port", i)
                 ),
                 int_only=True,
+                max_int_value=65535,
             ),
             self.status_text,
             self.hosted_port_text,

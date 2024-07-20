@@ -830,6 +830,7 @@ package laser_tag {
                 focus_action
                 unfocus_action
                 int_only: Boolean
+                max_int_value
                 no_eval_banned_elements: Boolean
                 disabled: Boolean
                 focused: Boolean

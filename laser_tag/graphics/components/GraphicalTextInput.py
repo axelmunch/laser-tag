@@ -24,6 +24,7 @@ class GraphicalTextInput(GraphicalElement):
         focus_action=None,
         unfocus_action=None,
         int_only=False,
+        max_int_value=None,
         no_eval_banned_elements=True,
         disabled=False,
         selected=False,
@@ -39,6 +40,7 @@ class GraphicalTextInput(GraphicalElement):
         self.focus_action = focus_action
         self.unfocus_action = unfocus_action
         self.int_only = int_only
+        self.max_int_value = max_int_value
         self.no_eval_banned_elements = no_eval_banned_elements
         self.disabled = disabled
         self.set_selected(selected)
@@ -120,7 +122,11 @@ class GraphicalTextInput(GraphicalElement):
                         or self.max_text_length == 0
                     ):
                         if self.int_only:
-                            if char_to_add in "0123456789":
+                            if (
+                                char_to_add in "0123456789"
+                                and int(self.input_value + char_to_add)
+                                <= self.max_int_value
+                            ):
                                 self.input_value += char_to_add
                         else:
                             if self.no_eval_banned_elements:
