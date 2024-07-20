@@ -1,7 +1,6 @@
 import pygame
 from pygame.locals import *
 
-from ..configuration import VARIABLES
 from .Event import Event
 from .EventInstance import EventInstance
 
@@ -19,11 +18,16 @@ def get_events() -> list[EventInstance]:
         if event.type == QUIT:
             events.append(EventInstance(Event.WINDOW_QUIT))
         elif event.type == KEYDOWN:
+            if event.unicode.isprintable() and len(event.unicode) > 0:
+                events.append(EventInstance(Event.TYPE_CHAR, event.unicode[0]))
+
             if event.key == K_ESCAPE:
                 events.append(EventInstance(Event.KEY_ESCAPE_PRESS))
-            elif event.key == K_RETURN:
+            elif event.key == K_RETURN or event.key == K_KP_ENTER:
                 events.append(EventInstance(Event.KEY_RETURN_PRESS))
                 events.append(EventInstance(Event.START_GAME))
+            elif event.key == K_BACKSPACE:
+                events.append(EventInstance(Event.KEY_BACKSPACE_PRESS))
             elif event.key == K_F11:
                 events.append(EventInstance(Event.WINDOW_FULLSCREEN))
             elif event.key == K_F12:
@@ -91,8 +95,10 @@ def get_events() -> list[EventInstance]:
     # Key events
     if key_pressed[K_ESCAPE]:
         events.append(EventInstance(Event.KEY_ESCAPE))
-    if key_pressed[K_RETURN]:
+    if key_pressed[K_RETURN] or key_pressed[K_KP_ENTER]:
         events.append(EventInstance(Event.KEY_RETURN))
+    if key_pressed[K_BACKSPACE]:
+        events.append(EventInstance(Event.KEY_BACKSPACE))
     if key_pressed[K_TAB]:
         events.append(EventInstance(Event.KEY_TAB))
         events.append(EventInstance(Event.GAME_SCOREBOARD))

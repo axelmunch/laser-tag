@@ -162,6 +162,8 @@ package laser_tag {
             KEY_ESCAPE_PRESS
             KEY_RETURN
             KEY_RETURN_PRESS
+            KEY_BACKSPACE
+            KEY_BACKSPACE_PRESS
             KEY_TAB
             KEY_UP
             KEY_DOWN
@@ -818,6 +820,28 @@ package laser_tag {
                 update(events: EventInstance[])
             }
 
+            class GraphicalTextInput extends GraphicalElement {
+                x
+                y
+                input_width
+                input_height
+                input_value
+                max_text_length
+                focus_action
+                unfocus_action
+                int_only: Boolean
+                no_eval_banned_elements: Boolean
+                disabled: Boolean
+                focused: Boolean
+
+                get_value()
+                focus_event()
+                unfocus_event()
+                set_disabled(disabled: Boolean)
+                set_relative_offset(offset_x, offset_y)
+                update(events: EventInstance[])
+            }
+
             class Fps extends Component {
                 update(fps)
             }
@@ -1023,6 +1047,7 @@ package laser_tag {
                     hosted_port_text: GraphicalText
                     elements
 
+                    update_input_value(update_callback)
                     back_action()
                     update(events: EventInstance[])
                 }

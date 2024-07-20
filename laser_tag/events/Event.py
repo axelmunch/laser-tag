@@ -32,6 +32,8 @@ class Event(Enum):
     KEY_ESCAPE_PRESS = auto()
     KEY_RETURN = auto()
     KEY_RETURN_PRESS = auto()
+    KEY_BACKSPACE = auto()
+    KEY_BACKSPACE_PRESS = auto()
     KEY_TAB = auto()
     KEY_UP = auto()
     KEY_DOWN = auto()
@@ -68,6 +70,8 @@ local_events = [
     Event.KEY_ESCAPE_PRESS,
     Event.KEY_RETURN,
     Event.KEY_RETURN_PRESS,
+    Event.KEY_BACKSPACE,
+    Event.KEY_BACKSPACE_PRESS,
     Event.KEY_TAB,
     Event.KEY_UP,
     Event.KEY_DOWN,

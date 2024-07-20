@@ -10,6 +10,7 @@ from ...resize import resize
 from ..Component import Component
 from ..GraphicalButton import GraphicalButton
 from ..GraphicalText import GraphicalText
+from ..GraphicalTextInput import GraphicalTextInput
 from .Menu import Menu
 
 
@@ -113,13 +114,16 @@ class ConnectionMenu(Component, Menu):
                 size=50,
                 color=(0, 0, 255),
             ),
-            GraphicalButton(
+            GraphicalTextInput(
                 960 - self.menu_box_width / 2.25,
                 540 - self.menu_box_height / 2 + border_margin + 200,
-                button_width,
+                self.menu_box_width * 7 / 18,
                 button_height,
-                text=VARIABLES.latest_join_ip,
-                disabled=True,
+                default_text=VARIABLES.latest_join_ip,
+                max_text_length=15,
+                unfocus_action=lambda i: self.update_input_value(
+                    lambda: setattr(VARIABLES, "latest_join_ip", i)
+                ),
             ),
             GraphicalText(
                 960 - self.menu_box_width / 2.25,
@@ -130,13 +134,17 @@ class ConnectionMenu(Component, Menu):
                 size=50,
                 color=(0, 0, 255),
             ),
-            GraphicalButton(
+            GraphicalTextInput(
                 960 - self.menu_box_width / 2.25,
                 540 - self.menu_box_height / 2 + border_margin + 400,
-                button_width,
+                self.menu_box_width * 7 / 18,
                 button_height,
-                text=VARIABLES.latest_join_port,
-                disabled=True,
+                default_text=VARIABLES.latest_join_port,
+                max_text_length=5,
+                unfocus_action=lambda i: self.update_input_value(
+                    lambda: setattr(VARIABLES, "latest_join_port", i)
+                ),
+                int_only=True,
             ),
             GraphicalText(
                 960 - self.menu_box_width / 2.25 + self.menu_box_width / 2,
@@ -147,13 +155,17 @@ class ConnectionMenu(Component, Menu):
                 size=50,
                 color=(0, 0, 255),
             ),
-            GraphicalButton(
+            GraphicalTextInput(
                 960 - self.menu_box_width / 2.25 + self.menu_box_width / 2,
                 540 - self.menu_box_height / 2 + border_margin + 200,
-                button_width,
+                self.menu_box_width * 7 / 18,
                 button_height,
-                text=VARIABLES.latest_host_port,
-                disabled=True,
+                default_text=VARIABLES.latest_host_port,
+                max_text_length=5,
+                unfocus_action=lambda i: self.update_input_value(
+                    lambda: setattr(VARIABLES, "latest_host_port", i)
+                ),
+                int_only=True,
             ),
             self.status_text,
             self.hosted_port_text,
@@ -167,6 +179,11 @@ class ConnectionMenu(Component, Menu):
     def resize(self):
         Menu.resize(self)
         Component.resize(self)
+
+    def update_input_value(self, update_callback):
+        if update_callback is not None:
+            update_callback()
+        VARIABLES.save()
 
     def back_action(self):
         if self.callback_main_menu is not None:
