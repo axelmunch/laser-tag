@@ -131,12 +131,6 @@ class World(Component):
 
                 approximate_display_size = ray_world_size
 
-                height_cropping_offset = 0
-                if approximate_display_size > 1080:
-                    height_cropping_offset = resize(
-                        (approximate_display_size - 1080) / 2, "y"
-                    )
-
                 ratio = ray.hit_infos[0]
                 line_rotation = ray.hit_infos[1]
 
@@ -152,7 +146,7 @@ class World(Component):
                 texture_surface_full = textures.get_original_surface(TextureNames.BLUE)
 
                 texture_size_ratio = (
-                    texture_surface_full.get_width() / approximate_display_size
+                    texture_surface_full.get_height() / approximate_display_size
                 )
                 resized_ray_width = ceil(VARIABLES.ray_width * texture_size_ratio)
 
