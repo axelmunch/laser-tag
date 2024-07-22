@@ -99,6 +99,9 @@ class GameEntity(Entity):
             return True
         return False
 
+    def check_can_be_attacked(self) -> bool:
+        return self.can_be_attacked
+
     def damage(self, damage):
         if self.can_be_attacked:
             self.hp -= damage

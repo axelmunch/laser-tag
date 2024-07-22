@@ -242,7 +242,8 @@ class World:
                             ):
                                 # Collision with the target
                                 if (
-                                    entity.collides_with(entity_target)
+                                    entity_target.check_can_be_attacked()
+                                    and entity.collides_with(entity_target)
                                     and entity.attack()
                                 ):
                                     entity.can_attack = False

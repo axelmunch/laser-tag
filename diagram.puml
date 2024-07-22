@@ -238,6 +238,7 @@ package laser_tag {
             set_max_hp(max_hp)
             death(no_deletion: Boolean)
             attack(): Boolean
+            check_can_be_attacked(): Boolean
             damage(damage): Boolean
             heal(heal)
             on_hit(entity: GameEntity)
@@ -258,10 +259,13 @@ package laser_tag {
 
         class Player extends GameEntity {
             name
+            deactivation_time
+            deactivated_until_timestamp
 
             create(parsed_object): Player
             entity_radius()
             death()
+            check_can_be_attacked()
             set_name(name)
         }
 
