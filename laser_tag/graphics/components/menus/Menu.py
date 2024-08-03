@@ -9,6 +9,7 @@ class Menu:
         self.menu_offset_y = 0
         self.elements: list[GraphicalElement] = []
         self.active: bool = True
+        self.add_event_function = None
 
     def resize(self):
         try:
@@ -17,7 +18,7 @@ class Menu:
         except AttributeError:
             pass
 
-    def update(self, events: list[EventInstance] = []):
+    def update(self, events: list[EventInstance] = [], no_escape=False):
         """
         Update the menu
 
@@ -26,12 +27,16 @@ class Menu:
         """
 
         for event in events:
-            if event.id == Event.KEY_ESCAPE_PRESS:
+            if not no_escape and event.id == Event.KEY_ESCAPE_PRESS:
                 self.set_active(False)
                 return
 
         for element in self.elements:
             element.update(events)
+
+    def add_event(self, event: EventInstance):
+        if self.add_event_function is not None:
+            self.add_event_function(event)
 
     def is_active(self) -> bool:
         return self.active

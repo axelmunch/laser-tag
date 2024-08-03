@@ -56,6 +56,9 @@ class GameMode:
             self.game_time_end = 0
         return self.game_started
 
+    def is_game_started(self) -> bool:
+        return self.game_started
+
     def update_leaderboard(self, entities: list[GameEntity]):
         self.leaderboard.clear()
 

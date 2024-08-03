@@ -240,7 +240,7 @@ class ConnectionMenu(Component, Menu):
             if event.id == Event.KEY_ESCAPE_PRESS:
                 self.back_action()
 
-        Menu.update(self, events)
+        Menu.update(self, events, no_escape=True)
         Component.update(self)
 
     def render(self):

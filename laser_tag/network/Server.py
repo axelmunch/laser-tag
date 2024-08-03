@@ -59,7 +59,7 @@ class Server:
         self.max_clients = SERVER_DEFAULT_MAX_CLIENTS
         self.clients = {}
 
-        self.game = Game()
+        self.game = Game(server_mode=True)
 
         self.server_delta_time = DeltaTime(SERVER_DELTA_TIME_NAME)
 

@@ -22,6 +22,7 @@ package laser_tag {
             SERVER_DELTA_TIME_NAME
             SERVER_TIMEOUT
             SERVER_SOCKET_TIMEOUT
+            SERVER_EVENTS_LIFESPAN
             CLIENT_TIMEOUT
             CLIENT_MINIMUM_TICK
             DEFAULT_TEXTURE_CACHE_LIMIT
@@ -143,6 +144,8 @@ package laser_tag {
             NONE
             TICK
             START_GAME
+            CHANGE_GAME_MODE
+            CHANGE_PLAYER_TEAM
             MESSAGE
             TYPE_CHAR
             GAME_MOVE
@@ -193,11 +196,27 @@ package laser_tag {
             data
             local: Boolean
             game: Boolean
+            server: Boolean
 
             create(parsed_object): EventInstance
         }
 
+        class ServerEvents {
+            server_mode: Boolean
+            events
+            tick_events: EventInstance[]
+            server_id
+            client_id
+
+            add_event(event: EventInstance)
+            get_events_to_send()
+            update(): EventInstance[]
+            get_events_for_tick(): EventInstance[]
+            set_state(parsed_object)
+        }
+
         EventInstance --> Event
+        ServerEvents --> EventInstance
     }
 
     package entities {
@@ -291,8 +310,10 @@ package laser_tag {
 
     package game {
         class Game {
+            server_mode: Boolean
             game_mode: GameMode
             world: World
+            server_events: ServerEvents
             mouse_x
             mouse_y
             show_scoreboard: Boolean
@@ -301,7 +322,6 @@ package laser_tag {
 
             set_state(parsed_object)
             reset()
-            update_state(state)
             enhance_events(events: EventInstance[])
             update(events: EventInstance[], controlled_entity_id, delta_time: DeltaTime, player_delta_time: DeltaTime)
         }
@@ -324,6 +344,7 @@ package laser_tag {
             set_state(parsed_object)
             reset(game_mode)
             start(): Boolean
+            is_game_started(): Boolean
             update_leaderboard(entities: GameEntity[])
             update(entities: GameEntity[])
         }
@@ -695,6 +716,7 @@ package laser_tag {
                 SETTINGS_CATEGORY
                 OPEN_FOLDER
                 MINI_BUTTON
+                GAME_MODE
             }
 
             class GraphicalElement extends Component {
@@ -1009,9 +1031,11 @@ package laser_tag {
                 class Menu {
                     elements: GraphicalElement[]
                     active: Boolean
+                    add_event_function
 
                     resize()
-                    update(events: EventInstance[])
+                    update(events: EventInstance[], no_escape: Boolean)
+                    add_event(event: EventInstance)
                     is_active(): Boolean
                     set_active(active: Boolean)
                     deactivate_event()
@@ -1019,12 +1043,37 @@ package laser_tag {
 
                 class Menus {
                     menus: Menu[]
+                    menu_events: EventInstance[]
 
                     init_menus()
+                    add_event(event: EventInstance)
+                    get_events(): EventInstance[]
                     resize()
                     update(events: EventInstance[])
                     get_menus(): Menu[]
                     open_menu(menu: Menu)
+                }
+
+                class ModeTeamSelectionMenu extends Component, Menu {
+                    game: Game
+                    menu_box_width
+                    menu_box_height
+                    border_margin
+                    button_width
+                    button_height
+                    back_button : GraphicalButton
+                    teams_button : GraphicalButton
+                    default_elements: GraphicalElement[]
+                    pages_buttons: GraphicalButton[]
+                    pages_elements
+                    elements
+                    selected_mode: Mode
+                    current_page
+
+                    select_mode(mode: Mode)
+                    refresh()
+                    switch_page(page)
+                    update(events: EventInstance[])
                 }
 
                 class Confirmation extends Component, Menu {
