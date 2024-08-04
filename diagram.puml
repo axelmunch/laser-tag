@@ -146,6 +146,8 @@ package laser_tag {
             START_GAME
             CHANGE_GAME_MODE
             CHANGE_PLAYER_TEAM
+            PLAYER_JOIN
+            PLAYER_LEAVE
             MESSAGE
             TYPE_CHAR
             GAME_MOVE
@@ -346,6 +348,8 @@ package laser_tag {
             start(): Boolean
             is_game_started(): Boolean
             update_leaderboard(entities: GameEntity[])
+            change_mode(mode: Mode): Boolean
+            get_teams_available(mode: Mode): Team[]
             update(entities: GameEntity[])
         }
 
@@ -395,6 +399,8 @@ package laser_tag {
             get_entity(uid): GameEntity
             remove_entity(uid)
             set_controlled_entity(uid)
+            change_player_team(id, team: Team)
+            reset_teams(teams: Team[])
             enhance_events(events: EventInstance[])
             update(events: EventInstance[], controlled_entity_id, delta_time: DeltaTime, player_delta_time: DeltaTime)
             move_entity(entity: GameEntity, movement_vector: Point)
@@ -597,6 +603,25 @@ package laser_tag {
             MENU_CONNECTION_SERVER_STOPPED
             MENU_DISCONNECTED_TITLE
             MENU_DISCONNECTED_MENU
+            MENU_SELECTION_TITLE
+            MENU_SELECTION_START
+            MENU_SELECTION_LEAVE
+            MENU_SELECTION_GAME_MODE
+            MENU_SELECTION_TEAMS
+            MENU_SELECTION_PLAYERS
+            GAME_MODE_SOLO
+            GAME_MODE_TEAM
+            GAME_MODE_SOLO_ELIMINATION
+            GAME_MODE_TEAM_ELIMINATION
+            TEAM_ALL
+            TEAM_RED
+            TEAM_BLUE
+            TEAM_GREEN
+            TEAM_YELLOW
+            TEAM_ORANGE
+            TEAM_PINK
+            TEAM_BLACK
+            TEAM_WHITE
         }
 
         class Language {
@@ -1068,11 +1093,19 @@ package laser_tag {
                     pages_elements
                     elements
                     selected_mode: Mode
+                    available_teams: Team[]
+                    team_areas
+                    players
+                    players_areas
+                    grab_player_id
+                    mouse_x
+                    mouse_y
                     current_page
 
                     select_mode(mode: Mode)
                     refresh()
                     switch_page(page)
+                    is_hovered(rect): Boolean
                     update(events: EventInstance[])
                 }
 

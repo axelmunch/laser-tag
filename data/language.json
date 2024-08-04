@@ -81,6 +81,25 @@
         "MENU_CONNECTION_SERVER_RUNNING": "Server running",
         "MENU_CONNECTION_SERVER_STOPPED": "Server stopped",
         "MENU_DISCONNECTED_TITLE": "Disconnected from the game",
-        "MENU_DISCONNECTED_MENU": "Back to menu"
+        "MENU_DISCONNECTED_MENU": "Back to menu",
+        "MENU_SELECTION_TITLE": "Game setup",
+        "MENU_SELECTION_START": "START",
+        "MENU_SELECTION_LEAVE": "Leave",
+        "MENU_SELECTION_GAME_MODE": "Game mode",
+        "MENU_SELECTION_TEAMS": "Teams",
+        "MENU_SELECTION_PLAYERS": "Players",
+        "GAME_MODE_SOLO": "Solo",
+        "GAME_MODE_TEAM": "Team",
+        "GAME_MODE_SOLO_ELIMINATION": "Solo Elimination",
+        "GAME_MODE_TEAM_ELIMINATION": "Team Elimination",
+        "TEAM_ALL": "All",
+        "TEAM_RED": "Red",
+        "TEAM_BLUE": "Blue",
+        "TEAM_GREEN": "Green",
+        "TEAM_YELLOW": "Yellow",
+        "TEAM_ORANGE": "Orange",
+        "TEAM_PINK": "Pink",
+        "TEAM_BLACK": "Black",
+        "TEAM_WHITE": "White"
     }
 }

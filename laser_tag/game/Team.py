@@ -1,5 +1,7 @@
 from enum import Enum
 
+from ..language.LanguageKey import LanguageKey
+
 
 class Team(Enum):
     """Teams"""
@@ -18,11 +20,39 @@ class Team(Enum):
     WHITE = 7
 
 
-def get_color(team: Team | int):
+def get_team_language_key(team: Team | int):
     try:
         team = Team(team)
     except ValueError:
-        team = Team.BLACK
+        team = Team.NONE
+    match team:
+        case Team.NONE:
+            return LanguageKey.TEAM_ALL
+        case Team.RED:
+            return LanguageKey.TEAM_RED
+        case Team.BLUE:
+            return LanguageKey.TEAM_BLUE
+        case Team.GREEN:
+            return LanguageKey.TEAM_GREEN
+        case Team.YELLOW:
+            return LanguageKey.TEAM_YELLOW
+        case Team.ORANGE:
+            return LanguageKey.TEAM_ORANGE
+        case Team.PINK:
+            return LanguageKey.TEAM_PINK
+        case Team.BLACK:
+            return LanguageKey.TEAM_BLACK
+        case Team.WHITE:
+            return LanguageKey.TEAM_WHITE
+        case _:
+            return LanguageKey.TEAM_ALL
+
+
+def get_team_color(team: Team | int):
+    try:
+        team = Team(team)
+    except ValueError:
+        team = Team.NONE
     match team:
         case Team.NONE:
             return (255, 0, 0)

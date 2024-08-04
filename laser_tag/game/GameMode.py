@@ -4,6 +4,7 @@ from ..configuration import VARIABLES
 from ..entities.GameEntity import GameEntity
 from ..entities.Player import Player
 from .Mode import Mode
+from .Team import Team
 
 
 class GameMode:
@@ -29,24 +30,20 @@ class GameMode:
     def reset(self, game_mode):
         self.game_started = False
         self.game_mode = game_mode
-        self.grace_period_seconds = 20
+        self.grace_period_seconds = 15
         self.grace_period_end = 0
         self.game_time_end = 0
         self.game_time_seconds = 0
         self.leaderboard = []
 
-        match game_mode:
+        match self.game_mode:
             case Mode.SOLO:
-                self.grace_period_seconds = 3
                 self.game_time_seconds = 10 * 60
             case Mode.SOLO_ELIMINATION:
-                self.grace_period_seconds = 3
                 self.game_time_seconds = 10 * 60
             case Mode.TEAM:
-                self.grace_period_seconds = 3
                 self.game_time_seconds = 10 * 60
             case Mode.TEAM_ELIMINATION:
-                self.grace_period_seconds = 3
                 self.game_time_seconds = 10 * 60
 
     def start(self) -> bool:
@@ -89,6 +86,31 @@ class GameMode:
 
         # Sort
         self.leaderboard.sort(key=lambda element: element[0], reverse=True)
+
+    def change_mode(self, mode: Mode) -> bool:
+        """Returns true if mode teams have changed"""
+
+        previous_teams = GameMode.get_teams_available(self.game_mode)
+
+        self.reset(mode)
+
+        return previous_teams != GameMode.get_teams_available(mode)
+
+    def get_teams_available(mode: Mode) -> list[Team]:
+        all_teams = list(Team)
+        all_teams.remove(Team.NONE)
+
+        match mode:
+            case Mode.SOLO:
+                return [Team.NONE]
+            case Mode.SOLO_ELIMINATION:
+                return [Team.NONE]
+            case Mode.TEAM:
+                return all_teams
+            case Mode.TEAM_ELIMINATION:
+                return all_teams
+
+        return all_teams
 
     def update(self, entities: list[GameEntity]):
         if not self.game_started:

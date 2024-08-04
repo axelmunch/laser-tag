@@ -10,10 +10,10 @@ from laser_tag.configuration import (
     SERVER_DELTA_TIME_NAME,
     SERVER_SOCKET_TIMEOUT,
     SERVER_TIMEOUT,
-    VARIABLES,
     VERSION,
 )
 from laser_tag.entities.Player import Player
+from laser_tag.events.Event import Event
 from laser_tag.events.EventInstance import EventInstance
 from laser_tag.game.Game import Game
 from laser_tag.network.safe_eval import safe_eval
@@ -37,7 +37,7 @@ class ClientInstance:
 class Server:
     def __init__(self, port: int, debug=False):
         self.port = port
-        self.debug = VARIABLES.debug or debug
+        self.debug = debug
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.settimeout(SERVER_SOCKET_TIMEOUT)
@@ -151,6 +151,13 @@ class Server:
 
         client_delta_time = DeltaTime(client.info)
 
+        self.game.update(
+            [EventInstance(Event.PLAYER_JOIN, client.controlled_entity_id)],
+            controlled_entity_id=client.controlled_entity_id,
+            delta_time=self.server_delta_time,
+            player_delta_time=client_delta_time,
+        )
+
         while client.data is not None and self.running:
             client.data = self.parse_events(self.recv(client))
 
@@ -167,6 +174,12 @@ class Server:
             self.send(client, self.get_state(client))
 
         # Disconnect client
+        self.game.update(
+            [EventInstance(Event.PLAYER_LEAVE, client.controlled_entity_id)],
+            controlled_entity_id=client.controlled_entity_id,
+            delta_time=self.server_delta_time,
+            player_delta_time=client_delta_time,
+        )
         client.conn.close()
         del self.clients[client.info]
         self.game.world.remove_entity(client.controlled_entity_id)
@@ -197,12 +210,7 @@ class Server:
         self.max_clients = max_clients
 
     def get_state(self, client: ClientInstance):
-        state = {}
-
-        state["game"] = self.game
-        state["controlled_entity_id"] = client.controlled_entity_id
-
-        return state
+        return {"game": self.game, "controlled_entity_id": client.controlled_entity_id}
 
     def parse_events(self, data):
         if not isinstance(data, list):

@@ -2,7 +2,7 @@ import pygame
 
 from ...entities.GameEntity import GameEntity
 from ...entities.Player import Player
-from ...game.Team import get_color
+from ...game.Team import get_team_color
 from ...language.LanguageKey import LanguageKey
 from ..resize import resize
 from .Component import Component
@@ -103,7 +103,7 @@ class Scoreboard(Component):
                 # Team color
                 pygame.draw.circle(
                     self.surface,
-                    get_color(entity.team),
+                    get_team_color(entity.team),
                     (resize(20 + 50, "x"), y + resize(step_height / 2, "y")),
                     resize(10),
                 )
