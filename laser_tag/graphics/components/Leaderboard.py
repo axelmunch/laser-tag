@@ -42,8 +42,15 @@ class Leaderboard(Component):
                 self.surface,
                 get_team_color(data[1]),
                 (resize(20, "x"), resize(i * 50 + 25, "y")),
-                resize(10),
+                resize(10, "x"),
             )
+            if data[1] == Team.NONE:
+                pygame.draw.circle(
+                    self.surface,
+                    (0, 0, 0),
+                    (resize(20, "x"), resize(i * 50 + 25, "y")),
+                    resize(5, "x"),
+                )
 
             # Rank
             self.surface.blit(

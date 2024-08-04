@@ -6,7 +6,7 @@ from ....events.EventInstance import EventInstance
 from ....game.Game import Game
 from ....game.GameMode import GameMode
 from ....game.Mode import Mode, get_mode_language_key
-from ....game.Team import get_team_color, get_team_language_key
+from ....game.Team import Team, get_team_color, get_team_language_key
 from ....language.LanguageKey import LanguageKey
 from ...resize import resize
 from ..Component import Component
@@ -401,6 +401,16 @@ class ModeTeamSelectionMenu(Component, Menu):
                     ),
                     int(resize(area[3] / 3, "x")),
                 )
+                if self.players[id].team == Team.NONE:
+                    pygame.draw.circle(
+                        self.surface,
+                        (0, 0, 0),
+                        (
+                            resize(draw_player_x + area[3] / 2, "x"),
+                            resize(draw_player_y + area[3] / 2, "y"),
+                        ),
+                        max(1, int(resize(area[3] / 6, "x"))),
+                    )
 
                 # Name
                 text_surface = self.text.get_surface(
