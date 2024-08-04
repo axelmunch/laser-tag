@@ -336,6 +336,7 @@ package laser_tag {
         }
 
         class GameMode {
+            language: Language
             game_mode: Mode
             game_started: Boolean
             grace_period_end

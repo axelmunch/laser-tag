@@ -3,14 +3,16 @@ from time import time
 from ..configuration import VARIABLES
 from ..entities.GameEntity import GameEntity
 from ..entities.Player import Player
+from ..language.Language import Language
 from .Mode import Mode
-from .Team import Team
+from .Team import Team, get_team_language_key
 
 
 class GameMode:
     """Game mode manager"""
 
     def __init__(self, game_mode=Mode.SOLO):
+        self.language = Language()
         self.reset(game_mode)
 
     def __repr__(self):
@@ -82,7 +84,9 @@ class GameMode:
                         )
 
             for team, score in teams.items():
-                self.leaderboard.append([int(score), team, team])
+                self.leaderboard.append(
+                    [int(score), team, self.language.get(get_team_language_key(team))]
+                )
 
         # Sort
         self.leaderboard.sort(key=lambda element: element[0], reverse=True)
