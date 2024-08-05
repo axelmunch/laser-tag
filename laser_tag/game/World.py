@@ -5,6 +5,7 @@ from ..configuration import GAME_WORLD_FILE, VARIABLES
 from ..entities.create_entity import create_entity
 from ..entities.GameEntity import GameEntity
 from ..entities.LaserRay import LaserRay
+from ..entities.Player import Player
 from ..events.Event import Event
 from ..events.EventInstance import EventInstance
 from ..game.Ray import Ray
@@ -85,6 +86,18 @@ class World:
 
     def set_controlled_entity(self, uid):
         self.controlled_entity = uid
+
+    def change_player_team(self, id, team: Team):
+        player = self.get_entity(id)
+        if player is not None:
+            player.team = team
+
+    def reset_teams(self, teams: list[Team]):
+        index = 0
+        for entity in self.entities.values():
+            if isinstance(entity, Player):
+                entity.team = teams[index % len(teams)]
+                index += 1
 
     def enhance_events(self, events: list[EventInstance]):
         movement_vector = [0, 0]

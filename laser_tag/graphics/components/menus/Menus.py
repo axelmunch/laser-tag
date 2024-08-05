@@ -17,6 +17,15 @@ class Menus:
 
     def init_menus(self):
         self.menus = []
+        self.menu_events = []
+
+    def add_event(self, event: EventInstance):
+        self.menu_events.append(event)
+
+    def get_events(self) -> list[EventInstance]:
+        events = self.menu_events
+        self.menu_events = []
+        return events
 
     def resize(self):
         for menu in self.menus:
@@ -46,4 +55,5 @@ class Menus:
         return self.menus
 
     def open_menu(self, menu: Menu):
+        menu.add_event_function = self.add_event
         self.menus.append(menu)

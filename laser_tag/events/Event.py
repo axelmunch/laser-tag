@@ -13,6 +13,10 @@ class Event(Enum):
     NONE = auto()
     TICK = auto()
     START_GAME = auto()
+    CHANGE_GAME_MODE = auto()
+    CHANGE_PLAYER_TEAM = auto()
+    PLAYER_JOIN = auto()
+    PLAYER_LEAVE = auto()
     MESSAGE = auto()
     TYPE_CHAR = auto()
     GAME_MOVE = auto()
@@ -110,4 +114,12 @@ game_events = [
     Event.GAME_ROTATE,
     Event.GAME_SELECT_TEAM,
     Event.GAME_SCOREBOARD,
+]
+
+# Events sent by the server
+server_events = [
+    Event.CHANGE_GAME_MODE,
+    Event.CHANGE_PLAYER_TEAM,
+    Event.PLAYER_JOIN,
+    Event.PLAYER_LEAVE,
 ]

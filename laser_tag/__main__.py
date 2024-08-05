@@ -7,6 +7,7 @@ from laser_tag.events.get_events import *
 from laser_tag.game.Game import Game
 from laser_tag.graphics import display
 from laser_tag.graphics.AssetsLoader import load_assets
+from laser_tag.graphics.components.menus.Menus import Menus
 from laser_tag.graphics.Renderer import Renderer
 from laser_tag.graphics.resize import resize
 from laser_tag.network.ClientServerGroup import ClientServerGroup
@@ -18,7 +19,9 @@ if __name__ == "__main__":
 
     clock = pygame.time.Clock()
 
-    game = Game()
+    game = Game(server_mode=False)
+
+    menus = Menus()
 
     renderer = Renderer(clock)
 
@@ -35,6 +38,9 @@ if __name__ == "__main__":
 
         # Events
         events = get_events()
+        menu_events = menus.get_events()
+        for event in menu_events:
+            events.append(event)
 
         # Enhance events
         game.enhance_events(events)
@@ -81,9 +87,6 @@ if __name__ == "__main__":
                     pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_ARROW)
                 )
 
-        # Predict
-        game.update(events)
-
         if client_server.is_client_connected():
             # Send
             client_server.get_client().add_events_to_send(
@@ -110,6 +113,9 @@ if __name__ == "__main__":
                     network_stats[2],
                     network_stats[3],
                 )
+
+        # Predict
+        game.update(events)
 
         renderer.update(game, events)
 

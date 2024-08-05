@@ -98,3 +98,25 @@ class LanguageKey(Enum):
 
     MENU_DISCONNECTED_TITLE = auto()
     MENU_DISCONNECTED_MENU = auto()
+
+    MENU_SELECTION_TITLE = auto()
+    MENU_SELECTION_START = auto()
+    MENU_SELECTION_LEAVE = auto()
+    MENU_SELECTION_GAME_MODE = auto()
+    MENU_SELECTION_TEAMS = auto()
+    MENU_SELECTION_PLAYERS = auto()
+
+    GAME_MODE_SOLO = auto()
+    GAME_MODE_TEAM = auto()
+    GAME_MODE_SOLO_ELIMINATION = auto()
+    GAME_MODE_TEAM_ELIMINATION = auto()
+
+    TEAM_ALL = auto()
+    TEAM_RED = auto()
+    TEAM_BLUE = auto()
+    TEAM_GREEN = auto()
+    TEAM_YELLOW = auto()
+    TEAM_ORANGE = auto()
+    TEAM_PINK = auto()
+    TEAM_BLACK = auto()
+    TEAM_WHITE = auto()

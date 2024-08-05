@@ -13,6 +13,7 @@ from .components.menus.ConnectionMenu import ConnectionMenu
 from .components.menus.Disconnected import Disconnected
 from .components.menus.MainMenu import MainMenu
 from .components.menus.Menus import Menus
+from .components.menus.ModeTeamSelectionMenu import ModeTeamSelectionMenu
 from .components.menus.PauseMenu import PauseMenu
 from .components.menus.SettingsMenu import SettingsMenu
 from .components.Minimap import Minimap
@@ -127,6 +128,13 @@ class Renderer:
         self.last_game_paused = game.game_paused
 
         if not game.game_paused:
+            if not game.game_mode.is_game_started():
+                game.game_paused = True
+                self.last_game_paused = True
+                self.menus.open_menu(
+                    ModeTeamSelectionMenu(game, callback_quit=lambda: self.quit(game))
+                )
+
             if (
                 not self.client_server.is_client_connected()
                 and self.last_client_connected
