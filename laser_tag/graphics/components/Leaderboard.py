@@ -16,7 +16,7 @@ class Leaderboard(Component):
 
         self.max_length = 5
 
-        self.set_original_size(275, 50 * self.max_length)
+        self.set_original_size(350, 50 * self.max_length)
 
         self.update(data)
 
@@ -32,7 +32,16 @@ class Leaderboard(Component):
         super().update()
 
     def render(self):
-        self.surface.fill((255, 255, 255, 64))
+        pygame.draw.rect(
+            self.surface,
+            (255, 255, 255, 64),
+            (
+                0,
+                0,
+                self.width,
+                resize(50 * min(len(self.data), self.max_length), "y"),
+            ),
+        )
 
         for i in range(min(len(self.data), self.max_length)):
             data = self.data[i]
@@ -66,10 +75,10 @@ class Leaderboard(Component):
             self.surface.blit(
                 self.text.get_surface(
                     data[2],
-                    20,
-                    (255, 255, 255),
+                    30,
+                    (223, 223, 223),
                 ),
-                (resize(70, "x"), resize(i * 50 + 17, "y")),
+                (resize(70, "x"), resize(i * 50 + 10, "y")),
             )
 
             # Score

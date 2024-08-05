@@ -42,7 +42,7 @@ class Scoreboard(Component):
         self.surface.blit(
             self.text.get_surface(
                 self.language.get(LanguageKey.GAME_SCOREBOARD_TITLE),
-                75,
+                60,
                 (255, 255, 255),
             ),
             (resize(10, "x"), resize(10, "y")),

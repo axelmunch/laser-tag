@@ -343,12 +343,14 @@ package laser_tag {
             game_time_end
             grace_time_seconds
             leaderboard
+            scoreboard
 
             set_state(parsed_object)
             reset(game_mode)
             start(): Boolean
             is_game_started(): Boolean
             update_leaderboard(entities: GameEntity[])
+            update_scoreboard(entities: GameEntity[])
             change_mode(mode: Mode): Boolean
             get_teams_available(mode: Mode): Team[]
             update(entities: GameEntity[])

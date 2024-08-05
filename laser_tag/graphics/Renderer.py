@@ -104,10 +104,11 @@ class Renderer:
                 rays=rays,
             )
 
-        self.leaderboard.update(game.game_mode.leaderboard)
+        if not game.game_paused:
+            self.leaderboard.update(game.game_mode.leaderboard)
 
         if game.show_scoreboard:
-            self.scoreboard.update(list(game.world.entities.values()))
+            self.scoreboard.update(game.game_mode.scoreboard)
 
         self.game_timer.update(
             game.game_mode.grace_period_seconds,

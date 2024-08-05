@@ -37,6 +37,7 @@ class GameMode:
         self.game_time_end = 0
         self.game_time_seconds = 0
         self.leaderboard = []
+        self.scoreboard = []
 
         match self.game_mode:
             case Mode.SOLO:
@@ -94,6 +95,24 @@ class GameMode:
         except ValueError:
             pass
 
+    def update_scoreboard(self, entities: list[GameEntity]):
+        self.scoreboard.clear()
+
+        for entity in entities.values():
+            if isinstance(entity, Player):
+                self.scoreboard.append(entity)
+
+        # Sort
+        try:
+            if self.game_mode in [Mode.SOLO_ELIMINATION, Mode.TEAM_ELIMINATION]:
+                self.scoreboard.sort(
+                    key=lambda element: element.eliminations, reverse=True
+                )
+            else:
+                self.scoreboard.sort(key=lambda element: element.score, reverse=True)
+        except ValueError:
+            pass
+
     def change_mode(self, mode: Mode) -> bool:
         """Returns true if mode teams have changed"""
 
@@ -140,3 +159,5 @@ class GameMode:
 
         # Leaderboard
         self.update_leaderboard(entities)
+        # Scoreboard
+        self.update_scoreboard(entities)

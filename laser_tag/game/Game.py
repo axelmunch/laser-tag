@@ -113,6 +113,8 @@ class Game:
     ):
         delta_time.update()
 
+        self.show_scoreboard = False
+
         for event in events:
             if event.server:
                 self.server_events.add_event(event)
@@ -123,32 +125,33 @@ class Game:
 
         if self.server_mode and not self.game_mode.is_game_started():
             for event in events:
-                if event.id == Event.START_GAME:
-                    if self.game_mode.start():
-                        # Reset
-                        self.reset()
-                elif event.id == Event.CHANGE_GAME_MODE:
-                    changing_mode = Mode.SOLO
-                    try:
-                        changing_mode = Mode(event.data)
-                    except ValueError:
-                        pass
+                match event.id:
+                    case Event.START_GAME:
+                        if self.game_mode.start():
+                            # Reset
+                            self.reset()
+                    case Event.CHANGE_GAME_MODE:
+                        changing_mode = Mode.SOLO
+                        try:
+                            changing_mode = Mode(event.data)
+                        except ValueError:
+                            pass
 
-                    teams_changed = self.game_mode.change_mode(changing_mode)
+                        teams_changed = self.game_mode.change_mode(changing_mode)
 
-                    if teams_changed:
-                        self.world.reset_teams(
-                            GameMode.get_teams_available(self.game_mode.game_mode)
-                        )
-                elif event.id == Event.CHANGE_PLAYER_TEAM:
-                    self.world.change_player_team(event.data[0], event.data[1])
-                elif event.id == Event.PLAYER_JOIN:
-                    if self.server_mode:
-                        entity = self.world.get_entity(event.data)
-                        if entity is not None:
-                            entity.team = GameMode.get_teams_available(
-                                self.game_mode.game_mode
-                            )[0]
+                        if teams_changed:
+                            self.world.reset_teams(
+                                GameMode.get_teams_available(self.game_mode.game_mode)
+                            )
+                    case Event.CHANGE_PLAYER_TEAM:
+                        self.world.change_player_team(event.data[0], event.data[1])
+                    case Event.PLAYER_JOIN:
+                        if self.server_mode:
+                            entity = self.world.get_entity(event.data)
+                            if entity is not None:
+                                entity.team = GameMode.get_teams_available(
+                                    self.game_mode.game_mode
+                                )[0]
 
         self.lock_cursor = not (
             self.game_paused
@@ -157,8 +160,6 @@ class Game:
         )
         if self.game_paused or not self.game_mode.is_game_started():
             return
-
-        self.show_scoreboard = False
 
         for event in events:
             match event.id:
@@ -171,6 +172,13 @@ class Game:
                         event.id = Event.NONE
                 case Event.GAME_SCOREBOARD:
                     self.show_scoreboard = True
+                case Event.PLAYER_JOIN:
+                    if self.server_mode:
+                        entity = self.world.get_entity(event.data)
+                        if entity is not None:
+                            entity.team = GameMode.get_teams_available(
+                                self.game_mode.game_mode
+                            )[0]
 
         self.world.update(events, controlled_entity_id, delta_time, player_delta_time)
 
