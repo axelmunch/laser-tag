@@ -17,11 +17,12 @@ from .Menu import Menu
 class ModeTeamSelectionMenu(Component, Menu):
     """Mode and team selection menu component"""
 
-    def __init__(self, game: Game):
+    def __init__(self, game: Game, callback_quit=None):
         Component.__init__(self)
         Menu.__init__(self)
 
         self.game = game
+        self.callback_quit = callback_quit
 
         self.set_original_size(1920, 1080)
 
@@ -31,14 +32,6 @@ class ModeTeamSelectionMenu(Component, Menu):
         self.button_width = (self.menu_box_width - 20 * 5 - self.border_margin * 2) / 4
         self.button_height = 100
 
-        self.back_button = GraphicalButton(
-            960 + self.menu_box_width / 2 - 50 - self.button_width,
-            540 + self.menu_box_height / 2 - self.button_height - self.border_margin,
-            self.button_width,
-            self.button_height,
-            text_key=LanguageKey.MENU_SELECTION_START,
-            action=lambda: self.add_event(EventInstance(Event.START_GAME)),
-        )
         self.teams_button = GraphicalButton(
             960 + self.menu_box_width / 4 - self.button_width / 2,
             540 - self.menu_box_height / 2 + self.border_margin,
@@ -49,7 +42,30 @@ class ModeTeamSelectionMenu(Component, Menu):
             type=ButtonType.SETTINGS_CATEGORY,
         )
 
-        self.default_elements = [self.back_button]
+        self.default_elements = [
+            GraphicalButton(
+                960 - self.menu_box_width / 2 + self.border_margin,
+                540
+                + self.menu_box_height / 2
+                - self.button_height
+                - self.border_margin,
+                self.button_width,
+                self.button_height,
+                text_key=LanguageKey.MENU_SELECTION_LEAVE,
+                action=self.quit,
+            ),
+            GraphicalButton(
+                960 + self.menu_box_width / 2 - self.border_margin - self.button_width,
+                540
+                + self.menu_box_height / 2
+                - self.button_height
+                - self.border_margin,
+                self.button_width,
+                self.button_height,
+                text_key=LanguageKey.MENU_SELECTION_START,
+                action=lambda: self.add_event(EventInstance(Event.START_GAME)),
+            ),
+        ]
 
         self.pages_buttons = [
             GraphicalButton(
@@ -233,6 +249,11 @@ class ModeTeamSelectionMenu(Component, Menu):
             and self.mouse_y - rect[1] >= 0
             and self.mouse_y - rect[1] <= rect[3]
         )
+
+    def quit(self):
+        if self.callback_quit is not None:
+            self.callback_quit()
+        self.set_active(False)
 
     def update(self, events: list[EventInstance] = []):
         """

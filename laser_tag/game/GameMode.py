@@ -89,7 +89,10 @@ class GameMode:
                 )
 
         # Sort
-        self.leaderboard.sort(key=lambda element: element[0], reverse=True)
+        try:
+            self.leaderboard.sort(key=lambda element: element[0], reverse=True)
+        except ValueError:
+            pass
 
     def change_mode(self, mode: Mode) -> bool:
         """Returns true if mode teams have changed"""

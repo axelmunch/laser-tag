@@ -131,7 +131,9 @@ class Renderer:
             if not game.game_mode.is_game_started():
                 game.game_paused = True
                 self.last_game_paused = True
-                self.menus.open_menu(ModeTeamSelectionMenu(game))
+                self.menus.open_menu(
+                    ModeTeamSelectionMenu(game, callback_quit=lambda: self.quit(game))
+                )
 
             if (
                 not self.client_server.is_client_connected()

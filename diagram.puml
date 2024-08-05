@@ -1082,12 +1082,12 @@ package laser_tag {
 
                 class ModeTeamSelectionMenu extends Component, Menu {
                     game: Game
+                    callback_quit
                     menu_box_width
                     menu_box_height
                     border_margin
                     button_width
                     button_height
-                    back_button : GraphicalButton
                     teams_button : GraphicalButton
                     default_elements: GraphicalElement[]
                     pages_buttons: GraphicalButton[]
@@ -1107,6 +1107,7 @@ package laser_tag {
                     refresh()
                     switch_page(page)
                     is_hovered(rect): Boolean
+                    quit()
                     update(events: EventInstance[])
                 }
 
