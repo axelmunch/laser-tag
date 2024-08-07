@@ -3,6 +3,8 @@ from os import startfile
 from subprocess import call
 from sys import platform
 
+from ..audio.Audio import Audio
+from ..audio.AudioPlayer import AudioPlayer
 from ..configuration import ASSETS_PATH, VARIABLES
 from .Textures import Textures
 
@@ -27,6 +29,14 @@ def load_assets():
     assets_path = ASSETS_PATH.joinpath(VARIABLES.assets_folder)
 
     load_textures(assets_path)
+
+    load_sounds(assets_path)
+
+
+def load_sounds(path):
+    audio_player = AudioPlayer()
+
+    # audio_player.load_sound(Audio.MENU_1, path.joinpath(""))
 
 
 def load_textures(path):

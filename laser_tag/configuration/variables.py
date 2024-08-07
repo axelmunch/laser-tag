@@ -55,6 +55,10 @@ class Variables:
         self.assets_folder = "default"
         self.language = "EN"
 
+        self.volume_global = 1
+        self.volume_music = 1
+        self.volume_effects = 1
+
         # Load from file
         self.load()
 
