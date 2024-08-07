@@ -17,6 +17,8 @@ class Event(Enum):
     CHANGE_PLAYER_TEAM = auto()
     PLAYER_JOIN = auto()
     PLAYER_LEAVE = auto()
+    PLAY_SOUND = auto()
+    PLAY_SOUND_LOCAL = auto()
     MESSAGE = auto()
     TYPE_CHAR = auto()
     GAME_MOVE = auto()
@@ -63,6 +65,7 @@ class Event(Enum):
 
 # Events that are not sent to the server
 local_events = [
+    Event.PLAY_SOUND_LOCAL,
     Event.MESSAGE,
     Event.TYPE_CHAR,
     Event.GAME_MOVE_FORWARD,
@@ -122,4 +125,5 @@ server_events = [
     Event.CHANGE_PLAYER_TEAM,
     Event.PLAYER_JOIN,
     Event.PLAYER_LEAVE,
+    Event.PLAY_SOUND,
 ]

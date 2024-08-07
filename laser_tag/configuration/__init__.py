@@ -2,7 +2,7 @@ from pathlib import Path
 
 from .variables import *
 
-VERSION = "v0.0.15"
+VERSION = "v0.0.16"
 GAME_NAME = "Laser Tag"
 
 TARGET_FPS = 60
@@ -36,6 +36,9 @@ MAX_WALL_HEIGHT = 2500
 MAX_RAY_DISTANCE = 50
 
 MAX_PLAYER_NAME_LENGTH = 16
+
+MUSIC_FADEOUT_MS = 3000
+AUDIO_CHANNELS = 16
 
 
 VARIABLES = Variables(VERSION, SETTINGS_FILE)

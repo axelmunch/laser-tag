@@ -80,19 +80,19 @@ class SettingsMenu(Component, Menu):
             #     action=lambda: self.switch_settings_page(2),
             #     type=ButtonType.SETTINGS_CATEGORY,
             # ),
-            # GraphicalButton(
-            #     960
-            #     - self.settings_box_width / 2
-            #     + border_margin
-            #     + 20 * 3
-            #     + button_width * 3,
-            #     540 - self.settings_box_height / 2 + border_margin,
-            #     button_width,
-            #     button_height,
-            #     text_key=LanguageKey.MENU_SETTINGS_AUDIO,
-            #     action=lambda: self.switch_settings_page(3),
-            #     type=ButtonType.SETTINGS_CATEGORY,
-            # ),
+            GraphicalButton(
+                960
+                - self.settings_box_width / 2
+                + border_margin
+                + 20 * 3
+                + button_width * 3,
+                540 - self.settings_box_height / 2 + border_margin,
+                button_width,
+                button_height,
+                text_key=LanguageKey.MENU_SETTINGS_AUDIO,
+                action=lambda: self.switch_settings_page(2),
+                type=ButtonType.SETTINGS_CATEGORY,
+            ),
             GraphicalButton(
                 960
                 - self.settings_box_width / 2
@@ -103,7 +103,7 @@ class SettingsMenu(Component, Menu):
                 button_width,
                 button_height,
                 text_key=LanguageKey.MENU_SETTINGS_DEBUG,
-                action=lambda: self.switch_settings_page(2),
+                action=lambda: self.switch_settings_page(3),
                 type=ButtonType.SETTINGS_CATEGORY,
                 disabled=not VARIABLES.debug,
             ),
@@ -295,7 +295,63 @@ class SettingsMenu(Component, Menu):
                 ),
             ],
             # [],
-            # [],
+            [
+                GraphicalText(
+                    960 - self.settings_box_width / 4 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 150 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(LanguageKey.MENU_SETTINGS_VOLUME_GLOBAL),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalSlider(
+                    960 - self.settings_box_width / 4,
+                    540 - self.settings_box_height / 2 + border_margin + 150,
+                    0,
+                    100,
+                    int(VARIABLES.volume_global * 100),
+                    change_action=lambda i: setattr(
+                        VARIABLES, "volume_global", i / 100
+                    ),
+                ),
+                GraphicalText(
+                    960 - self.settings_box_width / 4 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 300 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(LanguageKey.MENU_SETTINGS_VOLUME_MUSIC),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalSlider(
+                    960 - self.settings_box_width / 4,
+                    540 - self.settings_box_height / 2 + border_margin + 300,
+                    0,
+                    100,
+                    int(VARIABLES.volume_music * 100),
+                    change_action=lambda i: setattr(VARIABLES, "volume_music", i / 100),
+                ),
+                GraphicalText(
+                    960 - self.settings_box_width / 4 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 450 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(LanguageKey.MENU_SETTINGS_VOLUME_EFFECTS),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalSlider(
+                    960 - self.settings_box_width / 4,
+                    540 - self.settings_box_height / 2 + border_margin + 450,
+                    0,
+                    100,
+                    int(VARIABLES.volume_effects * 100),
+                    change_action=lambda i: setattr(
+                        VARIABLES, "volume_effects", i / 100
+                    ),
+                ),
+            ],
             [
                 GraphicalText(
                     960 - self.settings_box_width / 4 - 20,

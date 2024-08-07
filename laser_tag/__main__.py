@@ -1,6 +1,8 @@
 import pygame
 from pygame.locals import *
 
+from laser_tag.audio.AudioManager import AudioManager
+from laser_tag.audio.AudioPlayer import AudioPlayer
 from laser_tag.configuration import VARIABLES
 from laser_tag.events.Event import Event
 from laser_tag.events.get_events import *
@@ -24,6 +26,9 @@ if __name__ == "__main__":
     menus = Menus()
 
     renderer = Renderer(clock)
+
+    audio_manager = AudioManager()
+    audio_manager.set_audio_player(AudioPlayer())
 
     # Main menu
     game.game_paused = True
@@ -116,6 +121,8 @@ if __name__ == "__main__":
 
         # Predict
         game.update(events)
+
+        audio_manager.update(events)
 
         renderer.update(game, events)
 

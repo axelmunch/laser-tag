@@ -29,6 +29,8 @@ package laser_tag {
             MAX_WALL_HEIGHT
             MAX_RAY_DISTANCE
             MAX_PLAYER_NAME_LENGTH
+            MUSIC_FADEOUT_MS
+            AUDIO_CHANNELS
             VARIABLES: Variables
         }
 
@@ -63,6 +65,9 @@ package laser_tag {
             latest_host_port
             assets_folder
             language
+            volume_global
+            volume_music
+            volume_effects
 
             load()
             save()
@@ -148,6 +153,8 @@ package laser_tag {
             CHANGE_PLAYER_TEAM
             PLAYER_JOIN
             PLAYER_LEAVE
+            PLAY_SOUND
+            PLAY_SOUND_LOCAL
             MESSAGE
             TYPE_CHAR
             GAME_MOVE
@@ -219,6 +226,34 @@ package laser_tag {
 
         EventInstance --> Event
         ServerEvents --> EventInstance
+    }
+
+    package audio {
+        enum Audio {
+            MENU_1
+        }
+
+        class AudioManager {
+            audio
+
+            set_audio_player(audio)
+            update(events: EventInstance[])
+        }
+
+        class AudioPlayer {
+            sounds
+            channel_index
+            transition_music
+            latest_global_volume
+            latest_music_volume
+            latest_effects_volume
+
+            load_sound(audio: Audio, path)
+            play_sound(audio: Audio)
+            play_music(audio: Audio)
+            update_volume()
+            update(events: EventInstance[])
+        }
     }
 
     package entities {
@@ -594,6 +629,9 @@ package laser_tag {
             MENU_SETTINGS_COMPONENTS_OUTLINE
             MENU_SETTINGS_RAYS_MINIMAP
             MENU_SETTINGS_ALL_ENTITIES_MINIMAP
+            MENU_SETTINGS_VOLUME_GLOBAL
+            MENU_SETTINGS_VOLUME_MUSIC
+            MENU_SETTINGS_VOLUME_EFFECTS
             MENU_CONNECTION_TITLE
             MENU_CONNECTION_BACK
             MENU_CONNECTION_JOIN
