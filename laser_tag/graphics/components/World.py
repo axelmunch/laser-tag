@@ -2,9 +2,10 @@ from math import ceil, cos
 
 import pygame
 
-from ...configuration import MAX_WALL_HEIGHT, VARIABLES
+from ...configuration import ENTITIES_ROTATION_FRAMES, MAX_WALL_HEIGHT, VARIABLES
 from ...entities.GameEntity import GameEntity
 from ...entities.LaserRay import LaserRay
+from ...entities.Player import Player
 from ...game.Ray import Ray
 from ...math.degrees_radians import degrees_to_radians
 from ...math.distance import distance_points
@@ -217,8 +218,44 @@ class World(Component):
                     ),
                 )
 
-            elif isinstance(object, GameEntity):
+            elif isinstance(object, Player):
+                angle = 0
+                if self.data["current_entity"] is not None:
+                    angle = (
+                        get_angle(
+                            object.position, center=self.data["current_entity"].position
+                        )
+                        - object.rotation
+                        + 180
+                        + 180 / ENTITIES_ROTATION_FRAMES
+                    ) % 360
+
+                rotation_frame = int(angle / 360 * ENTITIES_ROTATION_FRAMES)
+
                 texture = TextureNames.GREEN
+
+                entity_world_size = min(VARIABLES.world_scale / distance, 1080)
+
+                texture_original_size = textures.get_original_size(texture)
+                texture_scale_ratio = entity_world_size / texture_original_size[1] * 0.7
+                texture_new_size = (
+                    texture_original_size[0] * texture_scale_ratio,
+                    texture_original_size[1] * texture_scale_ratio,
+                )
+
+                # Display the entity
+                self.surface.blit(
+                    textures.resize_texture(
+                        texture, (texture_new_size[0], texture_new_size[1])
+                    ),
+                    (
+                        resize(x_position * 1920 - texture_new_size[0] / 2, "x"),
+                        resize(540 + entity_world_size / 2 - texture_new_size[1], "y"),
+                    ),
+                )
+
+            elif isinstance(object, GameEntity):
+                texture = TextureNames.RED
 
                 entity_world_size = min(VARIABLES.world_scale / distance, 1080)
 

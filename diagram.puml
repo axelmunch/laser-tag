@@ -31,6 +31,7 @@ package laser_tag {
             MAX_PLAYER_NAME_LENGTH
             MUSIC_FADEOUT_MS
             AUDIO_CHANNELS
+            ENTITIES_ROTATION_FRAMES
             VARIABLES: Variables
         }
 
