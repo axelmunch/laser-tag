@@ -7,6 +7,7 @@ from ...entities.GameEntity import GameEntity
 from ...entities.LaserRay import LaserRay
 from ...entities.Player import Player
 from ...game.Ray import Ray
+from ...game.Team import get_team_color
 from ...math.degrees_radians import degrees_to_radians
 from ...math.distance import distance_points
 from ...math.Point import Point
@@ -251,6 +252,30 @@ class World(Component):
                     (
                         resize(x_position * 1920 - texture_new_size[0] / 2, "x"),
                         resize(540 + entity_world_size / 2 - texture_new_size[1], "y"),
+                    ),
+                )
+
+                # Display a text with the name
+                text_distance = max(1, distance)
+                text_margin = 10
+                text_surface = self.text.get_surface(
+                    object.name, 125 / text_distance, get_team_color(object.team)
+                )
+                self.surface.blit(
+                    text_surface,
+                    (
+                        resize(x_position * 1920, "x") - text_surface.get_width() / 2,
+                        max(
+                            resize(text_margin, "y"),
+                            resize(
+                                540
+                                + entity_world_size / 2
+                                - texture_new_size[1]
+                                - text_margin / text_distance,
+                                "y",
+                            )
+                            - text_surface.get_height(),
+                        ),
                     ),
                 )
 
