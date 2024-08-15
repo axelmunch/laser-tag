@@ -137,9 +137,9 @@ class Server:
             client.player_name is not None
             and isinstance(client.player_name, str)
             and len(client.player_name) >= 1
-            and len(client.player_name) <= MAX_PLAYER_NAME_LENGTH
         ):
             client.player_name = "Player"
+        client.player_name = client.player_name[:MAX_PLAYER_NAME_LENGTH]
         self.send(client, f'"{client.player_name}"')
 
         # Create player
