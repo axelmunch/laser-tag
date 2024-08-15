@@ -34,6 +34,9 @@ class ConnectionMenu(Component, Menu):
         button_width = (self.menu_box_width - 20 * 5 - border_margin * 2) / 5
         button_height = 100
 
+        if len(VARIABLES.player_name) == 0:
+            VARIABLES.player_name = self.language.get(LanguageKey.DEFAULT_PLAYER_NAME)
+
         self.back_button = GraphicalButton(
             960 - self.menu_box_width / 2 + 50,
             540 + self.menu_box_height / 2 - button_height - 50,

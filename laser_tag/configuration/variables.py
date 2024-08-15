@@ -41,7 +41,7 @@ class Variables:
 
         self.rotate_sensitivity = 5 / 100
 
-        self.player_name = "Player"
+        self.player_name = ""
 
         self.fov = 80
         self.ray_width = 15

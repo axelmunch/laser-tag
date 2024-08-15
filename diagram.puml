@@ -565,6 +565,7 @@ package laser_tag {
     package language {
         enum LanguageKey {
             GAME_NAME
+            DEFAULT_PLAYER_NAME
             NETWORK_STATS_CONNECTED
             NETWORK_STATS_DISCONNECTED
             NETWORK_STATS_CONNECTING

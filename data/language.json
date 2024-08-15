@@ -4,6 +4,7 @@
     },
     "EN": {
         "GAME_NAME": "Laser Tag",
+        "DEFAULT_PLAYER_NAME": "Player",
         "NETWORK_STATS_CONNECTED": "Connected",
         "NETWORK_STATS_DISCONNECTED": "Disconnected",
         "NETWORK_STATS_CONNECTING": "Connecting...",

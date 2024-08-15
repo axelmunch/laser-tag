@@ -12,6 +12,8 @@ class LanguageKey(Enum):
 
     GAME_NAME = auto()
 
+    DEFAULT_PLAYER_NAME = auto()
+
     NETWORK_STATS_CONNECTED = auto()
     NETWORK_STATS_DISCONNECTED = auto()
     NETWORK_STATS_CONNECTING = auto()
