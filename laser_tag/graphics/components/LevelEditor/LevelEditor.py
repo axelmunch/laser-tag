@@ -1,20 +1,24 @@
 import json
 
-from ....configuration import LEVEL_EDITOR_WORLD_FILE
+from ....configuration import LEVEL_EDITOR_WORLD_FILE, VARIABLES
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
 from ....game.load_world import load_world
 from ...resize import resize
 from ..Component import Component
+from ..menus.Menu import Menu
 from .ItemMenu import ItemMenu
 from .Toolbar import Toolbar
 from .View import View
 
 
-class LevelEditor(Component):
+class LevelEditor(Component, Menu):
     """Level editor component"""
 
     def __init__(self):
+        Component.__init__(self)
+        Menu.__init__(self)
+
         self.toolbar = Toolbar(load_action=self.load, save_action=self.save)
         self.item_menu = ItemMenu()
         self.view = View()
@@ -23,8 +27,6 @@ class LevelEditor(Component):
             self.item_menu,
             self.view,
         ]
-
-        super().__init__()
 
         self.set_original_size(1920, 1080)
 
@@ -38,10 +40,14 @@ class LevelEditor(Component):
         self.update()
 
     def resize(self):
-        super().resize()
+        Menu.resize(self)
+        Component.resize(self)
 
-        for component in self.components:
-            component.resize()
+        try:
+            for component in self.components:
+                component.resize()
+        except AttributeError:
+            pass
 
     def load(self):
         map_data = load_world(LEVEL_EDITOR_WORLD_FILE)
@@ -105,6 +111,9 @@ class LevelEditor(Component):
             events (list): Events
         """
 
+        if not VARIABLES.level_editor:
+            self.set_active(False)
+
         self.data = events
         for event in self.data:
             if event.id == Event.MOUSE_MOVE:
@@ -131,7 +140,8 @@ class LevelEditor(Component):
 
         self.view.update(self.data, (self.view_position[0], self.view_position[1]))
 
-        super().update()
+        Menu.update(self, events, no_escape=True)
+        Component.update(self)
 
     def render(self):
         self.surface.fill((255, 255, 255, 64))

@@ -70,6 +70,8 @@
         "MENU_SETTINGS_COMPONENTS_OUTLINE": "Components outline",
         "MENU_SETTINGS_RAYS_MINIMAP": "Rays minimap",
         "MENU_SETTINGS_ALL_ENTITIES_MINIMAP": "All entities minimap",
+        "MENU_SETTINGS_LEVEL_EDITOR": "Level editor",
+        "MENU_SETTINGS_LEVEL_EDITOR_OPEN": "Open",
         "MENU_SETTINGS_VOLUME_GLOBAL": "Global volume",
         "MENU_SETTINGS_VOLUME_MUSIC": "Music volume",
         "MENU_SETTINGS_VOLUME_EFFECTS": "Effects volume",

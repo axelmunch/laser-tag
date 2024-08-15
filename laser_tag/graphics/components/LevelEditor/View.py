@@ -8,6 +8,7 @@ from ....entities.GameEntity import GameEntity
 from ....entities.Player import Player
 from ....events.Event import Event
 from ....events.EventInstance import EventInstance
+from ....game.load_world import MapData
 from ....game.Wall import Wall
 from ....math.distance import distance_points
 from ....math.Line import Line
@@ -68,14 +69,14 @@ class View(Component):
         self.reset_center()
         self.update()
 
-    def get_map_data(self):
+    def get_map_data(self) -> MapData:
         return {
             "walls": self.get_walls(),
             "entities": self.entities,
             "spawn_points": self.spawn_points,
         }
 
-    def set_map_data(self, map_data: dict):
+    def set_map_data(self, map_data: MapData):
         self.walls = map_data["walls"]
         self.entities = map_data["entities"]
         self.spawn_points = map_data["spawn_points"]

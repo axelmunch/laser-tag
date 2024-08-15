@@ -631,6 +631,8 @@ package laser_tag {
             MENU_SETTINGS_COMPONENTS_OUTLINE
             MENU_SETTINGS_RAYS_MINIMAP
             MENU_SETTINGS_ALL_ENTITIES_MINIMAP
+            MENU_SETTINGS_LEVEL_EDITOR
+            MENU_SETTINGS_LEVEL_EDITOR_OPEN
             MENU_SETTINGS_VOLUME_GLOBAL
             MENU_SETTINGS_VOLUME_MUSIC
             MENU_SETTINGS_VOLUME_EFFECTS
@@ -1069,7 +1071,7 @@ package laser_tag {
                     update(events: EventInstance[], relative_offset)
                 }
 
-                class "LevelEditor" as LevelEditorComponent extends Component {
+                class "LevelEditor" as LevelEditorComponent extends Component, Menu {
                     toolbar: Toolbar
                     item_menu: ItemMenu
                     view: View
@@ -1249,6 +1251,7 @@ package laser_tag {
             clock
             menus: Menus
             last_game_paused: Boolean
+            last_level_editor: Boolean
             close_game: Boolean
             components: Component[]
 
@@ -1257,6 +1260,7 @@ package laser_tag {
             close_game_event(): Boolean
             resize()
             update(game: Game, events: EventInstance[])
+            open_level_editor()
             quit(game)
             open_main_menu(game)
             render(game: Game)

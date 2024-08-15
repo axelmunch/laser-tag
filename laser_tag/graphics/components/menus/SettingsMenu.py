@@ -160,8 +160,6 @@ class SettingsMenu(Component, Menu):
                     choices=self.language.get_language_list(),
                     default_choice=VARIABLES.language,
                     change_action=lambda i: self.change_language(i),
-                    disabled=False,
-                    selected=False,
                 ),
                 GraphicalText(
                     960 + self.settings_box_width / 6 - 20,
@@ -178,8 +176,6 @@ class SettingsMenu(Component, Menu):
                     choices={name: name for name in get_assets_folders()},
                     default_choice=VARIABLES.assets_folder,
                     change_action=lambda i: self.change_assets(i),
-                    disabled=False,
-                    selected=False,
                 ),
                 GraphicalButton(
                     960 + self.settings_box_width / 6 + 270,
@@ -206,8 +202,6 @@ class SettingsMenu(Component, Menu):
                     VARIABLES.show_fps,
                     check_action=lambda: setattr(VARIABLES, "show_fps", True),
                     uncheck_action=lambda: setattr(VARIABLES, "show_fps", False),
-                    disabled=False,
-                    selected=False,
                 ),
                 GraphicalText(
                     960 + self.settings_box_width / 6 - 20,
@@ -232,8 +226,6 @@ class SettingsMenu(Component, Menu):
                     },
                     default_choice=VARIABLES.fps,
                     change_action=lambda i: setattr(VARIABLES, "fps", i),
-                    disabled=False,
-                    selected=False,
                 ),
                 GraphicalText(
                     960 - self.settings_box_width / 4 - 20,
@@ -254,8 +246,6 @@ class SettingsMenu(Component, Menu):
                     uncheck_action=lambda: setattr(
                         VARIABLES, "anti_aliased_text", False
                     ),
-                    disabled=False,
-                    selected=False,
                 ),
                 GraphicalText(
                     960 - self.settings_box_width / 4 - 20,
@@ -290,8 +280,6 @@ class SettingsMenu(Component, Menu):
                     VARIABLES.fullscreen,
                     check_action=lambda: self.change_fullscreen(True),
                     uncheck_action=lambda: self.change_fullscreen(False),
-                    disabled=False,
-                    selected=False,
                 ),
             ],
             # [],
@@ -370,8 +358,6 @@ class SettingsMenu(Component, Menu):
                     uncheck_action=lambda: setattr(
                         VARIABLES, "show_network_stats", False
                     ),
-                    disabled=False,
-                    selected=False,
                 ),
                 GraphicalText(
                     960 + self.settings_box_width / 6 - 20,
@@ -394,8 +380,6 @@ class SettingsMenu(Component, Menu):
                     uncheck_action=lambda: setattr(
                         VARIABLES, "show_components_outline", False
                     ),
-                    disabled=False,
-                    selected=False,
                 ),
                 GraphicalText(
                     960 - self.settings_box_width / 4 - 20,
@@ -414,8 +398,6 @@ class SettingsMenu(Component, Menu):
                     uncheck_action=lambda: setattr(
                         VARIABLES, "show_rays_minimap", False
                     ),
-                    disabled=False,
-                    selected=False,
                 ),
                 GraphicalText(
                     960 + self.settings_box_width / 6 - 20,
@@ -438,8 +420,23 @@ class SettingsMenu(Component, Menu):
                     uncheck_action=lambda: setattr(
                         VARIABLES, "show_all_entities_minimap", False
                     ),
-                    disabled=False,
-                    selected=False,
+                ),
+                GraphicalText(
+                    960 - self.settings_box_width / 4 - 20,
+                    540 - self.settings_box_height / 2 + border_margin + 450 + 50,
+                    align_x="right",
+                    align_y="center",
+                    text=self.language.get(LanguageKey.MENU_SETTINGS_LEVEL_EDITOR),
+                    size=50,
+                    color=(0, 0, 255),
+                ),
+                GraphicalButton(
+                    960 - self.settings_box_width / 4,
+                    540 - self.settings_box_height / 2 + border_margin + 450,
+                    250,
+                    100,
+                    text_key=LanguageKey.MENU_SETTINGS_LEVEL_EDITOR_OPEN,
+                    action=lambda: setattr(VARIABLES, "level_editor", True),
                 ),
             ],
         ]

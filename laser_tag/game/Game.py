@@ -154,9 +154,7 @@ class Game:
                                 )[0]
 
         self.lock_cursor = not (
-            self.game_paused
-            or VARIABLES.level_editor
-            or not self.game_mode.is_game_started()
+            self.game_paused or not self.game_mode.is_game_started()
         )
         if self.game_paused or not self.game_mode.is_game_started():
             return
@@ -164,8 +162,7 @@ class Game:
         for event in events:
             match event.id:
                 case Event.KEY_ESCAPE_PRESS:
-                    if not self.game_paused and not VARIABLES.level_editor:
-                        self.game_paused = True
+                    self.game_paused = True
                 case Event.GAME_SELECT_TEAM:
                     # Can only select team if game has not started
                     if self.game_mode.game_started:
