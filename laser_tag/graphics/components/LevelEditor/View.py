@@ -54,7 +54,7 @@ class View(Component):
 
         self.snap_to_grid = True
         self.show_grid = True
-        self.preview_player = False
+        self.preview = False
 
         self.editor_state = EditorState.PLACE
         self.selected_item = None
@@ -92,12 +92,10 @@ class View(Component):
             self.cancel_placing_or_moving()
         self.selected_item = item
 
-    def set_view_variables(
-        self, snap_to_grid: bool, show_grid: bool, preview_player: bool
-    ):
+    def set_view_variables(self, snap_to_grid: bool, show_grid: bool, preview: bool):
         self.snap_to_grid = snap_to_grid
         self.show_grid = show_grid
-        self.preview_player = preview_player
+        self.preview = preview
 
     def get_walls(self) -> list[Wall]:
         return self.walls
@@ -437,7 +435,7 @@ class View(Component):
     def render(self):
         self.surface.fill((42, 42, 42))
 
-        if self.preview_player:
+        if self.preview:
             pygame.draw.circle(
                 self.surface,
                 (64, 64, 128),
@@ -495,6 +493,26 @@ class View(Component):
                             resize(point_position[1], "y"),
                         ),
                         resize(0.1 * self.cell_size, "x"),
+                    )
+                if self.preview:
+                    # Draw text
+                    text_surface = self.text.get_surface(
+                        str(wall.get_type()), 0.6 * self.cell_size, (192, 255, 192)
+                    )
+                    text_position = self.world_point_to_screen_position(
+                        Point(
+                            (line.point1.x + line.point2.x) / 2,
+                            (line.point1.y + line.point2.y) / 2,
+                        )
+                    )
+                    self.surface.blit(
+                        text_surface,
+                        (
+                            resize(text_position[0], "x")
+                            - text_surface.get_width() / 2,
+                            resize(text_position[1], "y")
+                            - text_surface.get_height() / 2,
+                        ),
                     )
 
         for entity in self.entities:
@@ -557,10 +575,8 @@ class View(Component):
                 if len(self.selected_elements) > 0:
                     color = (128, 128, 128)
 
-                    self.draw_line(
-                        Line(self.selected_elements[-1], self.position_aimed),
-                        color,
-                    )
+                    line = Line(self.selected_elements[-1], self.position_aimed)
+                    self.draw_line(line, color)
                     for point in [self.selected_elements[-1], self.position_aimed]:
                         point_position = self.world_point_to_screen_position(point)
                         pygame.draw.circle(
@@ -571,6 +587,26 @@ class View(Component):
                                 resize(point_position[1], "y"),
                             ),
                             resize(0.1 * self.cell_size, "x"),
+                        )
+                    if self.preview:
+                        # Draw text
+                        text_surface = self.text.get_surface(
+                            str(self.selected_item), 0.6 * self.cell_size, (96, 128, 96)
+                        )
+                        text_position = self.world_point_to_screen_position(
+                            Point(
+                                (line.point1.x + line.point2.x) / 2,
+                                (line.point1.y + line.point2.y) / 2,
+                            )
+                        )
+                        self.surface.blit(
+                            text_surface,
+                            (
+                                resize(text_position[0], "x")
+                                - text_surface.get_width() / 2,
+                                resize(text_position[1], "y")
+                                - text_surface.get_height() / 2,
+                            ),
                         )
             else:
                 if self.placing_or_moving:

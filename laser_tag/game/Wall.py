@@ -41,3 +41,6 @@ class Wall:
 
     def get_line(self) -> Line:
         return self.line
+
+    def get_type(self) -> WallType:
+        return self.type

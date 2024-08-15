@@ -405,6 +405,7 @@ package laser_tag {
 
             create(parsed_object): Wall
             get_line(): Line
+            get_type(): WallType
         }
 
         class Map {
@@ -1004,12 +1005,12 @@ package laser_tag {
                     editor_state: EditorState
                     snap_to_grid: Boolean
                     show_grid: Boolean
-                    preview_player: Boolean
+                    preview: Boolean
                     place_button: Button
                     move_button: Button
                     snap_to_grid_button: Button
                     show_grid_button: Button
-                    preview_player_button: Button
+                    preview_button: Button
                     buttons: GraphicalButton[]
 
                     get_editor_state(): EditorState
@@ -1038,7 +1039,7 @@ package laser_tag {
                     preview_radius
                     snap_to_grid: Boolean
                     show_grid: Boolean
-                    preview_player: Boolean
+                    preview: Boolean
                     editor_state: EditorState
                     selected_item: Item
                     position_aimed: Point
@@ -1050,7 +1051,7 @@ package laser_tag {
                     set_map_data(map_data)
                     set_editor_state(editor_state: EditorState)
                     set_selected_item(item: Item)
-                    set_view_variables(snap_to_grid: Boolean, show_grid: Boolean, preview_player: Boolean)
+                    set_view_variables(snap_to_grid: Boolean, show_grid: Boolean, preview: Boolean)
                     get_walls(): Wall[]
                     reset_center()
                     screen_position_to_world_point(x, y): Point

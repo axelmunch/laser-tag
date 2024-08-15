@@ -8,6 +8,7 @@ from ...entities.LaserRay import LaserRay
 from ...entities.Player import Player
 from ...game.Ray import Ray
 from ...game.Team import get_team_color
+from ...game.Wall import WallType
 from ...math.degrees_radians import degrees_to_radians
 from ...math.distance import distance_points
 from ...math.Point import Point
@@ -133,8 +134,10 @@ class World(Component):
 
                 approximate_display_size = ray_world_size
 
-                ratio = ray.hit_infos[0]
-                line_rotation = ray.hit_infos[1]
+                ratio = ray.hit_infos["line_intersecting"].get_point_ratio_on_line(
+                    ray.hit_infos["intersection_point"]
+                )
+                line_rotation = ray.hit_infos["line_intersecting"].get_rotation()
 
                 reversed_texture = False
 
@@ -145,7 +148,17 @@ class World(Component):
                     if rotation_difference <= 90 or rotation_difference >= 270:
                         reversed_texture = True
 
-                texture_surface_full = textures.get_original_surface(TextureNames.BLUE)
+                texture_name = TextureNames.BLUE
+                match ray.hit_infos["wall_type"]:
+                    case WallType.WALL_1:
+                        texture_name = TextureNames.BLUE
+                    case WallType.WALL_2:
+                        texture_name = TextureNames.RED
+                    case WallType.WALL_3:
+                        texture_name = TextureNames.GREEN
+                    case WallType.WALL_4:
+                        texture_name = TextureNames.BLUE
+                texture_surface_full = textures.get_original_surface(texture_name)
 
                 texture_size_ratio = (
                     texture_surface_full.get_height() / approximate_display_size

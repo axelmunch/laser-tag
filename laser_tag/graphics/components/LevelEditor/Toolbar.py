@@ -27,7 +27,7 @@ class Toolbar(Component):
 
         self.snap_to_grid = True
         self.show_grid = True
-        self.preview_player = False
+        self.preview = False
 
         # Create buttons
         margin = 20
@@ -68,13 +68,13 @@ class Toolbar(Component):
             action=lambda: setattr(self, "show_grid", not self.show_grid),
             type=ButtonType.LEVEL_EDITOR,
         )
-        self.preview_player_button = GraphicalButton(
+        self.preview_button = GraphicalButton(
             960 + button_size / 2 + 2 * self.original_height - margin,
             margin,
             button_size,
             button_size,
             text_key=LanguageKey.LEVEL_EDITOR_PREVIEW,
-            action=lambda: setattr(self, "preview_player", not self.preview_player),
+            action=lambda: setattr(self, "preview", not self.preview),
             type=ButtonType.LEVEL_EDITOR,
         )
         self.buttons = [
@@ -117,7 +117,7 @@ class Toolbar(Component):
             # Show grid
             self.show_grid_button,
             # Preview player
-            self.preview_player_button,
+            self.preview_button,
             # Help
             GraphicalButton(
                 1920 - (self.original_height - margin),
@@ -136,7 +136,7 @@ class Toolbar(Component):
         return self.editor_state
 
     def get_view_variables(self) -> tuple[bool, bool, bool]:
-        return self.snap_to_grid, self.show_grid, self.preview_player
+        return self.snap_to_grid, self.show_grid, self.preview
 
     def quit(self):
         VARIABLES.level_editor = False
@@ -172,8 +172,8 @@ class Toolbar(Component):
             self.snap_to_grid_button.set_selected(True)
         if self.show_grid:
             self.show_grid_button.set_selected(True)
-        if self.preview_player:
-            self.preview_player_button.set_selected(True)
+        if self.preview:
+            self.preview_button.set_selected(True)
 
         super().update()
 

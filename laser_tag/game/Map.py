@@ -8,13 +8,14 @@ from ..math.Line import Line
 from ..math.Point import Point
 from ..math.rotations import rotate
 from .Ray import Ray
-from .Wall import Wall
+from .Wall import Wall, WallType
 
 
 class IntersectionData(TypedDict):
     intersection_point: Point
     line_intersecting: Line
     distance: float
+    wall_type: WallType
 
 
 class Map:
@@ -119,6 +120,7 @@ class Map:
                                 "intersection_point": intersection_point,
                                 "line_intersecting": line,
                                 "distance": distance,
+                                "wall_type": self.walls[wall_index].get_type(),
                             }
 
             if intersection is not None:
@@ -127,12 +129,7 @@ class Map:
         if intersection is not None:
             ray.set_hit(
                 intersection["intersection_point"],
-                hit_infos=[
-                    intersection["line_intersecting"].get_point_ratio_on_line(
-                        intersection["intersection_point"]
-                    ),
-                    intersection["line_intersecting"].get_rotation(),
-                ],
+                hit_infos=intersection,
                 distance=intersection["distance"],
             )
 
