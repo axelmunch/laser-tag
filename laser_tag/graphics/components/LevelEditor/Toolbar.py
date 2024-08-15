@@ -132,6 +132,15 @@ class Toolbar(Component):
 
         self.update()
 
+    def resize(self):
+        super().resize()
+
+        try:
+            for button in self.buttons:
+                button.resize()
+        except AttributeError:
+            pass
+
     def get_editor_state(self) -> EditorState:
         return self.editor_state
 
