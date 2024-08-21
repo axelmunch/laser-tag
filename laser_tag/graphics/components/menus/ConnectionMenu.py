@@ -7,6 +7,7 @@ from ....game.Game import Game
 from ....language.LanguageKey import LanguageKey
 from ....network.ClientServerGroup import ClientServerGroup
 from ...resize import resize
+from ..BackgroundMenu import BackgroundMenu
 from ..Component import Component
 from ..GraphicalButton import GraphicalButton
 from ..GraphicalText import GraphicalText
@@ -191,11 +192,18 @@ class ConnectionMenu(Component, Menu):
             self.host_button_server,
         ]
 
+        self.background = BackgroundMenu()
+
         self.update()
 
     def resize(self):
         Menu.resize(self)
         Component.resize(self)
+
+        try:
+            self.background.resize()
+        except AttributeError:
+            pass
 
     def update_input_value(self, update_callback):
         if update_callback is not None:
@@ -214,6 +222,8 @@ class ConnectionMenu(Component, Menu):
         Parameters:
             events (list): Events
         """
+
+        self.background.update(events)
 
         if self.client_server.is_client_connected():
             self.game.game_paused = False
@@ -247,7 +257,11 @@ class ConnectionMenu(Component, Menu):
         Component.update(self)
 
     def render(self):
-        self.surface.fill((0, 0, 0))
+        self.surface.blit(self.background.get(), (0, 0))
+
+        transparent_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        transparent_surface.fill((0, 0, 0, 128))
+        self.surface.blit(transparent_surface, (0, 0))
 
         pygame.draw.rect(
             self.surface,

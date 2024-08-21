@@ -790,6 +790,10 @@ package laser_tag {
                 GAME_MODE
             }
 
+            class BackgroundMenu extends Component {
+                update(events: EventInstance[])
+            }
+
             class GraphicalElement extends Component {
                 selected: Boolean
 

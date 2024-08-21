@@ -1,6 +1,7 @@
 from ....events.EventInstance import EventInstance
 from ....language.LanguageKey import LanguageKey
 from ...resize import resize
+from ..BackgroundMenu import BackgroundMenu
 from ..Component import Component
 from ..GraphicalButton import GraphicalButton
 from .Confirmation import Confirmation
@@ -58,11 +59,18 @@ class MainMenu(Component, Menu):
             ),
         ]
 
+        self.background = BackgroundMenu()
+
         self.update()
 
     def resize(self):
         Menu.resize(self)
         Component.resize(self)
+
+        try:
+            self.background.resize()
+        except AttributeError:
+            pass
 
     def play(self):
         if self.callback_play is not None:
@@ -97,11 +105,13 @@ class MainMenu(Component, Menu):
             events (list): Events
         """
 
+        self.background.update(events)
+
         Menu.update(self, events)
         Component.update(self)
 
     def render(self):
-        self.surface.fill((0, 0, 0))
+        self.surface.blit(self.background.get(), (0, 0))
 
         pause_text = self.text.get_surface(
             self.language.get(LanguageKey.GAME_NAME),
