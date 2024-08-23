@@ -1,4 +1,5 @@
 from math import ceil, cos
+from time import time
 
 import pygame
 
@@ -18,6 +19,7 @@ from ..resize import resize
 from ..Textures import Textures
 from .Component import Component
 from .Crosshair import Crosshair
+from .HUD import HUD
 
 textures = Textures()
 
@@ -34,6 +36,7 @@ class World(Component):
         self.set_original_size(1920, 1080)
 
         self.crosshair = Crosshair()
+        self.hud = HUD()
 
         self.update(data["rays"], data["entities"], data["current_entity"])
 
@@ -42,6 +45,7 @@ class World(Component):
 
         try:
             self.crosshair.resize()
+            self.hud.resize()
         except AttributeError:
             pass
 
@@ -67,6 +71,12 @@ class World(Component):
         }
 
         self.crosshair.update()
+
+        if current_entity is not None and isinstance(current_entity, Player):
+            deactivation_time_ratio = (
+                time() - current_entity.deactivated_until_timestamp
+            ) / current_entity.deactivation_time
+            self.hud.update(deactivation_time_ratio, current_entity.can_attack)
 
         super().update()
 
@@ -340,6 +350,11 @@ class World(Component):
                 resize(960, "x") - self.crosshair.get().get_width() / 2,
                 resize(540, "y") - self.crosshair.get().get_height() / 2,
             ),
+        )
+
+        # HUD
+        self.surface.blit(
+            self.hud.get(), (0, resize(1080, "y") - self.hud.get().get_height())
         )
 
         super().render()

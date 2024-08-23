@@ -962,6 +962,10 @@ package laser_tag {
                 update(grace_period_seconds, grace_period_end, game_time_seconds, game_time_end)
             }
 
+            class HUD extends Component {
+                update(deactivation_time_ratio, can_attack: Boolean)
+            }
+
             class Leaderboard extends Component {
                 update(leaderboard)
             }
@@ -980,6 +984,7 @@ package laser_tag {
 
             class "World" as WorldComponent extends Component {
                 crosshair: Crosshair
+                hud: HUD
 
                 update(rays: Ray[], entities: GameEntity[], current_entity: GameEntity)
                 position_to_screen(point: Point)
