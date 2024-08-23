@@ -17,6 +17,7 @@ from ..AssetsLoader import TextureNames
 from ..resize import resize
 from ..Textures import Textures
 from .Component import Component
+from .Crosshair import Crosshair
 
 textures = Textures()
 
@@ -32,7 +33,17 @@ class World(Component):
 
         self.set_original_size(1920, 1080)
 
+        self.crosshair = Crosshair()
+
         self.update(data["rays"], data["entities"], data["current_entity"])
+
+    def resize(self):
+        super().resize()
+
+        try:
+            self.crosshair.resize()
+        except AttributeError:
+            pass
 
     def update(
         self,
@@ -54,6 +65,9 @@ class World(Component):
             "entities": entities,
             "current_entity": current_entity,
         }
+
+        self.crosshair.update()
+
         super().update()
 
     def position_to_screen(self, point: Point) -> float:
@@ -318,6 +332,15 @@ class World(Component):
                         resize(540 + entity_world_size / 2 - texture_new_size[1], "y"),
                     ),
                 )
+
+        # Crosshair
+        self.surface.blit(
+            self.crosshair.get(),
+            (
+                resize(960, "x") - self.crosshair.get().get_width() / 2,
+                resize(540, "y") - self.crosshair.get().get_height() / 2,
+            ),
+        )
 
         super().render()
 

@@ -950,6 +950,10 @@ package laser_tag {
                 update(events: EventInstance[])
             }
 
+            class Crosshair extends Component {
+                update()
+            }
+
             class Fps extends Component {
                 update(fps)
             }
@@ -975,6 +979,8 @@ package laser_tag {
             }
 
             class "World" as WorldComponent extends Component {
+                crosshair: Crosshair
+
                 update(rays: Ray[], entities: GameEntity[], current_entity: GameEntity)
                 position_to_screen(point: Point)
             }
