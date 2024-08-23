@@ -142,7 +142,6 @@ class GameMode:
         if not self.game_started:
             for entity in entities.values():
                 entity.can_attack = False
-            return
 
         # Time
         if self.grace_period_end > 0 and time() > self.grace_period_end:

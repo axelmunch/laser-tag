@@ -115,6 +115,8 @@ class Game:
 
         self.show_scoreboard = False
 
+        self.game_mode.update(self.world.entities)
+
         for event in events:
             if event.server:
                 self.server_events.add_event(event)
@@ -178,5 +180,3 @@ class Game:
                             )[0]
 
         self.world.update(events, controlled_entity_id, delta_time, player_delta_time)
-
-        self.game_mode.update(self.world.entities)
