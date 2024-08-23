@@ -238,6 +238,7 @@ package laser_tag {
             audio
 
             set_audio_player(audio)
+            set_listening_position(position: Point)
             update(events: EventInstance[])
         }
 
@@ -245,6 +246,7 @@ package laser_tag {
             sounds
             channel_index
             transition_music
+            listening_position
             latest_global_volume
             latest_music_volume
             latest_effects_volume
@@ -253,6 +255,7 @@ package laser_tag {
             play_sound(audio: Audio)
             play_music(audio: Audio)
             update_volume()
+            set_listening_position(position: Point)
             update(events: EventInstance[])
         }
     }
@@ -441,6 +444,7 @@ package laser_tag {
             set_controlled_entity(uid)
             change_player_team(id, team: Team)
             reset_teams(teams: Team[])
+            get_current_position(): Point
             enhance_events(events: EventInstance[])
             update(events: EventInstance[], controlled_entity_id, delta_time: DeltaTime, player_delta_time: DeltaTime)
             move_entity(entity: GameEntity, movement_vector: Point)

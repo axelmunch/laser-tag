@@ -3,6 +3,8 @@ import pygame
 from ..configuration import AUDIO_CHANNELS, MUSIC_FADEOUT_MS, VARIABLES
 from ..events.Event import Event
 from ..events.EventInstance import EventInstance
+from ..math.distance import distance_points
+from ..math.Point import Point
 from .Audio import Audio, loop_audio, music_audio
 from .AudioManager import AudioManager
 
@@ -31,6 +33,8 @@ class AudioPlayer(AudioManager):
 
         self.transition_music = None
 
+        self.listening_position = Point(0, 0)
+
         self.latest_global_volume = 0
         self.latest_music_volume = 0
         self.latest_effects_volume = 0
@@ -38,10 +42,21 @@ class AudioPlayer(AudioManager):
     def load_sound(self, audio: Audio, path):
         self.sounds[audio] = pygame.mixer.Sound(path)
 
-    def play_sound(self, audio: Audio):
+    def play_sound(self, audio: Audio, position=None):
         channel = pygame.mixer.Channel(
             self.channel_index % (pygame.mixer.get_num_channels() - 1)
         )
+
+        if position is None:
+            channel.set_volume(1)
+        else:
+            # Distance multiplier
+            distance_multiplier = min(
+                1, max(0, 1 - (distance_points(self.listening_position, position) / 20))
+            )
+
+            channel.set_volume(distance_multiplier)
+
         channel.play(self.sounds[audio])
 
         self.channel_index += 1
@@ -58,6 +73,9 @@ class AudioPlayer(AudioManager):
             else:
                 sound.set_volume(VARIABLES.volume_global * VARIABLES.volume_effects)
 
+    def set_listening_position(self, position: Point):
+        self.listening_position = position
+
     def update(self, events: list[EventInstance] = []):
         if (
             VARIABLES.volume_global != self.latest_global_volume
@@ -73,11 +91,19 @@ class AudioPlayer(AudioManager):
         for event in events:
             if event.id in [Event.PLAY_SOUND, Event.PLAY_SOUND_LOCAL]:
                 audio = event.data
+                position = None
+                if isinstance(event.data, list) and len(event.data) == 2:
+                    audio = event.data[0]
+                    position = Point.create(event.data[1])
                 try:
                     audio = Audio(audio)
                 except ValueError:
                     pass
-                self.play_music(audio)
+
+                if audio in music_audio:
+                    self.play_music(audio)
+                else:
+                    self.play_sound(audio, position=position)
 
         if self.transition_music is not None:
             channel = pygame.mixer.Channel(pygame.mixer.get_num_channels() - 1)

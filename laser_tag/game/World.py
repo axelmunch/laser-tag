@@ -99,6 +99,10 @@ class World:
                 entity.team = teams[index % len(teams)]
                 index += 1
 
+    def get_current_position(self) -> Point | None:
+        entity = self.get_entity(self.controlled_entity)
+        return entity.position if entity is not None else None
+
     def enhance_events(self, events: list[EventInstance]):
         movement_vector = [0, 0]
 

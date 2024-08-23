@@ -122,6 +122,9 @@ if __name__ == "__main__":
         # Predict
         game.update(events)
 
+        current_position = game.world.get_current_position()
+        if current_position is not None:
+            audio_manager.set_listening_position(current_position)
         audio_manager.update(events)
 
         renderer.update(game, events)
