@@ -321,9 +321,11 @@ package laser_tag {
             name
             deactivation_time
             deactivated_until_timestamp
+            deactivation_time_ratio
 
             create(parsed_object): Player
             entity_radius()
+            get_deactivation_time_ratio()
             death()
             check_can_be_attacked()
             set_name(name)
@@ -963,6 +965,10 @@ package laser_tag {
             }
 
             class HUD extends Component {
+                deactivation_time_ratio
+                can_attack: Boolean
+                size_multiplier
+
                 update(deactivation_time_ratio, can_attack: Boolean)
             }
 

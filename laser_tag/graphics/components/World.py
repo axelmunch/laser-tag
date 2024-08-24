@@ -73,10 +73,9 @@ class World(Component):
         self.crosshair.update()
 
         if current_entity is not None and isinstance(current_entity, Player):
-            deactivation_time_ratio = (
-                time() - current_entity.deactivated_until_timestamp
-            ) / current_entity.deactivation_time
-            self.hud.update(deactivation_time_ratio, current_entity.can_attack)
+            self.hud.update(
+                current_entity.deactivation_time_ratio, current_entity.can_attack
+            )
 
         super().update()
 

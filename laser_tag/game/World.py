@@ -255,7 +255,7 @@ class World:
                             # Target is in a different team (or not in a team)
                             if (
                                 entity.team != entity_target.team
-                                or entity_target.team == -1
+                                or entity_target.team == Team.NONE
                             ):
                                 # Collision with the target
                                 if (

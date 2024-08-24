@@ -25,11 +25,12 @@ class Player(GameEntity):
 
         self.deactivation_time = 4
         self.deactivated_until_timestamp = time()
+        self.deactivation_time_ratio = 0
 
         self.set_max_hp(1)
 
     def __repr__(self):
-        return f"['{self.__class__.__name__}',{self.position},{self.rotation},{self.team},{self.score},{self.eliminations},{self.deaths},{self.hp},{self.next_attack_timestamps},{self.deactivated_until_timestamp},{self.can_move},{self.can_attack},'{self.name}']"
+        return f"['{self.__class__.__name__}',{self.position},{self.rotation},{self.team},{self.score},{self.eliminations},{self.deaths},{self.hp},{self.next_attack_timestamps},{self.deactivated_until_timestamp},{self.get_deactivation_time_ratio()},{self.can_move},{self.can_attack},'{self.name}']"
 
     @staticmethod
     def create(parsed_object) -> Player:
@@ -47,9 +48,10 @@ class Player(GameEntity):
             entity.hp = float(parsed_object[6])
             entity.next_attack_timestamps = float(parsed_object[7])
             entity.deactivated_until_timestamp = float(parsed_object[8])
-            entity.can_move = bool(parsed_object[9])
-            entity.can_attack = bool(parsed_object[10])
-            entity.name = str(parsed_object[11])
+            entity.deactivation_time_ratio = float(parsed_object[9])
+            entity.can_move = bool(parsed_object[10])
+            entity.can_attack = bool(parsed_object[11])
+            entity.name = str(parsed_object[12])
             return entity
         except:
             return None
@@ -58,8 +60,12 @@ class Player(GameEntity):
     def entity_radius() -> float:
         return 0.2
 
+    def get_deactivation_time_ratio(self) -> float:
+        return 1 - (self.deactivated_until_timestamp - time()) / self.deactivation_time
+
     def death(self):
         self.deactivated_until_timestamp = time() + self.deactivation_time
+        self.deactivation_time_ratio = 0
         super().death(no_deletion=True)
 
     def attack(self) -> bool:
