@@ -18,8 +18,6 @@ from ..AssetsLoader import TextureNames
 from ..resize import resize
 from ..Textures import Textures
 from .Component import Component
-from .Crosshair import Crosshair
-from .HUD import HUD
 
 textures = Textures()
 
@@ -35,19 +33,7 @@ class World(Component):
 
         self.set_original_size(1920, 1080)
 
-        self.crosshair = Crosshair()
-        self.hud = HUD()
-
         self.update(data["rays"], data["entities"], data["current_entity"])
-
-    def resize(self):
-        super().resize()
-
-        try:
-            self.crosshair.resize()
-            self.hud.resize()
-        except AttributeError:
-            pass
 
     def update(
         self,
@@ -69,13 +55,6 @@ class World(Component):
             "entities": entities,
             "current_entity": current_entity,
         }
-
-        self.crosshair.update()
-
-        if current_entity is not None and isinstance(current_entity, Player):
-            self.hud.update(
-                current_entity.deactivation_time_ratio, current_entity.can_attack
-            )
 
         super().update()
 
@@ -341,20 +320,6 @@ class World(Component):
                         resize(540 + entity_world_size / 2 - texture_new_size[1], "y"),
                     ),
                 )
-
-        # Crosshair
-        self.surface.blit(
-            self.crosshair.get(),
-            (
-                resize(960, "x") - self.crosshair.get().get_width() / 2,
-                resize(540, "y") - self.crosshair.get().get_height() / 2,
-            ),
-        )
-
-        # HUD
-        self.surface.blit(
-            self.hud.get(), (0, resize(1080, "y") - self.hud.get().get_height())
-        )
 
         super().render()
 

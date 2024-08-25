@@ -1,12 +1,15 @@
 import pygame
 
 from ..configuration import VARIABLES
+from ..entities.Player import Player
 from ..events.EventInstance import EventInstance
 from ..game.Game import Game
 from ..network.ClientServerGroup import ClientServerGroup
 from . import display
+from .components.Crosshair import Crosshair
 from .components.Fps import Fps
 from .components.GameTimer import GameTimer
+from .components.HUD import HUD
 from .components.Leaderboard import Leaderboard
 from .components.LevelEditor.LevelEditor import LevelEditor
 from .components.menus.ConnectionMenu import ConnectionMenu
@@ -43,6 +46,8 @@ class Renderer:
         self.leaderboard = Leaderboard()
         self.scoreboard = Scoreboard()
         self.game_timer = GameTimer()
+        self.crosshair = Crosshair()
+        self.hud = HUD()
         self.world = World()
         self.components = [
             self.fps,
@@ -51,6 +56,8 @@ class Renderer:
             self.leaderboard,
             self.scoreboard,
             self.game_timer,
+            self.crosshair,
+            self.hud,
             self.world,
         ]
 
@@ -105,8 +112,7 @@ class Renderer:
                     rays=rays,
                 )
 
-            if not game.game_paused:
-                self.leaderboard.update(game.game_mode.leaderboard)
+            self.leaderboard.update(game.game_mode.leaderboard)
 
             if game.show_scoreboard:
                 self.scoreboard.update(game.game_mode.scoreboard)
@@ -117,6 +123,14 @@ class Renderer:
                 game.game_mode.game_time_seconds,
                 game.game_mode.game_time_end,
             )
+
+            self.crosshair.update()
+
+            current_entity = game.world.get_entity(controlled_entity_id)
+            if current_entity is not None and isinstance(current_entity, Player):
+                self.hud.update(
+                    current_entity.deactivation_time_ratio, current_entity.can_attack
+                )
 
         self.menus.update(events)
 
@@ -228,6 +242,20 @@ class Renderer:
                     ),
                     resize(10, "y"),
                 ),
+            )
+
+            # Crosshair
+            display.screen.blit(
+                self.crosshair.get(),
+                (
+                    resize(960, "x") - self.crosshair.get().get_width() / 2,
+                    resize(540, "y") - self.crosshair.get().get_height() / 2,
+                ),
+            )
+
+            # HUD
+            display.screen.blit(
+                self.hud.get(), (0, resize(1080, "y") - self.hud.get().get_height())
             )
 
         for menu in self.menus.get_menus():

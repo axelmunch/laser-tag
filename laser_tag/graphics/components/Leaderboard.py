@@ -32,6 +32,8 @@ class Leaderboard(Component):
         super().update()
 
     def render(self):
+        self.surface.fill((0, 0, 0, 0))
+
         pygame.draw.rect(
             self.surface,
             (255, 255, 255, 64),
