@@ -88,6 +88,10 @@ class World:
         self.controlled_entity = uid
 
     def change_player_team(self, id, team: Team):
+        try:
+            team = Team(team)
+        except ValueError:
+            pass
         player = self.get_entity(id)
         if player is not None:
             player.team = team
@@ -227,7 +231,7 @@ class World:
                             self.spawn_entity(laser_ray)
                     case Event.GAME_SELECT_TEAM:
                         if event.data in [t.value for t in Team]:
-                            current_entity.team = event.data
+                            current_entity.team = Team(event.data)
 
             # Update other entities
             for key in list(self.entities.keys()):

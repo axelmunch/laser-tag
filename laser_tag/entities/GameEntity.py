@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from time import time
 
+from ..game.Team import Team
 from ..math.Point import Point
 from .Entity import Entity
 
@@ -33,7 +34,7 @@ class GameEntity(Entity):
         self.score_reward = 0
         self.eliminations = 0
         self.deaths = 0
-        self.team = -1
+        self.team = Team.NONE
 
         self.hp = 0
         self.set_max_hp(1)
@@ -51,7 +52,7 @@ class GameEntity(Entity):
 
             entity = GameEntity(position, radius)
             entity.rotation = float(parsed_object[2])
-            entity.team = int(parsed_object[3])
+            entity.team = Team(parsed_object[3])
             entity.score = float(parsed_object[4])
             entity.eliminations = int(parsed_object[5])
             entity.deaths = int(parsed_object[6])

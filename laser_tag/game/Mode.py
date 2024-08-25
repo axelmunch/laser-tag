@@ -19,7 +19,7 @@ def get_mode_language_key(mode: Mode | int):
     try:
         mode = Mode(mode)
     except ValueError:
-        mode = mode.SOLO.NONE
+        pass
     match mode:
         case Mode.SOLO:
             return LanguageKey.GAME_MODE_SOLO

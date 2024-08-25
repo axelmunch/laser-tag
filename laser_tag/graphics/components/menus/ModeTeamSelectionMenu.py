@@ -301,7 +301,7 @@ class ModeTeamSelectionMenu(Component, Menu):
                             self.add_event(
                                 EventInstance(
                                     Event.CHANGE_PLAYER_TEAM,
-                                    [self.grab_player_id, str(team)],
+                                    [self.grab_player_id, team.value],
                                 )
                             )
                             break

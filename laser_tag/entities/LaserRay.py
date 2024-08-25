@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from ..game.Team import Team
 from ..math.Line import Line
 from ..math.Point import Point
 from .GameEntity import GameEntity
@@ -35,7 +36,7 @@ class LaserRay(GameEntity):
 
             entity = LaserRay(position, end_position, parsed_object[2])
             entity.rotation = float(parsed_object[3])
-            entity.team = int(parsed_object[4])
+            entity.team = Team(parsed_object[4])
             entity.damages = int(parsed_object[5])
             entity.score = float(parsed_object[6])
             entity.eliminations = int(parsed_object[7])

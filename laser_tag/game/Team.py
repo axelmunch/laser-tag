@@ -24,7 +24,7 @@ def get_team_language_key(team: Team | int):
     try:
         team = Team(team)
     except ValueError:
-        team = Team.NONE
+        pass
     match team:
         case Team.NONE:
             return LanguageKey.TEAM_ALL
@@ -52,7 +52,7 @@ def get_team_color(team: Team | int):
     try:
         team = Team(team)
     except ValueError:
-        team = Team.NONE
+        pass
     match team:
         case Team.NONE:
             return (255, 0, 0)
