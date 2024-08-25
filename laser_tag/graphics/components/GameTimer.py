@@ -18,8 +18,6 @@ class GameTimer(Component):
     ):
         super().__init__()
 
-        self.set_original_size(250, 50)
-
         self.update(
             data["grace_period_seconds"],
             data["grace_period_end"],
@@ -75,14 +73,11 @@ class GameTimer(Component):
                 # Milliseconds
                 text += f":{int((timer_value % 1) * 1000):03d}"
 
-            timer_text = self.text.get_surface(
+            self.surface = self.text.get_surface(
                 text,
                 50,
                 (255, 255, 255),
             )
-            self.surface.blit(
-                timer_text,
-                (self.width - timer_text.get_width(), resize(0, "y")),
-            )
+            self.width, self.height = self.surface.get_size()
 
         super().render()
