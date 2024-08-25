@@ -66,6 +66,8 @@ class HUD(Component):
                     resize(self.original_height / 2, "y") - texture.get_height() / 2,
                 ),
             )
+
+            self.surface.set_alpha(255)
         else:
             radius = (self.original_height / 2 - margin) * self.size_multiplier
 
