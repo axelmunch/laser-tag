@@ -32,7 +32,6 @@ class Event(Enum):
     GAME_RELOAD = auto()
     GAME_SHOOT = auto()
     GAME_ROTATE = auto()
-    GAME_SELECT_TEAM = auto()
     GAME_SCOREBOARD = auto()
     KEY_ESCAPE = auto()
     KEY_ESCAPE_PRESS = auto()
@@ -115,7 +114,6 @@ game_events = [
     Event.GAME_RELOAD,
     Event.GAME_SHOOT,
     Event.GAME_ROTATE,
-    Event.GAME_SELECT_TEAM,
     Event.GAME_SCOREBOARD,
 ]
 

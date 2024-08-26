@@ -61,10 +61,10 @@ class AudioPlayer(AudioManager):
 
         self.channel_index += 1
 
-    def play_music(self, audio: Audio):
+    def play_music(self, audio: Audio, fadeout_time=MUSIC_FADEOUT_MS):
         self.transition_music = audio
         channel = pygame.mixer.Channel(pygame.mixer.get_num_channels() - 1)
-        channel.fadeout(MUSIC_FADEOUT_MS)
+        channel.fadeout(fadeout_time)
 
     def update_volume(self):
         for audio, sound in self.sounds.items():

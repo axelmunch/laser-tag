@@ -229,9 +229,6 @@ class World:
                             laser_ray.damages = current_entity.damages
                             laser_ray.get_entity_fct = self.get_entity
                             self.spawn_entity(laser_ray)
-                    case Event.GAME_SELECT_TEAM:
-                        if event.data in [t.value for t in Team]:
-                            current_entity.team = Team(event.data)
 
             # Update other entities
             for key in list(self.entities.keys()):

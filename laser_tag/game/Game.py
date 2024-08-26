@@ -165,10 +165,6 @@ class Game:
             match event.id:
                 case Event.KEY_ESCAPE_PRESS:
                     self.game_paused = True
-                case Event.GAME_SELECT_TEAM:
-                    # Can only select team if game has not started
-                    if self.game_mode.game_started:
-                        event.id = Event.NONE
                 case Event.GAME_SCOREBOARD:
                     self.show_scoreboard = True
                 case Event.PLAYER_JOIN:

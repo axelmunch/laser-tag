@@ -169,7 +169,6 @@ package laser_tag {
             GAME_RELOAD
             GAME_SHOOT
             GAME_ROTATE
-            GAME_SELECT_TEAM
             GAME_SCOREBOARD
             KEY_ESCAPE
             KEY_ESCAPE_PRESS
@@ -253,7 +252,7 @@ package laser_tag {
 
             load_sound(audio: Audio, path)
             play_sound(audio: Audio)
-            play_music(audio: Audio)
+            play_music(audio: Audio, fadeout_time)
             update_volume()
             set_listening_position(position: Point)
             update(events: EventInstance[])
