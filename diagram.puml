@@ -952,7 +952,9 @@ package laser_tag {
             }
 
             class Crosshair extends Component {
-                update()
+                space_ratio
+
+                update(is_crouching: Boolean)
             }
 
             class Fps extends Component {

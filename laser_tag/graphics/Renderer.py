@@ -124,10 +124,10 @@ class Renderer:
                 game.game_mode.game_time_end,
             )
 
-            self.crosshair.update()
-
             current_entity = game.world.get_entity(controlled_entity_id)
             if current_entity is not None and isinstance(current_entity, Player):
+                self.crosshair.update(current_entity.is_crouching)
+
                 self.hud.update(
                     current_entity.deactivation_time_ratio, current_entity.can_attack
                 )
