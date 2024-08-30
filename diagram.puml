@@ -448,7 +448,7 @@ package laser_tag {
             get_current_position(): Point
             enhance_events(events: EventInstance[])
             update(events: EventInstance[], controlled_entity_id, delta_time: DeltaTime, player_delta_time: DeltaTime)
-            move_entity(entity: GameEntity, movement_vector: Point)
+            move_entity(entity: GameEntity, movement_vector: Point): Boolean
             cast_rays()
         }
 

@@ -285,7 +285,8 @@ class World:
                     if entity.time_to_live <= 0:
                         entity.death()
 
-    def move_entity(self, entity: GameEntity, movement_vector: Point):
+    def move_entity(self, entity: GameEntity, movement_vector: Point) -> bool:
+        new_entity_position = Point(entity.position.x, entity.position.y)
         collision = False
 
         # X
@@ -297,7 +298,7 @@ class World:
         )
 
         if not self.map.collides_with(moved_collider_x):
-            entity.move(entity.position.x + movement_vector.x, entity.position.y)
+            new_entity_position.x += movement_vector.x
         else:
             collision = True
 
@@ -310,9 +311,11 @@ class World:
         )
 
         if not self.map.collides_with(moved_collider_y):
-            entity.move(entity.position.x, entity.position.y + movement_vector.y)
+            new_entity_position.y += movement_vector.y
         else:
             collision = True
+
+        entity.move(new_entity_position.x, new_entity_position.y)
 
         return collision
 
