@@ -162,7 +162,17 @@ class World:
             async_mode = player_delta_time is not None
             player_delta_time = delta_time if not async_mode else player_delta_time
 
-            current_entity.is_running = False
+            is_moving = False
+            is_running = False
+
+            for event in events:
+                match event.id:
+                    case Event.GAME_RUN:
+                        is_running = True
+                    case Event.GAME_MOVE:
+                        is_moving = True
+
+            current_entity.is_running = is_moving and is_running
             current_entity.is_crouching = False
 
             for event in events:
@@ -173,9 +183,7 @@ class World:
                             player_delta_time.update(event.timestamp)
                     case Event.GAME_CROUCH:
                         current_entity.is_crouching = True
-                    case Event.GAME_RUN:
-                        if not current_entity.is_crouching:
-                            current_entity.is_running = True
+                        current_entity.is_running = False
                     case Event.GAME_ROTATE:
                         if (
                             isinstance(event.data, list)

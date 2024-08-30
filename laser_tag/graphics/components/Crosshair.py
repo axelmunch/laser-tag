@@ -19,20 +19,26 @@ class Crosshair(Component):
 
         self.update()
 
-    def update(self, is_crouching: bool = False):
+    def update(self, is_running: bool = False, is_crouching: bool = False):
         """
         Update the component
 
         Parameters:
+            is_running (bool): Is the player running
             is_crouching (bool): Is the player crouching
         """
 
         delta_time_value = DeltaTime().get_dt()
 
-        if is_crouching:
+        if is_running:
+            self.space_ratio = min(1, self.space_ratio + delta_time_value * 2)
+        elif is_crouching:
             self.space_ratio = max(0, self.space_ratio - delta_time_value * 2)
         else:
-            self.space_ratio = min(0.5, self.space_ratio + delta_time_value * 2)
+            if self.space_ratio > 0.5:
+                self.space_ratio = max(0.5, self.space_ratio - delta_time_value * 2)
+            elif self.space_ratio < 0.5:
+                self.space_ratio = min(0.5, self.space_ratio + delta_time_value * 2)
 
         super().update()
 
@@ -59,24 +65,16 @@ class Crosshair(Component):
             line_width,
         )
 
-        empty_space_width = ceil(self.width * self.space_ratio)
-        empty_space_height = ceil(self.height * self.space_ratio)
+        space_width = ceil(self.width * self.space_ratio)
+        space_height = ceil(self.height * self.space_ratio)
         pygame.draw.rect(
             self.surface,
             (0, 0, 0, 0),
             (
                 self.width / 2 - (self.width * self.space_ratio) / 2,
                 self.height / 2 - (self.height * self.space_ratio) / 2,
-                (
-                    empty_space_width + 1
-                    if empty_space_width % 2 != 0
-                    else empty_space_width
-                ),
-                (
-                    empty_space_height + 1
-                    if empty_space_height % 2 != 0
-                    else empty_space_height
-                ),
+                (space_width + 1 if space_width % 2 != 0 else space_width),
+                (space_height + 1 if space_height % 2 != 0 else space_height),
             ),
         )
 

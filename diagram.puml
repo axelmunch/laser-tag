@@ -954,7 +954,7 @@ package laser_tag {
             class Crosshair extends Component {
                 space_ratio
 
-                update(is_crouching: Boolean)
+                update(is_running: Boolean, is_crouching: Boolean)
             }
 
             class Fps extends Component {
@@ -971,6 +971,16 @@ package laser_tag {
                 size_multiplier
 
                 update(deactivation_time_ratio, can_attack: Boolean)
+            }
+
+            class LaserGun extends Component {
+                offset_x
+                offset_y
+                total_time
+                multiplier
+                is_shooting
+
+                update(is_moving: Boolean, is_running: Boolean, is_crouching: Boolean, is_shooting: Boolean)
             }
 
             class Leaderboard extends Component {

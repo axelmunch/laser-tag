@@ -1,7 +1,9 @@
 import pygame
 
 from ..configuration import VARIABLES
+from ..entities.LaserRay import LaserRay
 from ..entities.Player import Player
+from ..events.Event import Event
 from ..events.EventInstance import EventInstance
 from ..game.Game import Game
 from ..network.ClientServerGroup import ClientServerGroup
@@ -10,6 +12,7 @@ from .components.Crosshair import Crosshair
 from .components.Fps import Fps
 from .components.GameTimer import GameTimer
 from .components.HUD import HUD
+from .components.LaserGun import LaserGun
 from .components.Leaderboard import Leaderboard
 from .components.LevelEditor.LevelEditor import LevelEditor
 from .components.menus.ConnectionMenu import ConnectionMenu
@@ -48,6 +51,7 @@ class Renderer:
         self.game_timer = GameTimer()
         self.crosshair = Crosshair()
         self.hud = HUD()
+        self.laser_gun = LaserGun()
         self.world = World()
         self.components = [
             self.fps,
@@ -59,6 +63,7 @@ class Renderer:
             self.crosshair,
             self.hud,
             self.world,
+            self.laser_gun,
         ]
 
     def set_network_stats(
@@ -126,10 +131,33 @@ class Renderer:
 
             current_entity = game.world.get_entity(controlled_entity_id)
             if current_entity is not None and isinstance(current_entity, Player):
-                self.crosshair.update(current_entity.is_crouching)
+                self.crosshair.update(
+                    current_entity.is_running, current_entity.is_crouching
+                )
 
                 self.hud.update(
                     current_entity.deactivation_time_ratio, current_entity.can_attack
+                )
+
+                is_moving = False
+                for event in events:
+                    if event.id == Event.GAME_MOVE:
+                        is_moving = True
+                        break
+
+                # The player is shooting if there is a laser ray with his id
+                is_shooting = False
+                for entity in game.world.entities.values():
+                    if isinstance(entity, LaserRay):
+                        if entity.parent_id == controlled_entity_id:
+                            is_shooting = True
+                            break
+
+                self.laser_gun.update(
+                    is_moving,
+                    current_entity.is_running,
+                    current_entity.is_crouching,
+                    is_shooting,
                 )
 
         self.menus.update(events)
@@ -256,6 +284,18 @@ class Renderer:
             # HUD
             display.screen.blit(
                 self.hud.get(), (0, resize(1080, "y") - self.hud.get().get_height())
+            )
+
+            # Laser gun
+            laser_gun_offset = self.laser_gun.get_offset()
+            display.screen.blit(
+                self.laser_gun.get(),
+                (
+                    resize(960 + laser_gun_offset[0], "x")
+                    - self.laser_gun.get().get_width() / 2,
+                    resize(1080 + laser_gun_offset[1], "y")
+                    - self.laser_gun.get().get_height(),
+                ),
             )
 
         for menu in self.menus.get_menus():

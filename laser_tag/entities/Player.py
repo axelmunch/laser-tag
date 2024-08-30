@@ -30,7 +30,7 @@ class Player(GameEntity):
         self.set_max_hp(1)
 
     def __repr__(self):
-        return f"['{self.__class__.__name__}',{self.position},{self.rotation},{self.team},{self.score},{self.eliminations},{self.deaths},{self.hp},{self.next_attack_timestamps},{self.deactivated_until_timestamp},{self.get_deactivation_time_ratio()},{self.can_move},{self.can_attack},'{self.name}']"
+        return f"['{self.__class__.__name__}',{self.position},{self.rotation},{self.team},{self.score},{self.eliminations},{self.deaths},{self.hp},{self.next_attack_timestamps},{self.deactivated_until_timestamp},{self.get_deactivation_time_ratio()},{self.can_move},{self.can_attack},{self.is_running},'{self.name}']"
 
     @staticmethod
     def create(parsed_object) -> Player:
@@ -51,7 +51,8 @@ class Player(GameEntity):
             entity.deactivation_time_ratio = float(parsed_object[9])
             entity.can_move = bool(parsed_object[10])
             entity.can_attack = bool(parsed_object[11])
-            entity.name = str(parsed_object[12])
+            entity.is_running = bool(parsed_object[12])
+            entity.name = str(parsed_object[13])
             return entity
         except:
             return None
