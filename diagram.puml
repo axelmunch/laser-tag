@@ -32,6 +32,7 @@ package laser_tag {
             MUSIC_FADEOUT_MS
             AUDIO_CHANNELS
             ENTITIES_ROTATION_FRAMES
+            MASK_COLOR
             VARIABLES: Variables
         }
 
@@ -114,7 +115,6 @@ package laser_tag {
             create(parsed_object): Point
         }
 
-        Box --> Point
         Circle --> Point
         Circle --> Line
         Line --> Point
@@ -746,21 +746,22 @@ package laser_tag {
             original_width
             original_height
             texture_original
-            resize(size)
-            get_surface()
-            get_original_surface()
+            resize(size, team: Team)
+            get_surface(team: Team)
+            get_original_surface(team: Team)
             get_original_size()
             reduce_cache()
             clear_cache()
             set_cache_limit(limit)
+            mask_surface_team_color(surface, team: Team)
         }
 
         class Textures {
             textures
             load_texture(id, path, alpha: Boolean, custom_size, keep: Boolean)
-            resize_texture(id, size)
-            get_surface(id)
-            get_original_surface(id)
+            resize_texture(id, size, team: Team)
+            get_surface(id, team: Team)
+            get_original_surface(id, team: Team)
             get_original_size(id)
             remove_texture(id)
             clear_cache()
@@ -979,8 +980,9 @@ package laser_tag {
                 total_time
                 multiplier
                 is_shooting
+                team: Team
 
-                update(is_moving: Boolean, is_running: Boolean, is_crouching: Boolean, is_shooting: Boolean)
+                update(is_moving: Boolean, is_running: Boolean, is_crouching: Boolean, is_shooting: Boolean, team: Team)
             }
 
             class Leaderboard extends Component {

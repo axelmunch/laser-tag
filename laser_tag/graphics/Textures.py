@@ -1,5 +1,6 @@
 import pygame
 
+from ..game.Team import Team
 from .Texture import Texture
 
 
@@ -27,14 +28,16 @@ class Textures:
         if id not in self.textures or not keep:
             self.textures[id] = Texture(path, alpha, custom_size)
 
-    def resize_texture(self, id, size: tuple[float, float]) -> pygame.Surface:
-        return self.textures[id].resize(size)
+    def resize_texture(
+        self, id, size: tuple[float, float] = None, team: Team = None
+    ) -> pygame.Surface:
+        return self.textures[id].resize(size, team)
 
-    def get_surface(self, id) -> pygame.Surface:
-        return self.textures[id].get_surface()
+    def get_surface(self, id, team: Team = None) -> pygame.Surface:
+        return self.textures[id].get_surface(team)
 
-    def get_original_surface(self, id) -> pygame.Surface:
-        return self.textures[id].get_original_surface()
+    def get_original_surface(self, id, team: Team = None) -> pygame.Surface:
+        return self.textures[id].get_original_surface(team)
 
     def get_original_size(self, id) -> tuple[int, int]:
         return self.textures[id].get_original_size()

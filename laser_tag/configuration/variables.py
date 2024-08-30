@@ -1,4 +1,4 @@
-import json
+from json import dump, load
 
 
 class Variables:
@@ -65,7 +65,7 @@ class Variables:
     def load(self):
         try:
             with open(self.settings_file, "r", encoding="utf-8") as file:
-                variables = json.load(file)
+                variables = load(file)
                 current_version = self.version
                 self.__dict__.update(variables)
                 if "version" not in variables or self.version != current_version:
@@ -88,7 +88,7 @@ class Variables:
 
         self.settings_file.parent.mkdir(parents=True, exist_ok=True)
         with open(self.settings_file, "w") as file:
-            json.dump(variables, file, indent=4)
+            dump(variables, file, indent=4)
             file.write("\n")
 
         if self.debug:

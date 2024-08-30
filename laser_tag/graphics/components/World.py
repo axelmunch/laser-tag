@@ -262,7 +262,9 @@ class World(Component):
                 # Display the entity
                 self.surface.blit(
                     textures.resize_texture(
-                        texture, (texture_new_size[0], texture_new_size[1])
+                        texture,
+                        (texture_new_size[0], texture_new_size[1]),
+                        team=object.team,
                     ),
                     (
                         resize(x_position * 1920 - texture_new_size[0] / 2, "x"),

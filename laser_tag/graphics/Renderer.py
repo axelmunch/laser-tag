@@ -158,6 +158,7 @@ class Renderer:
                     current_entity.is_running,
                     current_entity.is_crouching,
                     is_shooting,
+                    current_entity.team,
                 )
 
         self.menus.update(events)

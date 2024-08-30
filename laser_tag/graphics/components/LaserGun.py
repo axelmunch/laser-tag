@@ -1,5 +1,6 @@
 from math import sin
 
+from ...game.Team import Team
 from ...utils.DeltaTime import DeltaTime
 from ..AssetsLoader import TextureNames
 from ..resize import resize
@@ -20,6 +21,7 @@ class LaserGun(Component):
         self.total_time = 0
         self.multiplier = 0
         self.is_shooting = False
+        self.team = None
 
         self.set_original_size(500, 250)
 
@@ -34,6 +36,7 @@ class LaserGun(Component):
         is_running: bool = False,
         is_crouching: bool = False,
         is_shooting: bool = False,
+        team: Team = None,
     ):
         """
         Update the component
@@ -43,9 +46,11 @@ class LaserGun(Component):
             is_running (bool): Is the player running
             is_crouching (bool): Is the player crouching
             is_shooting (bool): Is the player shooting
+            team (Team): Player team
         """
 
         self.is_shooting = is_shooting
+        self.team = team
 
         delta_time_value = DeltaTime().get_dt()
 
@@ -96,8 +101,7 @@ class LaserGun(Component):
 
         texture_name = TextureNames.GREEN if not self.is_shooting else TextureNames.RED
         texture = textures.resize_texture(
-            texture_name,
-            (self.original_width, self.original_height),
+            texture_name, (self.original_width, self.original_height), team=self.team
         )
         self.surface.blit(
             texture,
