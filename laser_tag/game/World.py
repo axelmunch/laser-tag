@@ -243,8 +243,8 @@ class World:
             current_entity.is_shooting = False
             for entity in self.entities.values():
                 if isinstance(entity, LaserRay):
-                    if (
-                        entity.parent_id == self.controlled_entity
+                    if entity.parent_id == (
+                        self.controlled_entity
                         if self.controlled_entity is not None
                         else controlled_entity_id
                     ):

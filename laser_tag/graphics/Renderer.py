@@ -212,6 +212,32 @@ class Renderer:
         if not VARIABLES.level_editor:
             display.screen.blit(self.world.get(), (0, 0))
 
+            # Crosshair
+            display.screen.blit(
+                self.crosshair.get(),
+                (
+                    resize(960, "x") - self.crosshair.get().get_width() / 2,
+                    resize(540, "y") - self.crosshair.get().get_height() / 2,
+                ),
+            )
+
+            # HUD
+            display.screen.blit(
+                self.hud.get(), (0, resize(1080, "y") - self.hud.get().get_height())
+            )
+
+            # Laser gun
+            laser_gun_offset = self.laser_gun.get_offset()
+            display.screen.blit(
+                self.laser_gun.get(),
+                (
+                    resize(960 + laser_gun_offset[0], "x")
+                    - self.laser_gun.get().get_width() / 2,
+                    resize(1080 + laser_gun_offset[1], "y")
+                    - self.laser_gun.get().get_height(),
+                ),
+            )
+
             display.screen.blit(self.minimap.get(), (resize(10, "x"), resize(10, "y")))
 
             display.screen.blit(
@@ -256,32 +282,6 @@ class Renderer:
                         else 0
                     ),
                     resize(10, "y"),
-                ),
-            )
-
-            # Crosshair
-            display.screen.blit(
-                self.crosshair.get(),
-                (
-                    resize(960, "x") - self.crosshair.get().get_width() / 2,
-                    resize(540, "y") - self.crosshair.get().get_height() / 2,
-                ),
-            )
-
-            # HUD
-            display.screen.blit(
-                self.hud.get(), (0, resize(1080, "y") - self.hud.get().get_height())
-            )
-
-            # Laser gun
-            laser_gun_offset = self.laser_gun.get_offset()
-            display.screen.blit(
-                self.laser_gun.get(),
-                (
-                    resize(960 + laser_gun_offset[0], "x")
-                    - self.laser_gun.get().get_width() / 2,
-                    resize(1080 + laser_gun_offset[1], "y")
-                    - self.laser_gun.get().get_height(),
                 ),
             )
 
