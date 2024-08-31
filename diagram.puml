@@ -318,6 +318,8 @@ package laser_tag {
 
         class Player extends GameEntity {
             name
+            is_shooting: Boolean
+            is_moving: Boolean
             deactivation_time
             deactivated_until_timestamp
             deactivation_time_ratio

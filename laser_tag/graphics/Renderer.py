@@ -139,25 +139,11 @@ class Renderer:
                     current_entity.deactivation_time_ratio, current_entity.can_attack
                 )
 
-                is_moving = False
-                for event in events:
-                    if event.id == Event.GAME_MOVE:
-                        is_moving = True
-                        break
-
-                # The player is shooting if there is a laser ray with his id
-                is_shooting = False
-                for entity in game.world.entities.values():
-                    if isinstance(entity, LaserRay):
-                        if entity.parent_id == controlled_entity_id:
-                            is_shooting = True
-                            break
-
                 self.laser_gun.update(
-                    is_moving,
+                    current_entity.is_moving,
                     current_entity.is_running,
                     current_entity.is_crouching,
-                    is_shooting,
+                    current_entity.is_shooting,
                     current_entity.team,
                 )
 

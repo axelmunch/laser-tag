@@ -172,6 +172,7 @@ class World:
                     case Event.GAME_MOVE:
                         is_moving = True
 
+            current_entity.is_moving = is_moving
             current_entity.is_running = is_moving and is_running
             current_entity.is_crouching = False
 
@@ -237,6 +238,18 @@ class World:
                             laser_ray.damages = current_entity.damages
                             laser_ray.get_entity_fct = self.get_entity
                             self.spawn_entity(laser_ray)
+
+            # The player is shooting if there is a laser ray with his id
+            current_entity.is_shooting = False
+            for entity in self.entities.values():
+                if isinstance(entity, LaserRay):
+                    if (
+                        entity.parent_id == self.controlled_entity
+                        if self.controlled_entity is not None
+                        else controlled_entity_id
+                    ):
+                        current_entity.is_shooting = True
+                        break
 
             # Update other entities
             for key in list(self.entities.keys()):

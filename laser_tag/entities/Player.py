@@ -23,6 +23,9 @@ class Player(GameEntity):
 
         self.score_reward = 100
 
+        self.is_shooting = False
+        self.is_moving = False
+
         self.deactivation_time = 4
         self.deactivated_until_timestamp = time()
         self.deactivation_time_ratio = 0
@@ -30,7 +33,7 @@ class Player(GameEntity):
         self.set_max_hp(1)
 
     def __repr__(self):
-        return f"['{self.__class__.__name__}',{self.position},{self.rotation},{self.team},{self.score},{self.eliminations},{self.deaths},{self.hp},{self.next_attack_timestamps},{self.deactivated_until_timestamp},{self.get_deactivation_time_ratio()},{self.can_move},{self.can_attack},{self.is_running},'{self.name}']"
+        return f"['{self.__class__.__name__}',{self.position},{self.rotation},{self.team},{self.score},{self.eliminations},{self.deaths},{self.hp},{self.next_attack_timestamps},{self.deactivated_until_timestamp},{self.get_deactivation_time_ratio()},{self.can_move},{self.can_attack},{self.is_running},{self.is_shooting},{self.is_moving},'{self.name}']"
 
     @staticmethod
     def create(parsed_object) -> Player:
@@ -52,7 +55,9 @@ class Player(GameEntity):
             entity.can_move = bool(parsed_object[10])
             entity.can_attack = bool(parsed_object[11])
             entity.is_running = bool(parsed_object[12])
-            entity.name = str(parsed_object[13])
+            entity.is_shooting = bool(parsed_object[13])
+            entity.is_moving = bool(parsed_object[14])
+            entity.name = str(parsed_object[15])
             return entity
         except:
             return None
