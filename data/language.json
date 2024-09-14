@@ -94,6 +94,7 @@
         "MENU_SELECTION_GAME_MODE": "Game mode",
         "MENU_SELECTION_TEAMS": "Teams",
         "MENU_SELECTION_PLAYERS": "Players",
+        "MENU_SELECTION_PLAYER_COUNT": "Number of players:",
         "GAME_MODE_SOLO": "Solo",
         "GAME_MODE_TEAM": "Team",
         "GAME_MODE_SOLO_ELIMINATION": "Solo Elimination",

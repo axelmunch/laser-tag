@@ -662,6 +662,7 @@ package laser_tag {
             MENU_SELECTION_GAME_MODE
             MENU_SELECTION_TEAMS
             MENU_SELECTION_PLAYERS
+            MENU_SELECTION_PLAYER_COUNT
             GAME_MODE_SOLO
             GAME_MODE_TEAM
             GAME_MODE_SOLO_ELIMINATION

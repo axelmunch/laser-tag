@@ -92,6 +92,8 @@ class ModeTeamSelectionMenu(Component, Menu):
         self.mouse_x = -1
         self.mouse_y = -1
 
+        self.player_count = 0
+
         self.current_page = 0
         self.refresh()
 
@@ -115,6 +117,7 @@ class ModeTeamSelectionMenu(Component, Menu):
             self.refresh()
 
     def refresh(self):
+        self.player_count = 0
         mode_button_width = self.button_width * 1.5
         mode_button_height = self.button_height
         self.pages_elements = [
@@ -205,6 +208,7 @@ class ModeTeamSelectionMenu(Component, Menu):
         for id, entity in self.game.world.entities.items():
             if isinstance(entity, Player):
                 self.players[id] = entity
+                self.player_count += 1
 
         player_width = self.menu_box_width / 4.5
         player_height = 60
@@ -465,5 +469,20 @@ class ModeTeamSelectionMenu(Component, Menu):
                         ),
                         int(resize(4, "x")),
                     )
+
+        # Player count
+        text_surface = self.text.get_surface(
+            f"{self.language.get(LanguageKey.MENU_SELECTION_PLAYER_COUNT)} {self.player_count}",
+            40,
+            (192, 192, 192),
+        )
+        self.surface.blit(
+            text_surface,
+            (
+                resize(960, "x") - text_surface.get_width() / 2,
+                resize(540 + self.menu_box_height / 2 - self.border_margin, "y")
+                - text_surface.get_height(),
+            ),
+        )
 
         super().render()

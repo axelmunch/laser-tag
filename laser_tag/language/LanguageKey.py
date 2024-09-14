@@ -112,6 +112,7 @@ class LanguageKey(Enum):
     MENU_SELECTION_GAME_MODE = auto()
     MENU_SELECTION_TEAMS = auto()
     MENU_SELECTION_PLAYERS = auto()
+    MENU_SELECTION_PLAYER_COUNT = auto()
 
     GAME_MODE_SOLO = auto()
     GAME_MODE_TEAM = auto()
