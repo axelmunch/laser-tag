@@ -81,6 +81,8 @@ class MainMenu(Component, Menu):
     def settings(self):
         if self.callback_settings is not None:
             self.callback_settings()
+        self.can_deactivate = True
+        self.set_active(False)
 
     def quit(self):
         if self.callback_quit is not None:

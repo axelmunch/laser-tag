@@ -5,6 +5,7 @@ from ....events.EventInstance import EventInstance
 from ....language.LanguageKey import LanguageKey
 from ...AssetsLoader import get_assets_folders, load_assets, open_assets_folder
 from ...resize import resize
+from ..BackgroundMenu import BackgroundMenu
 from ..Component import Component
 from ..GraphicalButton import ButtonType, GraphicalButton
 from ..GraphicalCheckbox import GraphicalCheckbox
@@ -18,11 +19,14 @@ from .Menu import Menu
 class SettingsMenu(Component, Menu):
     """Settings menu component"""
 
-    def __init__(self):
+    def __init__(self, callback_back=None, draw_menu_background=False):
         Component.__init__(self)
         Menu.__init__(self)
 
         self.set_original_size(1920, 1080)
+
+        self.callback_back = callback_back
+        self.draw_menu_background = draw_menu_background
 
         self.settings_box_width = 1920 - 500
         self.settings_box_height = 1080 - 200
@@ -36,7 +40,7 @@ class SettingsMenu(Component, Menu):
             button_width,
             button_height,
             text_key=LanguageKey.MENU_SETTINGS_BACK,
-            action=lambda: self.set_active(False),
+            action=self.back_action,
         )
         self.default_elements = [self.back_button]
 
@@ -438,6 +442,8 @@ class SettingsMenu(Component, Menu):
 
         self.switch_settings_page(0)
 
+        self.background = BackgroundMenu()
+
         self.update()
 
     def resize(self):
@@ -445,11 +451,17 @@ class SettingsMenu(Component, Menu):
             for page_elements in self.pages_elements:
                 for element in page_elements:
                     element.resize()
+            self.background.resize()
         except AttributeError:
             pass
 
         Menu.resize(self)
         Component.resize(self)
+
+    def back_action(self):
+        if self.callback_back is not None:
+            self.callback_back()
+        self.set_active(False)
 
     def change_screen_resolution(self, value):
         VARIABLES.windowed_resolution_ratio = value
@@ -495,11 +507,21 @@ class SettingsMenu(Component, Menu):
             events (list): Events
         """
 
+        if self.draw_menu_background:
+            self.background.update(events)
+
         Menu.update(self, events)
         Component.update(self)
 
     def render(self):
-        self.surface.fill((0, 0, 0, 128))
+        self.surface.fill((0, 0, 0, 0))
+
+        if self.draw_menu_background:
+            self.surface.blit(self.background.get(), (0, 0))
+
+        transparent_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        transparent_surface.fill((0, 0, 0, 128))
+        self.surface.blit(transparent_surface, (0, 0))
 
         pygame.draw.rect(
             self.surface,

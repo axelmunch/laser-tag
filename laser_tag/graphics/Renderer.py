@@ -201,7 +201,12 @@ class Renderer:
                         game, callback_main_menu=lambda: self.open_main_menu(game)
                     )
                 ),
-                callback_settings=lambda: self.menus.open_menu(SettingsMenu()),
+                callback_settings=lambda: self.menus.open_menu(
+                    SettingsMenu(
+                        callback_back=lambda: self.open_main_menu(game),
+                        draw_menu_background=True,
+                    )
+                ),
                 callback_quit=lambda: setattr(self, "close_game", True),
             )
         )

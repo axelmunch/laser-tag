@@ -1222,6 +1222,7 @@ package laser_tag {
                     status_text: GraphicalText
                     hosted_port_text: GraphicalText
                     elements
+                    background: BackgroundMenu
 
                     update_input_value(update_callback)
                     back_action()
@@ -1242,6 +1243,7 @@ package laser_tag {
                     callback_settings
                     callback_quit
                     can_deactivate: Boolean
+                    background: BackgroundMenu
 
                     play()
                     settings()
@@ -1261,6 +1263,8 @@ package laser_tag {
                 }
 
                 class SettingsMenu extends Component, Menu {
+                    callback_back
+                    draw_menu_background: Boolean
                     settings_box_width
                     settings_box_height
                     back_button : GraphicalButton
@@ -1268,7 +1272,9 @@ package laser_tag {
                     pages_buttons: GraphicalButton[]
                     pages_elements
                     elements
+                    background: BackgroundMenu
 
+                    back_action()
                     change_screen_resolution(value)
                     change_fullscreen(value)
                     change_ray_width(value)
