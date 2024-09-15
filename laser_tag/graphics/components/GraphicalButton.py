@@ -28,6 +28,7 @@ class ButtonType(Enum):
     OPEN_FOLDER = auto()
     MINI_BUTTON = auto()
     GAME_MODE = auto()
+    STOP_GAME = auto()
 
 
 class GraphicalButton(GraphicalElement):

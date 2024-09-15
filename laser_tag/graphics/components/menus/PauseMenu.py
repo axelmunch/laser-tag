@@ -1,8 +1,9 @@
+from ....events.Event import Event
 from ....events.EventInstance import EventInstance
 from ....language.LanguageKey import LanguageKey
 from ...resize import resize
 from ..Component import Component
-from ..GraphicalButton import GraphicalButton
+from ..GraphicalButton import ButtonType, GraphicalButton
 from .Confirmation import Confirmation
 from .Menu import Menu
 from .Menus import Menus
@@ -56,6 +57,20 @@ class PauseMenu(Component, Menu):
                     )
                 ),
             ),
+            GraphicalButton(
+                1920 - button_width - button_height / 2,
+                1080 - button_height * 1.5,
+                button_width,
+                button_height,
+                text_key=LanguageKey.MENU_PAUSE_STOP_GAME,
+                action=lambda: Menus().open_menu(
+                    Confirmation(
+                        LanguageKey.MENU_CONFIRMATION_STOP_GAME,
+                        callback_yes=self.stop_game,
+                    )
+                ),
+                type=ButtonType.STOP_GAME,
+            ),
         ]
 
         self.update()
@@ -71,6 +86,10 @@ class PauseMenu(Component, Menu):
 
     def settings(self):
         Menus().open_menu(SettingsMenu())
+
+    def stop_game(self):
+        self.add_event(EventInstance(Event.STOP_GAME))
+        self.resume()
 
     def quit(self):
         if self.callback_quit is not None:

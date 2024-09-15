@@ -13,6 +13,7 @@ class Event(Enum):
     NONE = auto()
     TICK = auto()
     START_GAME = auto()
+    STOP_GAME = auto()
     CHANGE_GAME_MODE = auto()
     CHANGE_PLAYER_TEAM = auto()
     PLAYER_JOIN = auto()

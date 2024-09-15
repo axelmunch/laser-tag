@@ -145,6 +145,10 @@ class GameMode:
 
         return all_teams
 
+    def stop_game(self):
+        self.grace_period_end = 0
+        self.game_time_end = time() - 1
+
     def update(self, entities: list[GameEntity]):
         if not self.game_started or self.game_finished:
             for entity in entities.values():

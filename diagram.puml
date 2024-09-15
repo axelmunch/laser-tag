@@ -150,6 +150,7 @@ package laser_tag {
             NONE
             TICK
             START_GAME
+            STOP_GAME
             CHANGE_GAME_MODE
             CHANGE_PLAYER_TEAM
             PLAYER_JOIN
@@ -399,6 +400,7 @@ package laser_tag {
             get_winning_color()
             change_mode(mode: Mode): Boolean
             get_teams_available(mode: Mode): Team[]
+            stop_game()
             update(entities: GameEntity[])
         }
 
@@ -623,8 +625,10 @@ package laser_tag {
             MENU_PAUSE_RESUME
             MENU_PAUSE_SETTINGS
             MENU_PAUSE_QUIT
+            MENU_PAUSE_STOP_GAME
             MENU_CONFIRMATION_YES
             MENU_CONFIRMATION_NO
+            MENU_CONFIRMATION_STOP_GAME
             MENU_CONFIRMATION_QUIT_GAME
             MENU_CONFIRMATION_CLOSE_GAME
             MENU_SETTINGS_TITLE
@@ -805,6 +809,7 @@ package laser_tag {
                 OPEN_FOLDER
                 MINI_BUTTON
                 GAME_MODE
+                STOP_GAME
             }
 
             class BackgroundMenu extends Component {
@@ -1267,6 +1272,7 @@ package laser_tag {
 
                     resume()
                     settings()
+                    stop_game()
                     quit()
                     update(events: EventInstance[])
                 }

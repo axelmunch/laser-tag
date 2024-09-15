@@ -178,6 +178,8 @@ class Game:
                             entity.team = GameMode.get_teams_available(
                                 self.game_mode.game_mode
                             )[0]
+                case Event.STOP_GAME:
+                    self.game_mode.stop_game()
 
         # Restart game
         if self.game_mode.game_finished:
