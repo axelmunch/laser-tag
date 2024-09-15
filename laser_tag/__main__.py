@@ -43,9 +43,7 @@ if __name__ == "__main__":
 
         # Events
         events = get_events()
-        menu_events = menus.get_events()
-        for event in menu_events:
-            events.append(event)
+        server_events = menus.get_events()
 
         # Enhance events
         game.enhance_events(events)
@@ -97,7 +95,7 @@ if __name__ == "__main__":
             client_server.get_client().add_events_to_send(
                 [
                     event
-                    for event in events
+                    for event in events + server_events
                     if not event.local and not (game.game_paused and event.game)
                 ]
             )
