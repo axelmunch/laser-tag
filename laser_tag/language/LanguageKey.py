@@ -50,6 +50,10 @@ class LanguageKey(Enum):
     GAME_SCOREBOARD_SCORE = auto()
     GAME_SCOREBOARD_ELIMINATIONS = auto()
     GAME_SCOREBOARD_DEATHS = auto()
+    GAME_END_GAME_WINNER_TITLE = auto()
+    GAME_END_GAME_WINNER_PLAYER = auto()
+    GAME_END_GAME_WINNER_TEAM = auto()
+    GAME_END_GAME_HOLD_TO_RESTART = auto()
 
     MENU_MAIN_PLAY = auto()
     MENU_MAIN_SETTINGS = auto()

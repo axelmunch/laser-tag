@@ -320,6 +320,7 @@ package laser_tag {
             name
             is_shooting: Boolean
             is_moving: Boolean
+            holding_restart: Boolean
             deactivation_time
             deactivated_until_timestamp
             deactivation_time_ratio
@@ -381,6 +382,7 @@ package laser_tag {
             language: Language
             game_mode: Mode
             game_started: Boolean
+            game_finished: Boolean
             grace_period_end
             game_time_end
             grace_time_seconds
@@ -393,6 +395,8 @@ package laser_tag {
             is_game_started(): Boolean
             update_leaderboard(entities: GameEntity[])
             update_scoreboard(entities: GameEntity[])
+            get_winning_message()
+            get_winning_color()
             change_mode(mode: Mode): Boolean
             get_teams_available(mode: Mode): Team[]
             update(entities: GameEntity[])
@@ -607,6 +611,10 @@ package laser_tag {
             GAME_SCOREBOARD_SCORE
             GAME_SCOREBOARD_ELIMINATIONS
             GAME_SCOREBOARD_DEATHS
+            GAME_END_GAME_WINNER_TITLE
+            GAME_END_GAME_WINNER_PLAYER
+            GAME_END_GAME_WINNER_TEAM
+            GAME_END_GAME_HOLD_TO_RESTART
             MENU_MAIN_PLAY
             MENU_MAIN_SETTINGS
             MENU_MAIN_QUIT
@@ -1297,6 +1305,8 @@ package laser_tag {
 
         class Renderer {
             clock
+            language: Language
+            text: Text
             menus: Menus
             last_game_paused: Boolean
             last_level_editor: Boolean

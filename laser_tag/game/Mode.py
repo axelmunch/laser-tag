@@ -15,6 +15,10 @@ class Mode(Enum):
     TEAM_ELIMINATION = auto()
 
 
+player_modes = [Mode.SOLO, Mode.SOLO_ELIMINATION]
+team_modes = [Mode.TEAM, Mode.TEAM_ELIMINATION]
+
+
 def get_mode_language_key(mode: Mode | int):
     try:
         mode = Mode(mode)

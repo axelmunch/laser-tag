@@ -474,7 +474,7 @@ class ModeTeamSelectionMenu(Component, Menu):
         text_surface = self.text.get_surface(
             f"{self.language.get(LanguageKey.MENU_SELECTION_PLAYER_COUNT)} {self.player_count}",
             40,
-            (192, 192, 192),
+            (255, 255, 255),
         )
         self.surface.blit(
             text_surface,

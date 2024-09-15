@@ -1,11 +1,11 @@
 import pygame
 
-from ..configuration import VARIABLES
-from ..entities.LaserRay import LaserRay
+from ..configuration import DEFAULT_FONT, VARIABLES
 from ..entities.Player import Player
-from ..events.Event import Event
 from ..events.EventInstance import EventInstance
 from ..game.Game import Game
+from ..language.Language import Language
+from ..language.LanguageKey import LanguageKey
 from ..network.ClientServerGroup import ClientServerGroup
 from . import display
 from .components.Crosshair import Crosshair
@@ -27,12 +27,19 @@ from .components.NetworkStats import NetworkStats
 from .components.Scoreboard import Scoreboard
 from .components.World import World
 from .resize import resize
+from .Text import Text
 
 
 class Renderer:
     def __init__(self, clock: pygame.time.Clock):
         self.clock = clock
 
+        self.language = Language()
+        self.text = Text(
+            DEFAULT_FONT["font"],
+            DEFAULT_FONT["font_is_file"],
+            DEFAULT_FONT["size_multiplier"],
+        )
         self.menus = Menus()
         self.last_game_paused = True
         self.last_level_editor = False
@@ -272,6 +279,65 @@ class Renderer:
                     (
                         resize(960, "x") - scoreboard.get_width() / 2,
                         resize(540, "y") - scoreboard.get_height() / 2,
+                    ),
+                )
+
+            if game.game_mode.game_finished:
+                # Display winner
+                winning_message = game.game_mode.get_winning_message()
+                winning_text = self.text.get_surface(
+                    winning_message,
+                    100,
+                    (255, 255, 255),
+                )
+                transparent_surface = pygame.Surface(
+                    (
+                        winning_text.get_width() + resize(20, "x"),
+                        winning_text.get_height() + resize(20, "y"),
+                    ),
+                    pygame.SRCALPHA,
+                )
+                team_color = game.game_mode.get_winning_color()
+                transparent_surface.fill(
+                    (team_color[0], team_color[1], team_color[2], 128)
+                )
+                display.screen.blit(
+                    transparent_surface,
+                    (
+                        resize(1920 - (1920 - 1280) / 2, "x")
+                        - transparent_surface.get_width(),
+                        resize((1080 - 720) / 4, "y")
+                        - transparent_surface.get_height() / 2,
+                    ),
+                )
+                display.screen.blit(
+                    winning_text,
+                    (
+                        resize(1920 - (1920 - 1280) / 2 - 10, "x")
+                        - winning_text.get_width(),
+                        resize((1080 - 720) / 4, "y") - winning_text.get_height() / 2,
+                    ),
+                )
+
+                # Hold to restart
+                holding_player_count = 0
+                player_count = 0
+                for entity in game.world.entities.values():
+                    if isinstance(entity, Player):
+                        player_count += 1
+                        if entity.holding_restart:
+                            holding_player_count += 1
+                hold_text = self.text.get_surface(
+                    f"{self.language.get(LanguageKey.GAME_END_GAME_HOLD_TO_RESTART)} ({holding_player_count}/{player_count})",
+                    50,
+                    (255, 255, 255),
+                )
+                display.screen.blit(
+                    hold_text,
+                    (
+                        resize(960, "x") - hold_text.get_width() / 2,
+                        resize(1080 - (1080 - 720) / 4, "y")
+                        - hold_text.get_height() / 2,
                     ),
                 )
 

@@ -175,6 +175,7 @@ class World:
             current_entity.is_moving = is_moving
             current_entity.is_running = is_moving and is_running
             current_entity.is_crouching = False
+            current_entity.holding_restart = False
 
             for event in events:
                 match event.id:
@@ -213,6 +214,8 @@ class World:
                                 ),
                             )
                     case Event.GAME_SHOOT:
+                        current_entity.holding_restart = True
+
                         if current_entity.attack():
                             ray = self.map.cast_ray(
                                 current_entity.position,

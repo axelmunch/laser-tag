@@ -1,4 +1,5 @@
 from ..configuration import VARIABLES
+from ..entities.Player import Player
 from ..events.Event import Event
 from ..events.EventInstance import EventInstance
 from ..events.ServerEvents import ServerEvents
@@ -113,7 +114,7 @@ class Game:
     ):
         delta_time.update()
 
-        self.show_scoreboard = False
+        self.show_scoreboard = self.game_mode.game_finished
 
         self.game_mode.update(self.world.entities)
 
@@ -174,5 +175,18 @@ class Game:
                             entity.team = GameMode.get_teams_available(
                                 self.game_mode.game_mode
                             )[0]
+
+        # Restart game
+        if self.game_mode.game_finished:
+            # Check hold to restart
+            holding_player_count = 0
+            player_count = 0
+            for entity in self.world.entities.values():
+                if isinstance(entity, Player):
+                    player_count += 1
+                    if entity.holding_restart:
+                        holding_player_count += 1
+            if holding_player_count == player_count:
+                self.game_mode.reset(self.game_mode.game_mode)
 
         self.world.update(events, controlled_entity_id, delta_time, player_delta_time)
