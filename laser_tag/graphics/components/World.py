@@ -296,14 +296,10 @@ class World(Component):
                     ),
                 )
 
-            elif isinstance(object, GameEntity):
+            elif isinstance(object, GameEntity) and not isinstance(object, LaserRay):
                 texture = TextureNames.RED
 
                 entity_world_size = min(VARIABLES.world_scale / distance, 1080)
-
-                if isinstance(object, LaserRay):
-                    texture = TextureNames.RED
-                    entity_world_size *= 0.5
 
                 texture_original_size = textures.get_original_size(texture)
                 texture_scale_ratio = entity_world_size / texture_original_size[1] * 0.7
