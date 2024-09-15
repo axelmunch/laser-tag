@@ -16,6 +16,7 @@ from laser_tag.entities.Player import Player
 from laser_tag.events.Event import Event
 from laser_tag.events.EventInstance import EventInstance
 from laser_tag.game.Game import Game
+from laser_tag.math.Point import Point
 from laser_tag.network.safe_eval import safe_eval
 from laser_tag.utils.DeltaTime import DeltaTime
 
@@ -143,8 +144,10 @@ class Server:
         self.send(client, f'"{client.player_name}"')
 
         # Create player
-        spawn_point = self.game.world.map.get_spawn_point()
-        client.controlled_entity_id = self.game.world.spawn_entity(Player(spawn_point))
+        player = Player(Point(0, 0))
+        client.controlled_entity_id = self.game.world.spawn_entity(player)
+        spawn_point = self.game.world.map.get_spawn_point(client.controlled_entity_id)
+        player.position = spawn_point
         self.game.world.get_entity(client.controlled_entity_id).set_name(
             client.player_name
         )

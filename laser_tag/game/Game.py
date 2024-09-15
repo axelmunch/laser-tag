@@ -56,8 +56,11 @@ class Game:
                 print("Error setting game state", e)
 
     def reset(self):
-        for entity in self.world.entities.values():
+        for entity_id, entity in self.world.entities.items():
             entity.reset()
+            if isinstance(entity, Player):
+                spawn_point = self.world.map.get_spawn_point(entity_id)
+                entity.position = spawn_point
 
     def enhance_events(self, events: list[EventInstance]):
         i = 0

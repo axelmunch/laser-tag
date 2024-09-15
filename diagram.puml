@@ -429,7 +429,7 @@ package laser_tag {
             margin
 
             set_walls(walls: Wall[])
-            get_spawn_point(): Point
+            get_spawn_point(id): Point
             get_map_bounds()
             generate_partitioning_cache()
             collides_with(collider: Circle): Boolean

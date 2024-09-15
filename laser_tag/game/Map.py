@@ -39,10 +39,15 @@ class Map:
         self.walls = walls
         self.generate_partitioning_cache()
 
-    def get_spawn_point(self) -> Point:
+    def get_spawn_point(self, id=None) -> Point:
         if len(self.spawn_points) == 0:
             return Point(0, 0)
-        return Point(self.spawn_points[0].x, self.spawn_points[0].y)
+        if id is None:
+            id = 0
+        return Point(
+            self.spawn_points[id % len(self.spawn_points)].x,
+            self.spawn_points[id % len(self.spawn_points)].y,
+        )
 
     def get_map_bounds(self) -> tuple[int, int, int, int]:
         return (
