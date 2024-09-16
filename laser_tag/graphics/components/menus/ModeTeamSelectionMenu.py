@@ -424,7 +424,7 @@ class ModeTeamSelectionMenu(Component, Menu):
                         resize(draw_player_x + area[3] / 2, "x"),
                         resize(draw_player_y + area[3] / 2, "y"),
                     ),
-                    int(resize(area[3] / 3, "x")),
+                    max(2, int(resize(area[3] / 3, "x"))),
                 )
                 if self.players[id].team == Team.NONE:
                     pygame.draw.circle(

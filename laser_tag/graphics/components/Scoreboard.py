@@ -105,14 +105,14 @@ class Scoreboard(Component):
                     self.surface,
                     get_team_color(entity.team),
                     (resize(20 + 50, "x"), y + resize(step_height / 2, "y")),
-                    resize(10, "x"),
+                    max(2, resize(10, "x")),
                 )
                 if entity.team == Team.NONE:
                     pygame.draw.circle(
                         self.surface,
                         (0, 0, 0),
                         (resize(20 + 50, "x"), y + resize(step_height / 2, "y")),
-                        resize(5, "x"),
+                        max(1, resize(5, "x")),
                     )
 
                 # Name

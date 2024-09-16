@@ -285,7 +285,7 @@ class ConnectionMenu(Component, Menu):
                 resize(960, "x"),
                 resize(540 + self.menu_box_height / 2 - 50, "y"),
             ),
-            int(resize(2, "x")),
+            max(1, int(resize(2, "x"))),
         )
 
         menu_title_text = self.text.get_surface(
