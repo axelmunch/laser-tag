@@ -245,9 +245,7 @@ class ConnectionMenu(Component, Menu):
                 )
             )
             self.status_text.text_key = LanguageKey.MENU_CONNECTION_SERVER_STOPPED
-            self.hosted_port_text.text_str = self.language.get(
-                LanguageKey.MENU_CONNECTION_HOSTED_PORT
-            )
+            self.hosted_port_text.text_str = ""
 
         for event in events:
             if event.id == Event.KEY_ESCAPE_PRESS:
