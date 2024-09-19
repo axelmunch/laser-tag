@@ -147,7 +147,7 @@ class Server:
         player = Player(Point(0, 0))
         client.controlled_entity_id = self.game.world.spawn_entity(player)
         spawn_point = self.game.world.map.get_spawn_point(client.controlled_entity_id)
-        player.position = spawn_point
+        player.move(spawn_point.x, spawn_point.y)
         self.game.world.get_entity(client.controlled_entity_id).set_name(
             client.player_name
         )

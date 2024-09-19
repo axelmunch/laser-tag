@@ -60,7 +60,7 @@ class Game:
             entity.reset()
             if isinstance(entity, Player):
                 spawn_point = self.world.map.get_spawn_point(entity_id)
-                entity.position = spawn_point
+                entity.move(spawn_point.x, spawn_point.y)
 
     def enhance_events(self, events: list[EventInstance]):
         i = 0
