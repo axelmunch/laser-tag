@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from ..utils.float_to_int import float_to_int
+
 
 class Point:
     """A point is represented by x and y"""
@@ -9,7 +11,7 @@ class Point:
         self.y = y
 
     def __repr__(self):
-        return f"[{self.x},{self.y}]"
+        return f"[{float_to_int(self.x)},{float_to_int(self.y)}]"
 
     @staticmethod
     def create(parsed_object) -> Point:

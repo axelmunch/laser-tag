@@ -24,7 +24,7 @@ class LaserRay(GameEntity):
         self.ray = Line(self.position, self.end_position)
 
     def __repr__(self):
-        return f"['{self.__class__.__name__}',{self.position},{self.end_position},{self.parent_id},{self.rotation},{self.team},{self.damages},{self.score},{self.eliminations},{self.time_to_live},{self.can_attack}]"
+        return f"['{self.__class__.__name__}',{self.position},{self.end_position},{self.parent_id},{self.rotation},{self.team},{self.damages},{self.score},{self.eliminations},{self.time_to_live},{int(self.can_attack)}]"
 
     @staticmethod
     def create(parsed_object) -> LaserRay:
