@@ -268,6 +268,7 @@ class World:
                 if isinstance(entity, LaserRay):
                     # Collision with entities
                     if entity.can_attack:
+                        has_attacked = False
                         for key_target in list(self.entities.keys()):
                             entity_target = self.get_entity(key_target)
                             # Target is not the laser ray nor its parent
@@ -288,7 +289,7 @@ class World:
                                     and entity.collides_with(entity_target)
                                     and entity.attack()
                                 ):
-                                    entity.can_attack = False
+                                    has_attacked = True
                                     # Damage the target
                                     killed = entity_target.damage(entity.damages)
                                     # The target was hit
@@ -296,6 +297,8 @@ class World:
                                         entity.on_hit(entity_target)
                                         if killed:
                                             entity.on_kill(entity_target)
+                        if has_attacked:
+                            entity.can_attack = False
 
                     entity.time_to_live -= delta_time.get_dt()
                     if entity.time_to_live <= 0:

@@ -63,7 +63,7 @@ class LaserRay(GameEntity):
         self.give_stats_to_parent()
 
     def attack(self) -> bool:
-        return True
+        return self.can_attack
 
     def give_stats_to_parent(self):
         if self.get_entity_fct is not None and (
