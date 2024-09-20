@@ -73,11 +73,10 @@ class Variables:
                     if self.debug:
                         print("Variables version update")
                     self.save()
+            if self.debug:
+                print("Variables loaded")
         except FileNotFoundError:
             self.save()
-
-        if self.debug:
-            print("Variables loaded")
 
     def save(self):
         variables = {
@@ -87,12 +86,15 @@ class Variables:
         }
 
         self.settings_file.parent.mkdir(parents=True, exist_ok=True)
-        with open(self.settings_file, "w") as file:
-            dump(variables, file, indent=4)
-            file.write("\n")
-
-        if self.debug:
-            print("Variables saved")
+        try:
+            with open(self.settings_file, "w") as file:
+                dump(variables, file, indent=4)
+                file.write("\n")
+            if self.debug:
+                print("Variables saved")
+        except Exception as e:
+            if self.debug:
+                print("Error saving variables", e)
 
     def set_full_screen_size(self, width, height):
         self.full_screen_width = width

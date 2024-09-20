@@ -275,10 +275,8 @@ if __name__ == "__main__":
     if not non_interactive:
         try:
             while (
-                "exit"
-                not in input(
-                    'Enter "exit" or press Ctrl+C to stop the server\n'
-                ).lower()
+                input('Enter "exit" or press Ctrl+C to stop the server\n').lower()
+                != "exit"
             ):
                 continue
 
