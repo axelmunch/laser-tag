@@ -19,7 +19,7 @@ class LaserRay(GameEntity):
         self.end_position = end_position
         self.parent_id = parent_id
         self.get_entity_fct = None
-        self.time_to_live = 0.15
+        self.time_to_live = 0.1
 
         self.ray = Line(self.position, self.end_position)
 

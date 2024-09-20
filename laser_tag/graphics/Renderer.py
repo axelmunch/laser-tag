@@ -287,7 +287,7 @@ class Renderer:
                 winning_message = game.game_mode.get_winning_message()
                 winning_text = self.text.get_surface(
                     winning_message,
-                    100,
+                    60,
                     (255, 255, 255),
                 )
                 transparent_surface = pygame.Surface(

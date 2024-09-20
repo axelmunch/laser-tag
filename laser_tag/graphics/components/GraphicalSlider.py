@@ -45,7 +45,7 @@ class GraphicalSlider(GraphicalElement):
         self.mouse_x = -1
         self.mouse_y = -1
 
-        self.set_original_size(400, 100)
+        self.set_original_size(350, 100)
 
         self.set_relative_offset(self.x, self.y)
 

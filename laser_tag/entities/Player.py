@@ -17,7 +17,7 @@ class Player(GameEntity):
 
         self.move_speed = 0.05
 
-        self.attack_speed = 0.25
+        self.attack_speed = 0.6
 
         self.damages = 1
 
