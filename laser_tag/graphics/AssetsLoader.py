@@ -1,5 +1,5 @@
+import os
 from enum import Enum, auto
-from os import startfile
 from subprocess import call
 from sys import platform
 
@@ -51,7 +51,7 @@ def load_textures(path):
 
 def open_assets_folder():
     if platform == "win32":
-        startfile(ASSETS_PATH)
+        os.startfile(ASSETS_PATH)
     else:
         opener = "open" if platform == "darwin" else "xdg-open"
         call([opener, ASSETS_PATH])
