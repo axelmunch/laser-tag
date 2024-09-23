@@ -2,27 +2,16 @@
 
 ## Description
 
-Laser tag is a game in which players shoot lasers at each other to earn points for themselves or their team. There are several game modes such as: team, solo, elimination...
+Multiplayer laser tag game in Python with raycasting.
 
-This game is a multiplayer laser tag game that uses raycasting to simulate a 3D environment.
+Host and join LAN parties.
 
-> **Note**
-> The game is currently under development and some of its features may not be completely working nor implemented yet.
+Team up or compete with your friends in different game modes.
 
-## Roadmap
+Shoot players to score points.
 
-- [X] Entity movement
-- [X] Standalone server
-- [X] Multiplayer
-- [X] Authoritative Server
-- [X] Playable laser tag
-- [X] Raycasting
-- [X] Vectorial map
-- [X] Textures
-- [X] Menu and settings screen
-- [X] Audio
-- [ ] Controller support
-- [ ] More laser tag game modes
+> [!NOTE]
+> This is a beta version of the game. Some features may not be fully functional.
 
 ## Prerequisites
 
